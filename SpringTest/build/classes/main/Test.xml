@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="TestControllerModel">
+	
+	<select id="getLogin" parameterType="TestControllerModel" resultType="TestControllerModel">
+		/* main.Test.getLogin */
+		
+		SELECT 
+			USER_ID
+			,USER_PASSWORD
+			,FAIL_CNT
+		FROM USER_MST
+		WHERE 
+			user_id = #{user_id}
+	</select>
+	
+	<insert id="getLoginHistory" parameterType="TestControllerModel">
+		/* main.Test.getLoginHistory */
+		
+		insert into LOGIN_HISTORY(
+			user_no
+			,user_id
+			,login_no
+			,login_result
+			,created_by
+			)
+		values(
+		#{user_no}
+		,#{user_id}
+		,login_seq.nextval
+		,#{login_result}
+		,#{user_id}	
+		)	
+	</insert>
+	
+	
+</mapper>
