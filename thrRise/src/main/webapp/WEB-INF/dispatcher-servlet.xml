@@ -14,9 +14,9 @@
     <mvc:annotation-driven />
 
     <!-- 자유게시판 -->
-    <bean class="Test.Controller.TestController" />
-    <bean class="Test.Dao.TestControllerDao" />
-    <bean class="Test.Service.impl.TestServiceImpl" />
+    <bean class="login.Controller.LoginController" />
+    <bean class="login.Dao.LoginControllerDao" />
+    <bean class="login.Service.impl.LoginServiceImpl" />
 
 
 
