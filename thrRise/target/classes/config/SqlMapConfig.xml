@@ -4,10 +4,10 @@
 
 <configuration>
 	<typeAliases>
-		<typeAlias alias="TestControllerModel" type="Test.Model.TestControllerModel"/>
+		<typeAlias alias="LoginControllerModel" type="login.Model.LoginControllerModel"/>
 	</typeAliases>
 
 	<mappers>
-		<mapper resource="main/Test.xml"/> 
+		<mapper resource="main/login.xml"/> 
 	</mappers>
 </configuration>
