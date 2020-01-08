@@ -13,7 +13,7 @@
     <context:annotation-config/> 
     <mvc:annotation-driven />
 
-    <!-- 자유게시판 -->
+    <!-- 로그인 -->
     <bean class="login.Controller.LoginController" />
     <bean class="login.Dao.LoginControllerDao" />
     <bean class="login.Service.impl.LoginServiceImpl" />
@@ -26,6 +26,7 @@
 	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
 	<property name="prefix" value="/" />
 	<property name="suffix" value=".jsp" />
+	
 </bean>
     
 

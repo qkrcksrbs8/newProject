@@ -1,10 +1,13 @@
 package login.Service.impl;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import login.Dao.LoginControllerDao;
 import login.Model.LoginControllerModel;
 
+@Repository("LoginService")
 public class LoginServiceImpl {
 	private Logger log = Logger.getLogger(this.getClass());
 	LoginControllerDao LoginDao = new LoginControllerDao();
@@ -33,7 +36,7 @@ public class LoginServiceImpl {
 			}
 			
 		}catch(Exception e) {
-			log.error("ERROR :: "+e.toString());
+			log.error("::ERROR::"+e.toString());
 		}
 		
 		

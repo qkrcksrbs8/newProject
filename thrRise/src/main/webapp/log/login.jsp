@@ -19,10 +19,7 @@ $(document).ready(function() {
 			alert("비밀번호를 입력하세요");
 			return false;
 		}
-		$("#loginId").val("");
-		$("#loginPass").val("");
-		$("#hiddenId").val("");
-		$("#hiddenPass").val(""); 
+		
 	});
 });
 </script>

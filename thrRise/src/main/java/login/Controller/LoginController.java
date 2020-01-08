@@ -3,6 +3,8 @@ package login.Controller;
 import org.apache.log4j.Logger;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,15 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import login.Model.LoginControllerModel;
 import login.Service.LoginService;
 
+@Controller
 public class LoginController {
 
 	private Logger log = Logger.getLogger(this.getClass());
-	private LoginService loginService;
+	public LoginService loginService;
 	
 	
 	/* 로그인페이지! */
-	@RequestMapping(value="/login.do",method=RequestMethod.GET)
+	@RequestMapping(value="login.do",method=RequestMethod.GET)
 	public String getWelcome(HttpServletRequest req) {
+		log.info(":: getWelcome ::");
 		return "log/login";
 	}
 	
@@ -31,10 +35,15 @@ public class LoginController {
 		log.info(":: login.Controller.LoginController 시작 :: getLogin");
 		log.info(":: 유저아이디 ::"+user_id);
 		log.info(":: 유저비밀번호 ::"+user_password);
+		try {
+			
 		LoginControllerModel param = new LoginControllerModel();
 		param.setUser_id(user_id);
 		param.setUser_password(user_password);
-		String result_code = loginService.getLogin(param);
+		String result_code = "";
+		log.info("::param.getUser_id::"+param.getUser_id());
+		log.info("::param.getUser_password::"+param.getUser_password());
+		result_code = loginService.getLogin(param);
 		log.info("result_code :: "+result_code);
 		
 		if(result_code.equals("0000")) {
@@ -52,11 +61,13 @@ public class LoginController {
 		}else {
 			/* 알 수 없는 에러 */
 		}
-		
-		
+				
 		log.info(":: login.Controller.LoginController 종료 :: getLogin");
 		log.info(":: :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ::");
-		return "log/main";
 		
+		}catch(Exception e) {
+			log.error("::ERROR::"+e.toString());
+		}
+		return "log/main";
 	}
 }
