@@ -2,6 +2,8 @@ package login.Controller;
 
 import org.apache.log4j.Logger;
 
+import javax.annotation.Resource;
+
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import login.Model.LoginControllerModel;
 import login.Service.LoginService;
 
+@SuppressWarnings("unused")
 @Controller
 public class LoginController {
 
 	private Logger log = Logger.getLogger(this.getClass());
+	
 	public LoginService loginService;
 	
 	
@@ -67,6 +71,8 @@ public class LoginController {
 		
 		}catch(Exception e) {
 			log.error("::ERROR::"+e.toString());
+			return "index";
+			
 		}
 		return "log/main";
 	}

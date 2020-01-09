@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import login.Dao.LoginControllerDao;
 import login.Model.LoginControllerModel;
 
+@SuppressWarnings("unused")
 @Repository("LoginService")
 public class LoginServiceImpl {
 	private Logger log = Logger.getLogger(this.getClass());
