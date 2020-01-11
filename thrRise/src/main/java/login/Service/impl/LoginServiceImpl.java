@@ -1,16 +1,23 @@
 package login.Service.impl;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
 
 import login.Dao.LoginControllerDao;
 import login.Model.LoginControllerModel;
+import login.Service.LoginService;
 
 @SuppressWarnings("unused")
-@Repository("LoginService")
-public class LoginServiceImpl {
+@Service("LoginService")
+public class LoginServiceImpl implements LoginService {
 	private Logger log = Logger.getLogger(this.getClass());
+	
+	@Autowired(required=true) 
 	LoginControllerDao LoginDao = new LoginControllerDao();
 	
 	public String getLogin(LoginControllerModel param) {
@@ -45,5 +52,9 @@ public class LoginServiceImpl {
 		log.info(":: :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ::");
 
 		return result_code;
+	}
+	
+	public int getInt() {
+		return 100;
 	}
 }
