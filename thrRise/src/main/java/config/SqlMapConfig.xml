@@ -4,10 +4,11 @@
 
 <configuration>
 	<typeAliases>
-		<typeAlias alias="LoginControllerModel" type="login.Model.LoginControllerModel"/>
-	</typeAliases>
+		<typeAlias type="com.login.Model.LoginControllerModel" alias="LoginControllerModel" />
+	</typeAliases> 
 
 	<mappers>
 		<mapper resource="main/login.xml"/> 
 	</mappers>
 </configuration>
+

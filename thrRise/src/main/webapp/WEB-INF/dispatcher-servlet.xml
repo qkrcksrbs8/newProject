@@ -14,9 +14,10 @@
     <mvc:annotation-driven />
 
     <!-- 로그인 -->
-    <bean class="login.Controller.LoginController" />
-    <bean class="login.Dao.LoginControllerDao" />
-    <bean class="login.Service.impl.LoginServiceImpl" />
+    <bean class="com.login.Controller.LoginController" />
+    <bean class="com.login.Dao.LoginControllerDao" />
+    <bean class="com.login.Service.impl.LoginServiceImpl" />
+    <bean class="com.login.Model.LoginControllerModel" />
 
     <!-- (4) viewResolver(위치)(prefix), 이동할페이지의 확장자를 지정(suffix) -->
 <bean id="viewResolver"

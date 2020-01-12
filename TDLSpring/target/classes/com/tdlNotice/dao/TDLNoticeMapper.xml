@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    
+<mapper namespace="tdlNotice">  
+ 
+   <!--1.springboard2 테이블에서 SQL작업(1.글목록보기) -->
+<select  id="selectListN"  parameterType="map"  resultType="noticeCommand"  >
+      SELECT  TN_num, TN_title, TN_id, TN_date, TN_content,TN_readcount
+    	    FROM(SELECT
+    		    a.*,
+    		        rownum rnum
+    		FROM (SELECT   *
+    				      FROM TDL_NOTICE
+    		<where>
+    		   <if test="keyWord!=null and keyField=='TN_title'">
+    		        TN_title like '%' || #{keyWord} || '%'
+    		   </if>
+    		   <if test="keyWord!=null and keyField=='TN_id'">
+    		        TN_id like '%' || #{keyWord} || '%'
+    		   </if>
+    		   <if test="keyWord!=null and keyField=='TN_content'">
+    		        TN_content like '%' || #{keyWord} || '%'
+    		   </if>
+    		   <if test="keyWord!=null and keyField=='all'">
+    		        TN_title like '%' || #{keyWord} || '%' or
+    		       	TN_id like '%' || #{keyWord} || '%' or
+    		        TN_content like '%' || #{keyWord} || '%'
+    		   </if>
+    		</where>	
+    				ORDER BY TN_num desc)a)
+	<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+	]]>
+ 	</select>  
+
+<!--2.검색어에 해당하는 총레코드수 구하기 java.lang.Integer->Integer->int-->
+ <select id="selectCountN" parameterType="map" resultType="Integer">
+    select count(*) from TDL_NOTICE
+                <where>
+    		   <if test="keyWord!=null and keyField=='TN_title'">
+    		        TN_title like '%' || #{keyWord} || '%'
+    		   </if>
+    		   <if test="keyWord!=null and keyField=='TN_id'">
+    		        TN_id like '%' || #{keyWord} || '%'
+    		   </if>
+    		   <if test="keyWord!=null and keyField=='TN_content'">
+    		        TN_content like '%' || #{keyWord} || '%'
+    		   </if>
+    		   <if test="keyWord!=null and keyField=='all'">
+    		        TN_title like '%' || #{keyWord} || '%' or
+    		       	TN_id like '%' || #{keyWord} || '%' or
+    		        TN_content like '%' || #{keyWord} || '%'
+    		   </if>
+    		</where>	
+ </select>
+
+  <!-- 최대값 구하기 -->
+ <select id="getNewNumN" resultType="int" >
+    select max(TN_num) from TDL_NOTICE
+ </select>
+ 
+ <!--3.글쓰기(sysdate, mysql(now())  com.board.domain.BoardCommand
+    #{매개변수명(=테이블의 필드명=멤버변수명}=>Getter Method호출하는 문장이다. 
+   -->
+ <insert id="insertTDLNotice" parameterType="noticeCommand">
+      insert into TDL_NOTICE(TN_num,TN_title,TN_id,TN_date,TN_content,TN_readcount) 
+    	 values(#{TN_num},#{TN_title},'test',SYSDATE,#{TN_content},0)
+ </insert>
+ 
+  <!--4.조회수 증가하기 java.lang.String=>String->string(X) -->
+ <update id="updateHitN" parameterType="Integer" >
+    update TDL_NOTICE set TN_readcount=TN_readcount+1 where TN_num=#{TN_num}
+ </update>
+
+<!--  5. 게시물번호에 따른 레코드 상세보기 -->
+ <select id="selectTDLNotice" parameterType="Integer"  resultType="noticeCommand">
+     select * from TDL_NOTICE where TN_num=#{TN_num}
+ </select>
+
+ <!--  6.글삭제하기 --> 
+ <delete id="deleteN" parameterType="Integer">
+    delete from TDL_NOTICE where TN_num=#{TN_num}
+ </delete>
+
+<!-- 7.글수정하기 -->
+ <update id="updatePostN" parameterType="noticeCommand">
+    update TDL_NOTICE set TN_title=#{TN_title} ,TN_content=#{TN_content}
+    where TN_num=#{TN_num}
+ </update>
+
+</mapper>
+
+
+
+
+
+
+

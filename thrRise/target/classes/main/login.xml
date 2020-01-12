@@ -3,7 +3,7 @@
 	
 <mapper namespace="LoginControllerModel">
 	
-	<select id="getLogin" parameterType="LoginControllerModel" resultType="LoginControllerModel">
+	<select id="getLogin" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		/* main.getLogin */
 		
 		SELECT 
@@ -15,7 +15,7 @@
 			user_id = #{user_id}
 	</select>
 	
-	<insert id="LoginLoginHistory" parameterType="LoginControllerModel">
+	<insert id="LoginLoginHistory" parameterType="com.login.Model.LoginControllerModel">
 		/* main.Login.getLoginHistory */
 		
 		insert into LOGIN_HISTORY(
