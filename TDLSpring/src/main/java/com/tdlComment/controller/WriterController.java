@@ -37,10 +37,10 @@ public class WriterController {
 			                     @RequestParam(value="TU_id")String TU_id,HttpServletRequest request) {
 	
 		if(log.isDebugEnabled()) {
-			System.out.println("여기는 댓글작성 시작");
-			System.out.println("TP_num =>"+TP_num);
-			System.out.println("TP_id =>"+TP_id);
-			System.out.println("TU_id =>"+TU_id);
+			log.info("여기는 댓글작성 시작");
+			log.info("TP_num =>"+TP_num);
+			log.info("TP_id =>"+TP_id);
+			log.info("TU_id =>"+TU_id);
 			log.debug("CommentCommand=>"+commandC);//입력받은 값을 출력
 			//로그객체명.debug(출력대상자를 입력)
 		}
@@ -50,9 +50,9 @@ public class WriterController {
 			commandC.setTPC_id(id);
 			commandC.setTPC_num(TP_num);
 			//최대값+1
-			System.out.println("TPC_num =>"+TPC_num);
+			log.info("TPC_num =>"+TPC_num);
 			int newNumC=TDLCommentDAO.getNewNumC(TPC_num)+1;
-			System.out.println("newNumC=>"+newNumC);//1->2
+			log.info("newNumC=>"+newNumC);//1->2
 			//게시물번호->계산->저장
 			//String addr =자유게시물번호+"c"+최대값 번호+"c"+댓글구분번호;
 			String addr=TP_num+"c"+newNumC+"c"+0;
@@ -60,12 +60,12 @@ public class WriterController {
 			commandC.setTPC_ref(newNumC);//2
 			
 			//글쓰기 호출
-			System.out.println("댓글 작성 TPC_id =>"+commandC.getTPC_id());
-			System.out.println("댓글 작성 TPC_num =>"+commandC.getTPC_num());
-			System.out.println("댓글 작성 TPC_content =>"+commandC.getTPC_content());
-			System.out.println("게시물넘버 보내주기 =>"+TP_num);
+			log.info("댓글 작성 TPC_id =>"+commandC.getTPC_id());
+			log.info("댓글 작성 TPC_num =>"+commandC.getTPC_num());
+			log.info("댓글 작성 TPC_content =>"+commandC.getTPC_content());
+			log.info("게시물넘버 보내주기 =>"+TP_num);
 			TDLCommentDAO.insertC(commandC);
-			System.out.println("댓글 작성 TPC_date =>"+commandC.getTPC_date());
+			log.info("댓글 작성 TPC_date =>"+commandC.getTPC_date());
 			
 			request.setAttribute("TP_num", TP_num);
 			request.setAttribute("TP_id", TP_id);

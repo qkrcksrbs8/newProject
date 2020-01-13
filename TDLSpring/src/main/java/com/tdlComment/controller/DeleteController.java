@@ -33,17 +33,17 @@ public class DeleteController {
 			                       @RequestParam(value="TP_num")int TP_num,				                     
 				                     @RequestParam(value="TU_id")String TU_id) {
 		
-		System.out.println("여기는댓글삭제라구!"+TP_num+"   "+TU_id);
+		log.info("여기는댓글삭제라구!"+TP_num+"   "+TU_id);
 		if(log.isDebugEnabled()) {
-			System.out.println("댓글삭제 시작");
+			log.info("댓글삭제 시작");
 			log.debug("CommentCommand=>"+commandC);//입력받은 값을 출력
 			//로그객체명.debug(출력대상자를 입력)
 		}
 		String TPC_addr = TP_addr;
 		//글삭제 
-			System.out.println("댓글 삭제할 TP_addr =>"+TP_addr);
+			log.info("댓글 삭제할 TP_addr =>"+TP_addr);
 			TDLCommentDAO.deleteC(TP_addr);
-			System.out.println("댓글 삭제 성공! ");
+			log.info("댓글 삭제 성공! ");
 		//return "redirect:요청명령어"; =>return "이동할 페이지명"
 			return "redirect:/TDL_POST/TDLPostContent.do?TP_num="+TP_num+"&TP_id='"+TP_id+"'&TU_id='"+TU_id+"'";
 	}
