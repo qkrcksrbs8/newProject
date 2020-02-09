@@ -20,6 +20,25 @@ import com.sun.javafx.collections.MappingChange.Map;
 import com.login.Model.LoginControllerModel;
 import com.login.Service.LoginService;
 
+/**
+ * 
+ * <pre>
+ * Statements
+ * </pre>
+ * 
+ * @ClassName   : LoginController.java
+ * @Description : 클래스 설명을 기술합니다.
+ * @author qkrck
+ * @since 2020. 1. 24.
+ * @version 1.0
+ * @see
+ * @Modification Information
+ * <pre>
+ *  since         author    description
+ * ============   ======  ====================
+ * 2020. 1. 24.   qkrck    최초생성 2020. 1. 24.
+ * </pre>
+ */
 @SuppressWarnings("unused")
 @Controller
 public class LoginController {
@@ -29,15 +48,24 @@ public class LoginController {
 	@Autowired
 	public LoginService loginService;
 	
-	
-	/* 로그인페이지! */
+	/**
+	 * 로그인페이지로 이동
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping(value="login.do",method=RequestMethod.GET)
 	public String getWelcome(HttpServletRequest req) {
 		log.info(":: getWelcome ::");
 		return "log/login";
 	}
 	
-	/* 로그인 */
+	/**
+	 * 메인페이지로 이동
+	 * @param req
+	 * @param user_id
+	 * @param user_password
+	 * @return
+	 */
 	@RequestMapping(value="/main.do",method=RequestMethod.POST)
 	public String getLogin(HttpServletRequest req
 			,@RequestParam("hiddenId")String user_id
