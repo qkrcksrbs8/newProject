@@ -28,4 +28,43 @@ public class BoardServiceImpl implements BoardService {
 		return boardDAO.selectBoardCnt(map);
 	}
 	
+	
+//	-- 게시판 시퀀스
+//	CREATE SEQUENCE BOARD_SEQUENCE
+//	  START WITH 1
+//	  INCREMENT BY 1
+//	  MAXVALUE 100
+//	  MINVALUE 1
+//	  NOCYCLE;
+//
+//	--게시판 테이블
+//	create table board_mst(
+//	board_seq int primary key
+//	,board_title varchar2(25) not null
+//	, board_content varchar2(200)
+//	, created_date date
+//	, created_by varchar2(25)
+//	, last_update_date date
+//	, last_update_by varchar2(25)
+//	);
+//
+//	insert into board_mst(
+//	board_seq
+//	, board_title
+//	, board_content
+//	, created_date
+//	, created_by
+//	, last_update_date
+//	, last_update_by
+//	)
+//	values(
+//	BOARD_SEQUENCE.NEXTVAL
+//	, '안녕하세요'
+//	, '반갑습니다'
+//	, sysdate
+//	, 'admin'
+//	, sysdate
+//	, 'admin'
+//	);
+	
 }

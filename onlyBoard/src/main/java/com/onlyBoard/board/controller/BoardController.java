@@ -28,7 +28,9 @@ public class BoardController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", "admin");
-		boardService.selectBoardCnt(map);
+		int cnt = boardService.selectBoardCnt(map);
+		
+		System.out.println("@@@@@@ cnt : "+cnt);
 		
 		ModelAndView  mav = new ModelAndView("board");
 		mav.setViewName("main/board");//jsp °æ·Î
