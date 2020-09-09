@@ -54,14 +54,14 @@ $(function(){
 	
 <section id="content">
 	<div class="container board-view-con">
-		<div class="board-view-sub">
+		<div class="board-view-sub" style="min-height: 200px; text-align: left;">
 			<pre>${boardList.board_content }</pre>
 		</div>
 	</div>
 </section>		
 	
 <section id="content">
-	<div class="container board-view-con board-view-con1">
+	<div class="container board-view-con">  
 		<div class="board-view-sub board-view-utilbtn">
 			<button id="boardUpdateBtn" class="btn btn-success">글수정</button>
 			<button id="boardDeleteBtn" class="btn btn-success">글삭제</button>
