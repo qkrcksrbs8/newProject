@@ -1,15 +1,15 @@
 package com.onlyBoard.board.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.onlyBoard.board.model.BoardVO;
 import com.onlyBoard.board.service.BoardService;
 
 @Controller
@@ -20,22 +20,59 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;//게시판 인터페이스
 	
-	
-	@RequestMapping(value="/test")
-	public ModelAndView test() {
+	/**
+	 * 게시판 조회
+	 */
+	@RequestMapping(value="/boardList")
+	public ModelAndView boardList() {
 
-		System.out.println("@@@@@@ test() start");
+		logger.info("start");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("user_id", "admin");
-		int cnt = boardService.selectBoardCnt(map);
+		List<BoardVO> boardList = null;//게시판 리스트
+		int count = 0;//게시판 리스트 수
 		
-		System.out.println("@@@@@@ cnt : "+cnt);
+		count = boardService.selectBoardCnt();//게시판 리스트 수
+		
+		logger.info("count : "+count);
+		
+		if(0 < count) {
+			
+			boardList = boardService.selectBoardList();//게시판 리스트 조회
+			
+		}//if
 		
 		ModelAndView  mav = new ModelAndView("board");
 		mav.setViewName("main/board");//jsp 경로
-
-		System.out.println("@@@@@@ test() end");
+		mav.addObject("count", count);//총레코드수
+		mav.addObject("boardList", boardList);//게시판 리스트
+	
+		logger.info(boardList.toString());
+		
+		logger.info("end");
+		return mav;
+	}
+	
+	/**
+	 * 게시판 상세
+	 * @param board_seq
+	 * @return
+	 */
+	@RequestMapping(value="/boardDetail")
+	public ModelAndView boardDetail(@RequestParam(value="board_seq") int board_seq) {
+		
+		logger.info("start");
+		
+		logger.info("board_seq : "+board_seq);
+		BoardVO boardList = boardService.selectBoard(board_seq);//게시판 상세 조회
+		
+		logger.info(boardList.toString());
+		
+		ModelAndView  mav = new ModelAndView("boardDetail");
+		mav.setViewName("main/boardDetail");//jsp 경로
+		mav.addObject("boardList", boardList);//게시판 리스트
+		
+		logger.info("end");
+		
 		return mav;
 	}
 	

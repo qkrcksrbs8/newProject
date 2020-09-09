@@ -1,12 +1,15 @@
 package com.onlyBoard.board.service.impl;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.onlyBoard.board.service.BoardService;
 import com.onlyBoard.board.dao.BoardDAO;
+import com.onlyBoard.board.model.BoardVO;
+import com.onlyBoard.board.service.BoardService;
 
 /**
  * 게시판 ServiceImpl 정의
@@ -15,56 +18,74 @@ import com.onlyBoard.board.dao.BoardDAO;
 @Repository
 public class BoardServiceImpl implements BoardService {
 
+	Logger logger = Logger.getLogger(this.getClass());//로그
+	
 	@Autowired
-	private BoardDAO boardDAO;
+	private BoardDAO boardDAO;//게시판 DAO
 	
 	/* 
 	 * 게시판 리스트 수 조회
 	 */
-	public int selectBoardCnt(Map<String, Object> map) {
+	public int selectBoardCnt() {
 		
-		System.out.println("@@@@@ 서비스임플 ");
+		int boardCnt = 0;//게시판 리스트 수
 		
-		return boardDAO.selectBoardCnt(map);
+		try {
+			
+			boardCnt = boardDAO.selectBoardCnt();//게시판 리스트 수 조회
+		
+		}catch(Exception e) {
+			
+			logger.error("selectBoardCnt()");
+			logger.error(e.toString());
+			
+		}//try
+		
+		return boardCnt;
 	}
 	
+	/**
+	 * 게시판 리스트
+	 */
+	public List<BoardVO> selectBoardList() {	
+		
+		List<BoardVO> boardList = new ArrayList<BoardVO>();//게시판VO List
+		
+		try {
+			
+			boardList = boardDAO.selectBoardList();//게시판 리스트 조회
+			
+		}catch(Exception e) {
+			
+			logger.error("selectBoardList()");
+			logger.error(e.toString());
+			
+		}//try
+		
+		return boardList;
+		
+	}
 	
-//	-- 게시판 시퀀스
-//	CREATE SEQUENCE BOARD_SEQUENCE
-//	  START WITH 1
-//	  INCREMENT BY 1
-//	  MAXVALUE 100
-//	  MINVALUE 1
-//	  NOCYCLE;
-//
-//	--게시판 테이블
-//	create table board_mst(
-//	board_seq int primary key
-//	,board_title varchar2(25) not null
-//	, board_content varchar2(200)
-//	, created_date date
-//	, created_by varchar2(25)
-//	, last_update_date date
-//	, last_update_by varchar2(25)
-//	);
-//
-//	insert into board_mst(
-//	board_seq
-//	, board_title
-//	, board_content
-//	, created_date
-//	, created_by
-//	, last_update_date
-//	, last_update_by
-//	)
-//	values(
-//	BOARD_SEQUENCE.NEXTVAL
-//	, '안녕하세요'
-//	, '반갑습니다'
-//	, sysdate
-//	, 'admin'
-//	, sysdate
-//	, 'admin'
-//	);
+	/**
+	 * 게시판 상세
+	 */
+	public BoardVO selectBoard(int board_seq) {
+		
+		BoardVO boardVO = new BoardVO();//게시판VO
+		
+		try {
+			
+			boardVO = boardDAO.selectBoard(board_seq);//게시판 상세조회
+			
+		}catch(Exception e) {
+			
+			logger.error("selectBoard()");
+			logger.error(e.toString());
+			
+		}//try
+		
+		return boardVO;
+	
+	}
 	
 }

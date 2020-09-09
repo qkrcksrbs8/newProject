@@ -1,8 +1,10 @@
 package com.onlyBoard.board.dao;
 
-import java.util.Map;
+import java.util.List;
 
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+
+import com.onlyBoard.board.model.BoardVO;
 
 /**
  * 게시판 DAO 정의
@@ -10,9 +12,26 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
  */
 public class BoardDAO extends SqlSessionDaoSupport {
 	
-	public int selectBoardCnt(Map<String, Object> map) {
-		return getSqlSession().selectOne("selectBoardCnt",map);
+	/**
+	 * 게시판 리스트 수
+	 */
+	public int selectBoardCnt() throws Exception {
+		return getSqlSession().selectOne("selectBoardCnt");
 	}
+	
+	/**
+	 * 게시판 리스트
+	 */
+	public List<BoardVO> selectBoardList() throws Exception {
+		return getSqlSession().selectList("selectBoardList");
+	}
+	
+	/**
+	 * 게시판 상세
+	 */
+	public BoardVO selectBoard(int board_seq) throws Exception { 
+		return (BoardVO) getSqlSession().selectOne("selectBoard", board_seq);
+	} 
 
 }
   

@@ -34,7 +34,6 @@
 					<li class="col-xs-6 col-md-6">제목</li>
 					<li class="col-xs-2 col-md-2">작성자</li>
 					<li class="col-xs-2 col-md-2">작성일</li>
-					<li class="col-xs-1 col-md-1">조회수</li>
 				</ul>
 			</div>
 			<div class="board-list-wrap borard-list-con">
@@ -45,7 +44,6 @@
 						<li class="col-md-6 col-xs-6"><a href="/TDLSpring/TDL_POST/TDLPostContent.do?TP_num=${article.TP_num}&TP_id=${article.TP_id}&TU_id=<%=TU_id %>">${article.TP_title}</a></li>
 						<li class="col-md-2 col-xs-2">${article.TP_id }</li>
 						<li class="col-md-2 col-xs-2">${article.TP_date.substring(0,8)}</li>	
-						<li class="col-md-1 col-xs-1">${article.TP_readcount }</li>
 					</ul>
 				</c:forEach>
 			</div>
