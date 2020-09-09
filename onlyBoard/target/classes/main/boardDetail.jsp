@@ -21,9 +21,22 @@ $(function(){
 		
 		}else{
 			
-			
-			$('#boardUpdateBtn').text('글수정');
-			$('input[name=board_title]').attr('readOnly','true');
+			$.ajax({
+	            url:'boardUpdate.do',
+	            success:function(data){
+	            	
+	                alert('저장이 완료되었습니다.');
+	                
+	                $('#boardUpdateBtn').text('글수정');
+	    			$('input[name=board_title]').attr('readOnly','true');
+	    			
+	            },error : function(request, status, error ) {   // 오류가 발생했을 때 호출된다. 
+
+		        	alert('저장에 실패하였습니다.');
+
+		        }//error
+	            
+	        })//ajax
 			
 		}//if
 		
@@ -39,7 +52,7 @@ $(function(){
 <section id="content">
 	<div class="col_full">
 		<label for="template-contactform-subject">제목 <small>*</small></label>
-		<input type="text" id="template-contactform-subject" name="board_title" value="${boardList.board_title }" class="required sm-form-control" readOnly="true" /> 
+		<input type="text" id="template-contactform-subject" name="board_title" value="${boardList.board_title }" class="required sm-form-control" readOnly="readOnly" /> 
 	</div>
 </section>	
 	

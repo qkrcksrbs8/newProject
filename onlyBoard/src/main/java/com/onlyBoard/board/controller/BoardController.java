@@ -75,5 +75,27 @@ public class BoardController {
 		
 		return mav;
 	}
+
+	/**
+	 * 게시판 업데이트
+	 * @param board_seq
+	 * @return
+	 */
+	@RequestMapping(value="/boardUpdate")
+	public String boardUpdate(@RequestParam(value="board_seq") int board_seq
+									, @RequestParam(value="board_title") int board_title
+									, @RequestParam(value="board_content") int board_content) {
+		
+		logger.info("start");
+		
+		logger.info("board_seq : "+board_seq);
+		logger.info("board_title : "+board_title);
+		logger.info("board_content : "+board_content);
+		
+		
+		logger.info("end");
+		
+		return "0000";
+	}
 	
 }
