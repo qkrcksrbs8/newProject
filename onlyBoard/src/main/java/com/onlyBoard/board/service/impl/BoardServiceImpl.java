@@ -2,6 +2,7 @@ package com.onlyBoard.board.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDAO boardDAO;//게시판 DAO
 	
 	/* 
-	 * 게시판 리스트 수 조회
+	 * 게시판 리스트 수 조회	
 	 */
 	public int selectBoardCnt() {
 		
@@ -47,13 +48,13 @@ public class BoardServiceImpl implements BoardService {
 	/**
 	 * 게시판 리스트
 	 */
-	public List<BoardVO> selectBoardList() {	
+	public List<BoardVO> selectBoardList(Map<String, Object> map) {	
 		
 		List<BoardVO> boardList = new ArrayList<BoardVO>();//게시판VO List
 		
 		try {
 			
-			boardList = boardDAO.selectBoardList();//게시판 리스트 조회
+			boardList = boardDAO.selectBoardList(map);//게시판 리스트 조회
 			
 		}catch(Exception e) {
 			

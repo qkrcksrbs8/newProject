@@ -5,12 +5,6 @@
       
 <mapper namespace="com.onlyBoard.board.dao.BoardDAO">  
   
-  <!-- 
-<select id="selectBoardCnt" parameterType="map" resultType="int" >
-	SELECT COUNT(*)
-	FROM BOARD_MST
-</select> -->
- 
  
 <select id="selectBoardCnt" resultType="int" >
 	SELECT COUNT(*)
@@ -18,16 +12,27 @@
 	WHERE USEFLAG = 1
 </select>
 
-<select id="selectBoardList" resultType="com.onlyBoard.board.model.BoardVO">
-	SELECT 
-		BOARD_SEQ
+<select id="selectBoardList" parameterType="map" resultType="com.onlyBoard.board.model.BoardVO">
+	SELECT  
+        BOARD_SEQ
 	    , BOARD_TITLE
 	    , BOARD_CONTENT
 	    , REGEXP_REPLACE(CREATED_DATE, '[^0-9]') AS CREATED_DATE
 	    , CREATED_BY
-	FROM BOARD_MST
-	WHERE USEFLAG = 1
-	ORDER BY BOARD_SEQ DESC
+	    , rnum
+	FROM(
+	    SELECT
+	        a.*,
+	        rownum rnum
+	    FROM (
+	        SELECT   *
+	        FROM BOARD_MST
+	        ORDER BY BOARD_SEQ desc
+	        )a
+	)
+	<![CDATA[
+	WHERE rnum >= #{start} AND rnum <= #{end}
+	]]>
 </select>
 
 <select id="selectBoard" parameterType="Integer" resultType="com.onlyBoard.board.model.BoardVO">

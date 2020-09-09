@@ -129,7 +129,7 @@
 							 	<c:if test="${check <0}">
 									<form action="/TDLSpring/TDLLike/TDLLikeUp.do" method="post">								
 										<p class="comment-like-btn text-center">			
-											<button btye="submit">									
+											<button type="submit">									
 													<font id="" class="icon-thumbs-up" color="gray" style="font-size:22"></font>																		
 											</button>
 										</p>	

@@ -6,4 +6,5 @@
 	response.sendRedirect("boardList.do");//게시판 이동
 %>
 </html>
-  
+   
+   

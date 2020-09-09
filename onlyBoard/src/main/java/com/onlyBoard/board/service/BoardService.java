@@ -1,6 +1,7 @@
 package com.onlyBoard.board.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.onlyBoard.board.model.BoardVO;
 
@@ -20,7 +21,7 @@ public interface BoardService {
 	/**
 	 * 게시판 리스트
 	 */
-	public List<BoardVO> selectBoardList();
+	public List<BoardVO> selectBoardList(Map<String, Object> map);
 	
 	/**
 	 * 게시판 상세
