@@ -16,8 +16,8 @@ public class BoardDAO extends SqlSessionDaoSupport {
 	/**
 	 * 게시글 리스트 수
 	 */
-	public int selectBoardCnt() throws Exception {
-		return getSqlSession().selectOne("selectBoardCnt");
+	public int selectBoardCnt(Map<String, Object> map) throws Exception {
+		return getSqlSession().selectOne("selectBoardCnt", map);
 	}
 	
 	/**

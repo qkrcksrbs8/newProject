@@ -27,13 +27,13 @@ public class BoardServiceImpl implements BoardService {
 	/* 
 	 * 게시글 리스트 수 조회	
 	 */
-	public int selectBoardCnt() {
+	public int selectBoardCnt(Map<String, Object> map) {
 		
 		int boardCnt = 0;//게시판 리스트 수
 		
 		try {
 			
-			boardCnt = boardDAO.selectBoardCnt();//게시판 리스트 수 조회
+			boardCnt = boardDAO.selectBoardCnt(map);//게시판 리스트 수 조회
 		
 		}catch(Exception e) {
 			

@@ -42,13 +42,7 @@ button {
 	transform:translate(0, -50%);
 	-webkit-transform:translate(0, -50%);
 } 
-select {
-	position : absolute;
-	top:50%;  
-	right:0;
-	transform:translate(0, -50%);
-	-webkit-transform:translate(0, -50%);
-}
+
 </style>
 
 <body>
@@ -110,21 +104,42 @@ select {
 							${pagingHtml}
 						</li> 
 						
-					</ul>		 
-					<div class="form-group  col-4 col-md-3 offset-md-8">
-						<div class="white-section">
-							<select id="inputState" name="keyField" class="form-control selectpicker">					
-								<option value="board_title">제목</option>
-								<option value="board_content">제목+본문</option>
-								<option value="user_name">작성자</option>
-							</select> 
-						</div>
-					</div>
-					<button id="boardInsertBtn" class="btn btn-success" >글작성</button>
+					</ul>		 					
+					 
+					<button id="boardInsertBtn" class="btn btn-success" >글작성</button>  
+					
 				</div>
 			</div>
 		</div>
 	</section>		
+	
+	<section id="content" class="board-list-search-wrap">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-md-10  nopadding">
+					<form action="boardList.do" name="search" method="POST">
+						<div class="form-row">
+							<div class="form-group  col-4 col-md-3 offset-md-4">
+								<div class="white-section">
+									<select id="inputState" name="keyField" class="form-control selectpicker">					
+										<option value="onlyTitle">제목</option>
+										<option value="titleContent">내용</option>
+										<option value="onlyName">작성자</option>
+									</select> 
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<input type="text" name="keyWord" class="form-control">
+							</div>
+							<div class="form-group col-md-1">
+								<button type="submit" class="btn btn-success form-control"><i class="icon-line-search"></i></button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
 	
 </div>
 

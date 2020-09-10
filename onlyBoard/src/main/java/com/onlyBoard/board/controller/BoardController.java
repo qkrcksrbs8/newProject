@@ -29,16 +29,31 @@ public class BoardController {
 	 * 게시판 조회
 	 */
 	@RequestMapping(value="/boardList")
-	public ModelAndView boardList(@RequestParam(value="pageNum",defaultValue="1")int currentPage) {
+	public ModelAndView boardList(@RequestParam(value="pageNum",defaultValue="1")int currentPage
+								, @RequestParam(value="keyField", required =false) String keyField
+								, @RequestParam(value="keyWord", required =false) String keyWord) {
 
 		logger.info("start");
 		
+		logger.info("keyField : "+keyField);
+		logger.info("keyWord : "+keyWord);
+		
 		List<BoardVO> boardList = new ArrayList<BoardVO>();//게시판 리스트
 		Map<String, Object> map = new HashMap<String, Object>();//페이징 map
+		map.put("keyField", keyField);//검색분야
+		map.put("keyWord", keyWord);//검색어
 		
-		int count = boardService.selectBoardCnt();//게시판 리스트 수		
+		int count = boardService.selectBoardCnt(map);//게시판 리스트 수		
 		logger.info("count : "+count);		
-		PagingUtil page = new PagingUtil(currentPage, count, 5,2, "boardList.do");
+		
+		PagingUtil page;
+		
+		if(keyWord == null) {
+			page = new PagingUtil(currentPage, count, 5,2, "boardList.do");
+		}else {
+			page = new PagingUtil(keyField, keyWord, currentPage, count, 5,2, "boardList.do",null);
+		}
+		
 		map.put("start", page.getStartCount());//start->페이지당 맨 첫번째 나오는 게시물번호
 		map.put("end", page.getEndCount());//마지막게시물번호
 

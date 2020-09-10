@@ -16,7 +16,7 @@ public interface BoardService {
 	 * @param map
 	 * @return
 	 */
-	public int selectBoardCnt();
+	public int selectBoardCnt(Map<String, Object> map);
 	
 	/**
 	 * 게시글 리스트

@@ -6,10 +6,19 @@
 <mapper namespace="com.onlyBoard.board.dao.BoardDAO">  
   
  
-<select id="selectBoardCnt" resultType="int" >
+<select id="selectBoardCnt" parameterType="map" resultType="int" >
 	SELECT COUNT(*)
 	FROM BOARD_MST
 	WHERE USEFLAG = 1
+    <if test="keyWord!=null and keyField=='onlyTitle'">
+	   and board_title like '%' || #{keyWord} || '%'
+    </if>
+    <if test="keyWord!=null and keyField=='onlyName'">
+       and created_by like '%' || #{keyWord} || '%'
+    </if>
+    <if test="keyWord!=null and keyField=='titleContent'">
+       and board_content like '%' || #{keyWord} || '%'
+    </if>
 </select>
 
 <select id="selectBoardList" parameterType="map" resultType="com.onlyBoard.board.model.BoardVO">
@@ -28,6 +37,15 @@
 	        SELECT   *
 	        FROM BOARD_MST
 	        WHERE USEFLAG = 1
+	        <if test="keyWord!=null and keyField=='onlyTitle'">
+    		   and board_title like '%' || #{keyWord} || '%'
+   		    </if>
+   		    <if test="keyWord!=null and keyField=='onlyName'">
+   		       and created_by like '%' || #{keyWord} || '%'
+   		    </if>
+   		    <if test="keyWord!=null and keyField=='titleContent'">
+   		       and board_content like '%' || #{keyWord} || '%'
+   		    </if>
 	        ORDER BY BOARD_SEQ desc
 	        )a
 	)
