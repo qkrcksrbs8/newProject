@@ -27,6 +27,7 @@
 	    FROM (
 	        SELECT   *
 	        FROM BOARD_MST
+	        WHERE USEFLAG = 1
 	        ORDER BY BOARD_SEQ desc
 	        )a
 	)
@@ -47,6 +48,45 @@
 	AND board_seq = #{board_seq}
 </select> 
 
+<update id="updateBoard" parameterType="map"> 
+	UPDATE BOARD_MST SET
+		last_update_date = SYSDATE
+		,last_update_by = #{user_name} 
+		,board_title = #{board_title}
+		,board_content = #{board_content}
+	WHERE board_seq = #{board_seq}
+	
+</update> 
+
+<update id="deleteBoard" parameterType="map"> 
+	UPDATE BOARD_MST SET
+		last_update_date = SYSDATE
+		,last_update_by = #{user_name} 
+		,USEFLAG = 0
+	WHERE board_seq = #{board_seq}
+	
+</update> 
+
+<insert id="insertBoard" parameterType="map">
+	Insert into BOARD_MST (
+		BOARD_SEQ
+		,BOARD_TITLE
+		,BOARD_CONTENT
+		,CREATED_DATE
+		,CREATED_BY
+		,LAST_UPDATE_DATE
+		,LAST_UPDATE_BY
+	) values (
+		BOARD_SEQUENCE.nextval
+		, #{board_title}
+		, #{board_content}
+		, SYSDATE 
+		, #{created_by}
+		, SYSDATE
+		, #{last_update_by}
+	)
+
+</insert>
 
 </mapper>
 

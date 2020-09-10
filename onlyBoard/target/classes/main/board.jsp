@@ -15,6 +15,42 @@
 <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
 <link rel="stylesheet" href="css/responsive.css" type="text/css" />
 <link rel="stylesheet" href="css/tdl.css" type="text/css" />
+<link rel="stylesheet" href="css/imports/shortcodes/misc.css" type="text/css" />
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+
+$(function(){
+	
+	$('#boardInsertBtn').on('click', function(){
+		
+		location.href='writeBoard.do';
+		
+	});
+	
+});
+
+</script>
+
+<style>
+ul {
+	position:relative;
+}
+button {
+	position : absolute;
+	top:50%;  
+	right:0;
+	transform:translate(0, -50%);
+	-webkit-transform:translate(0, -50%);
+} 
+select {
+	position : absolute;
+	top:50%;  
+	right:0;
+	transform:translate(0, -50%);
+	-webkit-transform:translate(0, -50%);
+}
+</style>
+
 <body>
 
 <div class="container">
@@ -67,13 +103,24 @@
 	<!-- 자유게시판 list page paging -->
 	<section id="content" class="board-list-paging">
 		<div class="container">
-			<div class="row">
+			<div class="row position:relative;">
 				<div class="col-md-12">
 					<ul class="pagination">
 						<li>
 							${pagingHtml}
-						</li>
-					</ul>		
+						</li> 
+						
+					</ul>		 
+					<div class="form-group  col-4 col-md-3 offset-md-8">
+						<div class="white-section">
+							<select id="inputState" name="keyField" class="form-control selectpicker">					
+								<option value="board_title">제목</option>
+								<option value="board_content">제목+본문</option>
+								<option value="user_name">작성자</option>
+							</select> 
+						</div>
+					</div>
+					<button id="boardInsertBtn" class="btn btn-success" >글작성</button>
 				</div>
 			</div>
 		</div>

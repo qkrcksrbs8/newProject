@@ -12,20 +12,35 @@ import com.onlyBoard.board.model.BoardVO;
 public interface BoardService {
 
 	/**
-	 * 게시판 리스트 수
+	 * 게시글 리스트 수
 	 * @param map
 	 * @return
 	 */
 	public int selectBoardCnt();
 	
 	/**
-	 * 게시판 리스트
+	 * 게시글 리스트
 	 */
 	public List<BoardVO> selectBoardList(Map<String, Object> map);
 	
 	/**
-	 * 게시판 상세
+	 * 게시글 상세
 	 */
 	public BoardVO selectBoard(int board_seq);
 	
+	/**
+	 * 게시글 업데이트
+	 */
+	public String updateBoard(Map<String, Object> map);
+	
+	/**
+	 * 게시글 삭제 (사용여부만 변경 1 -> 0) 
+	 * 1:사용중 / 0:미사용  
+	 */
+	public String deleteBoard(Map<String, Object> map);
+	
+	/**
+	 * 게시글 작성
+	 */
+	public String insertBoard(Map<String, Object> map);
 }

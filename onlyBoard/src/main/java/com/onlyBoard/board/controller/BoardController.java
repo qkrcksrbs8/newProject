@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.onlyBoard.board.model.BoardVO;
@@ -37,7 +38,7 @@ public class BoardController {
 		
 		int count = boardService.selectBoardCnt();//게시판 리스트 수		
 		logger.info("count : "+count);		
-		PagingUtil page = new PagingUtil(currentPage, count, 10,3, "boardList.do");
+		PagingUtil page = new PagingUtil(currentPage, count, 5,2, "boardList.do");
 		map.put("start", page.getStartCount());//start->페이지당 맨 첫번째 나오는 게시물번호
 		map.put("end", page.getEndCount());//마지막게시물번호
 
@@ -67,8 +68,7 @@ public class BoardController {
 	@RequestMapping(value="/boardDetail")
 	public ModelAndView boardDetail(@RequestParam(value="board_seq") int board_seq) {
 		
-		logger.info("start");
-		
+		logger.info("start");	
 		logger.info("board_seq : "+board_seq);
 		BoardVO boardList = boardService.selectBoard(board_seq);//게시판 상세 조회
 		
@@ -88,24 +88,133 @@ public class BoardController {
 	 * @param board_seq
 	 * @return
 	 */
-//	@RequestMapping(value="/boardUpdate")
-//	public ResponseEntity<Object> boardUpdate(@RequestParam(value="board_seq") int board_seq
-//									, @RequestParam(value="board_title") int board_title
-//									, @RequestParam(value="board_content") int board_content) {
-//		
-//		logger.info("start");
-//		
-//		HttpStatus statusCode = HttpStatus.OK;
-//		
-//		
-//		logger.info("board_seq : "+board_seq);
-//		logger.info("board_title : "+board_title);
-//		logger.info("board_content : "+board_content);
-//		
-//		
-//		logger.info("end");
-//		
-//		return ;
-//	}
+	@ResponseBody
+	@RequestMapping(value="/updateBoard")
+	public String updateBoard(@RequestParam(value="board_seq") int board_seq
+							, @RequestParam(value="board_title") String board_title
+							, @RequestParam(value="board_content") String board_content
+							, @RequestParam(value="user_name") String user_name) {
+		
+		logger.info("start");
+		logger.info("board_seq : "+board_seq);
+		logger.info("board_title : "+board_title);
+		logger.info("board_content : "+board_content);
+		logger.info("user_name : "+user_name);
+		
+		String resultCode = "0000";//0000:정상 / 9000:에러
+		
+		try {
+			
+			Map<String, Object> map = new HashMap<String, Object>();//게시글 업데이트 map
+			map.put("board_seq", board_seq);//게시글 시퀀스
+			map.put("board_title", board_title.replace("\r\n","<br>"));//게시글 제목
+			map.put("board_content", board_content.replace("\r\n","<br>"));//게시글 내용
+			map.put("user_name", user_name);//최종수정자
+			 
+			resultCode = boardService.updateBoard(map);//게시글 업데이트
+			
+		}catch(Exception e) {
+
+			logger.error(e.toString());
+			resultCode = "9000";
+			
+		}//try
+		
+		
+		logger.info("end");
+		
+		return resultCode;
+	}
+	
+	
+	/**
+	 * 게시판 삭제
+	 * @param board_seq
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/deleteBoard")
+	public String deleteBoard(@RequestParam(value="board_seq") int board_seq
+							, @RequestParam(value="user_name") String user_name) {
+		
+		logger.info("start");
+		logger.info("board_seq : "+board_seq);
+		logger.info("user_name : "+user_name);
+		
+		String resultCode = "0000";//0000:정상 / 9000:에러
+		
+		try {
+			
+			Map<String, Object> map = new HashMap<String, Object>();//게시글 삭제 map
+			map.put("board_seq", board_seq);//게시글 시퀀스
+			map.put("user_name", user_name);//최종수정자
+			
+			resultCode = boardService.deleteBoard(map);//게시글 삭제
+			
+		}catch(Exception e) {
+
+			logger.error(e.toString());
+			resultCode = "9000";
+			
+		}//try
+		
+		
+		logger.info("end");
+		
+		return resultCode;
+	}
+	
+	/**
+	 * 게시글 작성 페이지 이동
+	 * @return
+	 */
+	@RequestMapping(value="/writeBoard")
+	public ModelAndView boardWrite() {
+				
+		ModelAndView  mav = new ModelAndView("boardWrite");
+		mav.setViewName("main/boardWrite");//jsp 경로
+		
+		return mav;
+	}
+	
+	/**
+	 * 게시글 작성
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/insertBoard")
+	public String boardInsert(@RequestParam(value="board_title", required =false) String board_title
+							  , @RequestParam(value="board_content", required =false) String board_content
+							  , @RequestParam(value="user_name", required =false) String user_name) {
+		
+		logger.info("start");
+		logger.info("board_title : "+board_title);
+		logger.info("board_content : "+board_content);
+		logger.info("user_name : "+user_name);
+		
+		String resultCode = "0000";//0000:정상 / 9000:에러
+		
+		try {
+			
+			Map<String, Object> map = new HashMap<String, Object>();//게시글 삭제 map
+			map.put("board_title", board_title);//게시글 제목
+			map.put("board_content", board_content);//게시글 내용
+			map.put("created_by", user_name);//생성자
+			map.put("last_update_by", user_name);//최종수정자
+			
+			resultCode = boardService.insertBoard(map);//게시글 삭제
+			
+		}catch(Exception e) {
+
+			logger.error(e.toString());
+			resultCode = "9000";
+			
+		}//try
+				
+		logger.info("end");
+		
+		return resultCode;
+		
+	}
 	
 }

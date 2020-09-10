@@ -25,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDAO boardDAO;//게시판 DAO
 	
 	/* 
-	 * 게시판 리스트 수 조회	
+	 * 게시글 리스트 수 조회	
 	 */
 	public int selectBoardCnt() {
 		
@@ -46,7 +46,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	/**
-	 * 게시판 리스트
+	 * 게시글 리스트
 	 */
 	public List<BoardVO> selectBoardList(Map<String, Object> map) {	
 		
@@ -68,7 +68,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	/**
-	 * 게시판 상세
+	 * 게시글 상세
 	 */
 	public BoardVO selectBoard(int board_seq) {
 		
@@ -89,4 +89,67 @@ public class BoardServiceImpl implements BoardService {
 	
 	}
 	
+	/**
+	 * 게시글 업데이트
+	 */
+	public String updateBoard(Map<String, Object> map) {
+
+		String resultCode = "0000";// 0000:정상 / 9000:에러
+		
+		try {
+
+			boardDAO.updateBoard(map);//게시글 업데이트
+			resultCode = "0000";// 0000:정상 / 9000:에러
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());
+			resultCode = "9000";// 0000:정상 / 9000:에러
+			
+		}
+		
+		return resultCode;
+	}
+	
+	/**
+	 * 게시글 삭제 (사용여부만 변경 1 -> 0) 
+	 * 1:사용중 / 0:미사용  
+	 */
+	public String deleteBoard(Map<String, Object> map) {
+		
+		String resultCode = "0000";// 0000:정상 / 9000:에러
+		
+		try {
+
+			boardDAO.deleteBoard(map);//게시글 업데이트
+			resultCode = "0000";// 0000:정상 / 9000:에러
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());
+			resultCode = "9000";// 0000:정상 / 9000:에러
+			
+		}//try
+		
+		return resultCode;
+	}
+	
+	public String insertBoard(Map<String, Object> map) {
+		
+		String resultCode = "0000";// 0000:정상 / 9000:에러
+		
+		try {
+			
+			boardDAO.insertBoard(map);//게시글 생성
+			resultCode = "0000";// 0000:정상 / 9000:에러
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());
+			resultCode = "9000";// 0000:정상 / 9000:에러
+			
+		}//try
+		
+		return resultCode;
+	}
 }
