@@ -26,23 +26,6 @@
 	<property name="suffix" value=".jsp" />
 </bean>
     
-
-<!--     예외페이지 작성
-           SimpleMappingExceptionResolver->웹상에서 에러가 발생->개발자가 작성한 예외처리
-                                                              페이지를 보여주게 설정이 가능하다.
-            <prop key="java.lang.Exception(발생한 예외처리클래스명)">예외처리페이지명</prop>                                                  
-       
-      
-    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <property name="exceptionMappings">
-            <props>
-                <prop key="java.lang.Exception">pageError</prop>
-            </props>
-        </property>
-    </bean>
-    
- -->
-    
 </beans>
 
 

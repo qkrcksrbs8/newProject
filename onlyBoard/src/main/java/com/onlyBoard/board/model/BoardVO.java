@@ -1,5 +1,7 @@
 package com.onlyBoard.board.model;
 
+import com.onlyBoard.board.dao.BoardDAO;
+
 /**
  * 게시판 VO
  *
@@ -14,6 +16,11 @@ public class BoardVO {
 	private String last_update_date;//최종수정일
 	private String last_update_by;//최종수정자
 	private int rnum;//rownum
+	
+    private final static int pageCount = 5;
+    private int blockStartNum = 0;
+    private int blockLastNum = 0;
+    private int lastPageNum = 0;
 	
 	public int getBoard_seq() {
 		return board_seq;
@@ -63,14 +70,38 @@ public class BoardVO {
 	public void setLast_update_by(String last_update_by) {
 		this.last_update_by = last_update_by;
 	}
+	public int getBlockStartNum() {
+		return blockStartNum;
+	}
+	public void setBlockStartNum(int blockStartNum) {
+		this.blockStartNum = blockStartNum;
+	}
+	public int getBlockLastNum() {
+		return blockLastNum;
+	}
+	public void setBlockLastNum(int blockLastNum) {
+		this.blockLastNum = blockLastNum;
+	}
+	public int getLastPageNum() {
+		return lastPageNum;
+	}
+	public void setLastPageNum(int lastPageNum) {
+		this.lastPageNum = lastPageNum;
+	}
+	public static int getPagecount() {
+		return pageCount;
+	}
 	
 	@Override
 	public String toString() {
 		return "BoardVO [board_seq=" + board_seq + ", board_title=" + board_title + ", board_content=" + board_content
 				+ ", created_date=" + created_date + ", created_by=" + created_by + ", last_update_date="
-				+ last_update_date + ", last_update_by=" + last_update_by + ", rnum=" + rnum + "]";
+				+ last_update_date + ", last_update_by=" + last_update_by + ", rnum=" + rnum + ", blockStartNum="
+				+ blockStartNum + ", blockLastNum=" + blockLastNum + ", lastPageNum=" + lastPageNum + "]";
 	}
+	
 
+	
 	
 
 	

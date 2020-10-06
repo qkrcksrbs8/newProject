@@ -21,9 +21,19 @@
 
 $(function(){
 	
-	$('#boardInsertBtn').on('click', function(){
+	$('#boardInsertBtn').on('click', function(){//글 작성 버튼		
+		location.href='writeBoard.do';//글 작성 페이지로 이동		
+	});
+	
+	$('#searchBtn').on('click', function(){//조회버튼		 
 		
-		location.href='writeBoard.do';
+		var keyWord = $('input[name=keyWord]').val();//검색어 value
+		var special_pattern = /[\{\}\[\]\/?;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+		
+		if( special_pattern.test(keyWord) == true ){//특수문자 사용 불가
+		    alert('특수문자는 사용할 수 없습니다.');
+		    return false;
+		}
 		
 	});
 	
@@ -43,20 +53,25 @@ button {
 	-webkit-transform:translate(0, -50%);
 } 
 
+.form-row > .col, .form-row > [class*="col-"] {
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 40px;
+}
 </style>
 
 <body>
 
 <div class="container">
 
-	<!-- 자유게시판 list header -->
-<section id="content" class="board-list-header-wrap">
-	<div class="container">
-		<h3 class="board-list-header"><i class="icon-clipboard-list" style="margin-right: 10px;"></i>게시판 목록</h3>
-	</div>
-</section>
+	<!-- 게시판 헤더 -->
+	<section id="content" class="board-list-header-wrap">
+		<div class="container">
+			<h3 class="board-list-header"><i class="icon-clipboard-list" style="margin-right: 10px;"></i>게시판 목록</h3>
+		</div>
+	</section>
 	
-	<!-- 출력할 글 데이터가 하나도 없을 때. --> 
+	<!-- 게시글 없을 때. --> 
 	<c:if test="${count==0}"> 
 		<section id="content">
 			<div class="container">
@@ -69,7 +84,7 @@ button {
 		</section>
 	</c:if>
 	
-	<!-- 출력할 글 데이터가 있을 때. --> 
+	<!-- 게시글 있을 때. --> 
 	<section id="content">
 		<div class="container">
 			<div class="board-list-wrap board-list-header">
@@ -94,7 +109,7 @@ button {
 		</div>
 	</section>	
 	
-	<!-- 자유게시판 list page paging -->
+	<!-- 게시판 페이징  -->
 	<section id="content" class="board-list-paging">
 		<div class="container">
 			<div class="row position:relative;">
@@ -102,12 +117,9 @@ button {
 					<ul class="pagination">
 						<li>
 							${pagingHtml}
-						</li> 
-						
-					</ul>		 					
-					 
-					<button id="boardInsertBtn" class="btn btn-success" >글작성</button>  
-					
+						</li> 						
+					</ul>		 									 
+					<button id="boardInsertBtn" class="btn btn-success" >글작성</button>  			
 				</div>
 			</div>
 		</div>

@@ -31,16 +31,17 @@ public class BoardController {
 	@RequestMapping(value="/boardList")
 	public ModelAndView boardList(@RequestParam(value="pageNum",defaultValue="1")int currentPage
 								, @RequestParam(value="keyField", required =false) String keyField
-								, @RequestParam(value="keyWord", required =false) String keyWord) {
+								, @RequestParam(value="keyWord", required =false) String keyWord
+								, @RequestParam(value="pagee", defaultValue="1") int pagee) {
 
 		logger.info("start");
-		
 		logger.info("keyField : "+keyField);
 		logger.info("keyWord : "+keyWord);
 		
 		List<BoardVO> boardList = new ArrayList<BoardVO>();//게시판 리스트
 		Map<String, Object> map = new HashMap<String, Object>();//페이징 map
 		map.put("keyField", keyField);//검색분야
+//		map.put("keyWord", keyWord);//검색어
 		map.put("keyWord", keyWord);//검색어
 		
 		int count = boardService.selectBoardCnt(map);//게시판 리스트 수		
@@ -54,10 +55,47 @@ public class BoardController {
 			page = new PagingUtil(keyField, keyWord, currentPage, count, 5,2, "boardList.do",null);
 		}
 		
-		map.put("start", page.getStartCount());//start->페이지당 맨 첫번째 나오는 게시물번호
-		map.put("end", page.getEndCount());//마지막게시물번호
 
+		
+		BoardVO pagingg = new BoardVO();
+		
+		int blockStartNum = pagingg.getBlockStartNum();
+		int blockLastNum = pagingg.getBlockLastNum();
+		int lastPageNum = pagingg.getLastPageNum();
+		int pageCount= pagingg.getPagecount();
+		
+		int blockNum = 0;
+
+		// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
+        blockStartNum = (pageCount * pagee) + 1;
+        blockLastNum = blockStartNum + (pageCount-1);
+		
+        // 총 페이지의 마지막 번호
+		if( count % pageCount == 0 ) {
+            lastPageNum = (int)Math.floor(count/pageCount);
+        }
+        else {
+            lastPageNum = (int)Math.floor(count/pageCount) + 1;
+        }
+		
+		if(keyWord != null) {//검색 키워드가 있을 때
+			
+			if( count % pageCount == 0 ) {
+	            lastPageNum = (int)Math.floor(count/pageCount);
+	        }else {
+	            lastPageNum = (int)Math.floor(count/pageCount) + 1;
+	        }
+			
+		}//if
+		
+		System.out.println("start : "+blockStartNum+", end : "+blockLastNum);
+		
 		if(0 < count) {
+		
+//			map.put("start", page.getStartCount());//start->페이지당 맨 첫번째 나오는 게시물번호
+//			map.put("end", page.getEndCount());//마지막게시물번호
+			map.put("start", blockStartNum);//start->페이지당 맨 첫번째 나오는 게시물번호
+			map.put("end", blockLastNum);//마지막게시물번호
 			
 			boardList = boardService.selectBoardList(map);//게시판 리스트 조회
 			
@@ -68,6 +106,11 @@ public class BoardController {
 		mav.addObject("count", count);//총레코드수
 		mav.addObject("boardList", boardList);//게시판 리스트
 		mav.addObject("pagingHtml", page.getPagingHtml());//링크문자열을 전달
+		
+		mav.addObject("blockStartNum", blockStartNum);//총레코드수
+		mav.addObject("blockLastNum", blockLastNum);//게시판 리스트
+		mav.addObject("lastPageNum", lastPageNum);//링크문자열을 전달
+		mav.addObject("keyWord", keyWord);
 		
 		logger.info(boardList.toString());
 		
@@ -86,6 +129,7 @@ public class BoardController {
 		logger.info("start");	
 		logger.info("board_seq : "+board_seq);
 		BoardVO boardList = boardService.selectBoard(board_seq);//게시판 상세 조회
+		boardList.getBoard_seq()l
 		
 		logger.info(boardList.toString());
 		
