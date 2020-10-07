@@ -19,8 +19,8 @@ public class Main {
 						,{1,2,2,2,3,3,0,0,0,5}
 						,{1,1,1,0,0,0,0,0,0,5}};
 		
-		//배열
-		System.out.println(solution.solution(board));
+		//배열 결과
+		System.out.println("제거한 블록의 수는 "+solution.solution(board)+"개 입니다.");
 		
 	}
 
