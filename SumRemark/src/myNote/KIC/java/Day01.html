@@ -1,0 +1,277 @@
+1일차(자바프로그램의 실치 및 환경설정)
+
+ java.sun.com=>오라클에서 인수=>http://www.oracle.com~
+
+ 프로그램의 설치 기준
+
+ 가능한 안정성을 기반으로하는 버전을 선택->새로운 버전X
+ =>가장 최신 버전의 아래버전을 선호(8.0버전 기준)
+
+ 새로운 버전=>개발버전=>새로운 기능을 테스트할 목적으로 개발된 버전=>버그가 있을 가능성 존재 O
+
+ ******************************************************
+ 
+ JDK(java Development Kit)=>자바 개발버전->down
+					              처음부터 코딩작성->실행까지 된
+					              버전
+
+ JRE(Java RunTime Environment)->이미 개발이 완료된 자바
+                               	프로그램을 실행시킬 수 
+                               	있는 버전(테스트버전)
+                               ->배타테스트
+                               =>테스트 목적
+                               
+ *******************************************************
+ 
+  자바 설치 과정
+
+  1.설치경로=>C:\jdk1.8\ ==>path환경변수에 등록
+                         (=>경로를 줄이기 위해서 설정)
+
+  2.JRE경로=>기본설정을 그대로 사용
+           =>자바로 개발한 프로그램이 원활하게 실행이
+                   될 수 있도록 도와주는 프로그램(=라이브러리)
+           =>라이브러리 설치경로를 지정해주는것
+             
+ *********************************************************
+ c:\jdk1.8\bin=>javac.exe=>컴파일할때 필요로하는 실행파일
+                java.exe=>실행(run)할때 필요로하는 실행파일
+                javaw.exe=>eclipse 실행할때 필요
+                ,,,
+                
+ *****************
+ 개발환경 구축하기
+ ******************
+
+ 1.자바설치=>c:\jdk1.8\에 설치->path에 등록시키기위해서
+                                짧게 부여하기위해
+
+ 2.path환경변수 설정
+
+ 3.예제 작성=>1)메모장에서 작성=>콘솔에서 실행
+   (편집기)   2)editplus에서 실행
+              3)이클립스설치 및 환경설정->실행
+
+  =>작업한 내용을 파일로 저장
+
+  notepad
+
+  자바의 문서 양식(형태)=>HelloTest.java로 저장
+                                   ======
+                          HelloTest.js
+                          HelloTest.css
+
+ 파일명 작성=>첫글자는 대문자로 중간에 글자가 변경
+              대문자로 작성.java
+
+ 
+ 자바설치=>개발?
+
+   1)응용프로그램 작성이 가능->ex)계산기,그림판,,,=>Swing
+ **2)웹프로그램 개발=>사이트 작성이 가능(JSP)=>스프링
+
+   3)안드로이드 프로그램 개발=>핸드폰에서 실행앱을 작성
+
+****************************************************
+C:\Users\kitcoop>java -version =>자바버전 확인명령어
+                      ========>옵션
+java version "1.8.0_191"
+Java(TM) SE Runtime Environment (build 1.8.0_191-b12)
+Java HotSpot(TM) 64-Bit Server VM (build 25.191-b12, mixed mode)
+
+****************************************************
+C:\Users\kitcoop>javac
+'javac'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+
+=>콘솔에서 javac명령어가 어디에 있는지 정확하게 컴퓨터가
+  못찾는 경우에 발생하는 에러메세지
+*****************************************************
+ path 환경변수에 자바의 설치경로를 등록해줘야 된다.
+
+ path 환경변수=>프로그램을 보통 설치=>설치경로를 자동으로
+                등록=>보통 바로가기 아이콘을 만들어준다
+
+ 자바는 자동으로 등록X=>수동으로 등록시켜줘야 한다.
+
+
+ path변수에 추가시킬때 앞=>.;C:\jdk1.8\bin;~
+                   ==>.현재폴더를 의미한다.
+                    
+  먼저 현재폴더 먼저 인식을 시킨후 자바경로를 인식시켜야 된다.
+                        뒤=>설치경로~;C:\jdk1.8\bin 
+                        경로1;경로2;경로3~
+    		  ; =>경로를 구분하는 인자로 사용
+==============>확인한뒤 빠져나간다.==========>
+이미 전에 열렸던 콘솔창은 종료시킨뒤 다시 실행시켜서 확인
+할것.
+
+C:\Users\kitcoop>javac
+Usage: javac <options> <source files>
+where possible options include:
+  -g                         Generate all debugging info
+  -g:none                    Generate no debugging info
+  -g:{lines,vars,source}     Generate only some debugging info
+  -nowarn                    Generate no warnings
+  -verbose                   Output messages about what the compiler is doing
+  -deprecation               Output source locations where deprecated APIs are u
+sed
+  -classpath <path>          Specify where to find user class files and annotati
+on processors
+
+=============자바개발 환경 끝=======================
+
+// 한줄 주석 ->자바의 설치 및 예제 1개
+/*
+  여러줄 주석
+
+ 자바의 기본문법
+
+ 1.확장자->~.java
+ 2.형식) 메서드명은 소문자로 시작
+         (=함수)
+
+  public class 프로그램이름(=클래스명=파일명){
+
+   public static void main(String args[]){
+       내용을 기술
+   }
+  }
+  3.대,소문자를 구분해서 작성->소문자 위주로
+                               작업
+  4.작업단위=>클래스 단위로 작업
+  5.실행하기위해서 ->main()가 반드시 필요하다.
+  6.출력=>System.out(표준출력장치)=>모니터
+          System.in(표준입력장치)=>키보드
+  7.코딩=>중간에 .을 찍어서 표현
+  8.매 문장뒤에 반드시 ; 를 줘야 된다.
+*/
+
+public class HelloTest {
+
+   public static void main(String args[]){
+      System.out.print("Java Testing!!!");
+   }
+} 
+=======================================================
+ 자바문서를 작성
+
+ 1.문자열(문법에 맞게 작성)=>Source Code(소스코드)
+                            coding(코딩)
+   HelloTest.java
+  사람작성 문자열-------------------->컴퓨터가 알아듣는말
+                    컴파일(compile)    HelloTest.class
+                      javac.exe          (클래스 파일)
+
+ 형식) javac 컴파일시킬 소스파일명.java
+
+C:\webtest\3.java>javac HelloTest.java
+
+C:\webtest\3.java>
+
+ 2.실행(Run)=>컴파일된 클래스파일들을 메모리에 올리는 작업
+              (loading)=>JVM(자바 가상 머신)이 메모리에
+                         올려서 실행(눈에 보이게 해준다)
+
+ 형식)java 실행시킬 클래스파일명.class (X)
+
+      C:\webtest\3.java>javac HelloTest.java
+
+      C:\webtest\3.java>java HelloTest.class
+
+오류: 기본 클래스 HelloTest.class을(를) 찾거나 로드할 수 없습니다.
+
+      java 실행시킬 클래스파일명 (O)
+
+C:\webtest\3.java>java HelloTest
+Java Testing!!!
+C:\webtest\3.java>
+======================================================
+
+ 편집기=>editplus => ** eclipse **
+                     =============
+도구->기본설정
+
+사용자 도구->추가->프로그램 선택
+
+메뉴제목:컴파일 or compile
+명령->javac.exe가 있는 경로를 지정
+        c:\jdk1.8\bin\javac.exe
+인수->컴파일할 파일명을 지정
+       ->파일이름지정->$(FileName)
+디렉토리->파일디렉토리 지정->$(FileDir)
+
+동작=>출력내용 캡처를 선택
+
+****************************************
+
+실행
+
+메뉴제목:실행 or rum
+명령->java.exe가 있는 경로를 지정
+        c:\jdk1.8\bin\java.exe
+*인수->실행할 클래스파일명을 지정*
+          $(FileNameNoExt)
+     ->확장자를 뺀 파일명으로 지정
+   왜->확장자가 있으면 실행이 안되기때문에
+디렉토리->파일디렉토리 지정->$(FileDir)
+
+동작=>출력내용 캡처를 선택
+================================================
+
+ *** 실무 =>Eclipse 설치 및 환경설정 ***
+
+ http://www.eclipse.org =>나중에 새로운 버전
+                         가장 최신버전을 다운로드 가능
+
+ ** eclipse 설치->실행 **
+
+1.작업영역부터 변경 =>workspace 변경
+                     file ->switch workspace ->other
+                            sou폴더생성->지정
+                          	C:\webtest\3.java\sou
+                     		=>재가동
+
+2.자바개발=>Java Project를 먼저 생성=>java perspective
+                                      (=window와 동일)
+
+     JavaStudy
+         |
+          -src=>소스파일만 저장(HelloTest2.java)
+         |
+          -bin=>컴파일된 클래스파일들만 따로 저장된
+                폴더(HelloTest2.class)
+
+  오 click=>new ->project=>java project=>JavaStudy
+                                         프로젝트 생성
+
+                src=>new =>class 선택(=>예제 작성)
+                          HelloTest3
+                          main 메서드 체크
+======================================================
+
+글꼴 설정->windows->preprience
+             General
+                  |
+                  Appearance
+                       -Colors and Fonts
+                               |
+                                -basic
+                                   Text Font
+                      (Verdana->적절한 글꼴
+                         크기(26)
+=====================================================
+패키지=>예제를 작성=>자바파일이 섞여서 관리X
+
+   따로 폴더를 하나 생성=>소스파일을 저장=>패키지를 작성
+======================================================
+
+
+
+
+
+
+
+
+
+

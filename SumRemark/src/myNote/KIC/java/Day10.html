@@ -1,0 +1,412 @@
+10일차(상속2,상속과 생성자와의 관계,super,접근지정자)
+             ====================== ===== ==========
+==========
+상담=>4:20
+==========
+
+<과제 1>
+
+j0114패키지 작성한후 아래와 같은  클래스를 작성하세요
+1.ArgTest2을 save as 해서 ArgTest5으로 저장
+ 각 세대수 별로 인원수를 체크해서 출력하는 프로그램 작성 하세요.
+ 
+ 실행결과
+ 
+10대 인원수=3명
+20대 인원수=4명
+30대 인원수=?
+40대 인원수=?
+50대 인원수=?
+
+ int cnt[]=new int[5];//cnt[0]~cnt[4] 각 세대별로 배열에 저장(검색저장할목적)
+       
+       for(int i=0;i<b.length;i++) {
+    	   if(b[i]>=10 && b[i]<=19) cnt[0]++; //10대
+    	   if(b[i]>=20 && b[i]<=29) cnt[1]++;
+    	   if(b[i]>=30 && b[i]<=39) cnt[2]++;
+    	   if(b[i]>=40 && b[i]<=49) cnt[3]++;
+    	   if(b[i]>=50 && b[i]<=59) cnt[4]++;//50대
+       }//for
+       for(int i=0;i<cnt.length;i++)
+       System.out.println((i+1)*10+"대 인원수(count)="+cnt[i]+"명");
+
+=======================================================
+**** <과제 2> ****
+
+RepeatChar.java로 저장할것.(메서드 문제)
+
+************************************************
+1.main()에서 문제 풀이
+2.메서드를 하나 작성(일반 또는 정적)
+3.패키지를 하나 생성->외부에서 메서드를 불러오기
+*************************************************
+
+ 1) 실행결과==>Scanner클래스를 사용할것.
+    일반 or 정적메서드(charPrint)를 작성해 볼것
+
+ 반복할 문자를 입력하세요? a =>"ab"
+  next()=>"a"=>'a' =>String
+
+ 반복할 횟수를 입력하세요? 4
+
+ aaaa
+
+public class RepeatChar {
+     //char ch; int n;//멤버변수->메서드에서 매개변수 X
+	public static void main(String[] args) {
+
+		char ch;	//문자하나를 저장할 변수->String에서 분리(charAt)
+		int n;		//반복할 횟수를 저장할 변수
+		
+        Scanner sc=new Scanner(System.in);	//메서드호출 next() or nextLine()
+        									//nextInt(),nextDouble()
+        									
+        System.out.println("반복할 문자를 입력?");//"a"->'a'
+        
+        String str=sc.nextLine();	//한라인 전체를 입력받을때 사용 a b c (공백포함)
+                                 	//next()->단어중심(공백포함X) a b c->a만 저장
+                                 	
+        ch=str.trim().charAt(0);//"a  "->"a"->'a'
+        //System.out.println("ch=>"+ch);
+        
+        System.out.println("반복할 숫자를 입력?");
+        n=sc.nextInt();
+        /* (1)
+        for(int i=1;i<=n;i++)
+        	System.out.print(ch);
+        */
+        /* (2)
+        RepeatChar rc=new RepeatChar();
+        rc.charPrint(ch,n);
+        */
+        //RepeatChar.charPrint(ch, n);
+        //(3) 남의 클래스의 메서드를 불러오기
+        PrintTest pt=new PrintTest();
+        pt.charPrint(ch,n);
+	}
+	//(2)메서드 작성=>charPrint
+	/*
+	 void charPrint(char ch,int n) {
+		 for(int i=1;i<=n;i++)
+	        	System.out.print(ch);
+	}*/
+}
+
+
+=========================================================
+
+ 클래스들간의 관계=>한 개 이상의 서로 관련이 있는 클래스들을
+                    연결시키는 방법(=>오라클 (조인))
+
+  ** 상속의 특징(보충) **
+
+ 1.is a 관계  ======>상속일때 사용하는 기법(논리적인 설계방법)
+   
+      p-->q (참)
+      p<---q(거짓 또는 참=>거짓으로 본다.)
+
+       특수한 경우      범용적인 경우(범위가 제일 넓다)
+  class Manager extends Employee
+         팀장             직원
+          p                 q
+
+  팀장은 그 회사의 직원이다.(참)
+  직원은 그 회사의 팀장이다.(항상 팀장은 아니다)->거짓
+********************************************************
+  
+  도서관리->도서,고객
+
+            class 도서 extends 고객 (물리적으로는 성립되지만
+                                     논리적으로 X is a관계)
+***********************************************************
+
+ 2.has a 관계
+
+** 상속과 생성자와의 관계 특징 ** =>InheriTest.java
+
+1.자바에서 클래스를 작성
+
+  java.lang.Object를 상속->클래스 작성
+            ======
+
+2.상속관계에서 자식클래스의 객체를 생성
+  ============
+  부모클래스의 생성자를 먼저 호출하고 나서
+  자식클래스의 생성자를 호출한다.
+  =>따로 따로 저장을 시키기위한 수단
+   =>생성자 호출 매카니즘
+------------------------------------
+ 상속을 배우기 전
+
+ this =>현재 생성된 객체를 가리키는 예약어
+
+ this()=>클래스의 기본생성자 호출
+--------------------------------------
+** 상속 도입 **
+
+ this=>자식클래스의 객체를 가리키는 예약어
+ super=>부모클래스의 객체를 가리키는 예약어
+
+ this()=>자식 클래스의 기본생성자 호출
+ super()=>부모 클래스의 기본생성자 호출
+ super(1)=>부모 클래스의 정수형 인수 1개짜리
+           생성자 호출
+ super("홍길동")=>부모 클래스의 문자열 인수
+                  1개짜리 생성자 호출 
+
+public String toString()
+
+Returns a string representation of the object
+      =>객체의 대표적인 문자열을 반환
+      =>객체의 주소값을 출력
+
+
+getClass().getName() + '@' + Integer.toHexString(hashCode())
+ 클래스의 이름출력+@    16진수출력(메모리에 잡힌
+                                    주소값)
+
+c.toString()=>j0114.Child@6d06d69c
+
+class Parent extends Object{ //public Object(){} //(4)
+	public Parent() {
+		super();//(3)
+		System.out.println("난 parent 기본생성자호출됨!");//(5)
+	}
+	@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return "내용을 변경하고 싶다.";
+		}
+}
+====================================================
+ SuperTest.java
+
+  super()=>생략가능->자동으로 추가
+********************************************
+ =>인수가 들어가 있는 super()는 생략불가
+ =>반드시 인수가 있는 부모클래스의 생성자를
+   호출할려면 부모클래스에 인수있는 생성자를
+   선언해야 한다.
+*********************************************
+  super(1),super("홍길동"),super(1,"홍길동")
+
+  조건에 만족하는 인수를 가진 부모클래스의 생성자가
+  존재해야 에러가 발생안된다.
+
+public class SuperTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+          C c=new C("홍길동");//1)
+	}//8)
+}
+
+class A extends Object{ //Object(){}
+	public A() {
+		super();//4)
+		System.out.println("난 A의 생성자 호출됨!");//5)
+	}
+}
+
+//B->A
+class B extends A{
+	public B() {
+		super();//
+		System.out.println("난 B의 생성자 호출됨!");//
+	}
+	//추가(인수가 있는 생성자는 반드시 선언해야 사용가능 //
+	public B(String s) {
+		super();//3)
+		System.out.println(s);//"홍길동" 6)
+	}
+	//////////////////////////////////////////
+}
+//C->B
+class C extends B{
+	public C() {
+		System.out.println("난 C의 생성자 호출됨!");
+	}
+	public C(String s) {
+		super(s);//2)super("홍길동")
+		System.out.println(s);// 7)
+	}
+}
+=================================================
+SuperTest2.java
+===============
+
+//super 키워드 사용법
+class Person{
+	String name;
+	int age=20;
+	
+	void print() {
+		System.out.println("person 메서드호출=>"+name);
+	}
+}
+
+class Man extends Person{
+	//상속을 받은 멤버변수와 같은 이름의 변수를 자식클래스에 또 선언이 가능
+	//부모클래스에서 물려받은 멤버변수=>super.멤버변수
+	int age=40;
+	/*
+	String name;
+	int age=20;
+	
+	void print() {
+		System.out.println("person 메서드호출=>"+name);
+	}
+	 */
+	
+	void print() {
+		System.out.println("자식클래스의 this.age=>"+this.age);//40
+		System.out.println("부모클래스의 super.age=>"+super.age);//20
+		//System.out.println("name의 저장된값은?"+name);
+		//자식클래스 메서드 내부에서 부모클래스의 오버라이딩 전의 메서드호출가능
+		super.print();
+	}
+}
+=======================================================
+결론) 상속관계에서 부모,자식클래스의 멤버변수와 메서드가
+      같다면 어떻게,자식,부모클래스의 구성요소인지 구분?
+
+ 멤버변수=>super.멤버변수=>부모소유, 멤버변수(자식)
+ 메서드===>super.부모메서드명(~), 메서드명(~)(자식)
+=========================================================
+ 추상화->캡슐화->다형성->배열->상속성
+======================================
+ ** 상속의 활용 **
+
+ Employee,Company =>생성자와 상속관의 관계,생성자호출유형
+                    super(),super
+
+ 1.생성자 이용
+
+public Manager(String name,int age,String sung,long salary,
+			                 String addr,String department) {
+		//자식클래스의 생성자->부모클래스의 생성자를 호출(중복된 멤버변수 소스코드)
+		super(name,age,sung,addr,salary);
+		/*
+		this.name=name;//m1.name="임시테스트";
+		this.age=age;
+		this.sung=sung;
+		this.salary=salary;
+		this.addr=addr;
+		*/
+		//추가
+		this.department=department;
+	}
+
+//오버라이딩 2
+	void display() {
+		/*
+		System.out.println("===팀장의 정보===");
+		System.out.println("이름=>"+name);
+		System.out.println("나이=>"+age);
+		System.out.println("성별=>"+sung);
+		System.out.println("주소=>"+addr);
+		System.out.println("급여=>"+salary);
+		System.out.println("보너스=>"+this.bonus());//3.0
+		*/
+		super.display();
+		//추가
+		System.out.println("담당 부서명=>"+department);
+		System.out.println("부하직원의 수=>"+sub.length);
+	}
+==========================================================
+ 접근지정자=접근 제어자(modifier)
+
+ 추상화->캡슐화->다형성->배열->상속성(객체 배열)
+         =====p348
+
+          1.private
+          2.public
+          ===========>상속과 연관(p348)
+          3.default권한자
+          4.protected 권한자
+
+===========================================
+접근지정자->작성한 클래스=>패키지를 이용=>외부에서 필요로하는
+                                         클래스를 불러올때
+                                         사용하는 지정자
+
+1.private 접근지정자->같은 패키지에서는 접근X
+                      다른 패키지에서는 접근X
+                      ===============================
+                      자기 클래스 내부에서만 접근 O
+                      ===============================
+  A.java, B.java,C.java
+
+=======================================================
+  A <=====B 에 접근? =>A 클래스의 멤버변수(값 저장)
+                       A  클래스의 메서드를 호출하기 위해서
+
+package j0114.test;
+
+//자기 클래스내부에서만 사용만 한다면 접근지정자가 의미X
+//다 접근이 가능하기때문에  외부(자기패키지,남의 패키지 모두 포함)
+
+public class A {
+
+	//--------------------------------------------
+	private int i=10;//1.멤버변수앞에 private
+	
+	private void print() { //2.메서드명 앞에 private=>외부에서 절대 호출불가
+		System.out.println("private i=>"+i);
+	}
+	//----------------------------------------------
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+         A a=new A();
+         a.i=20;
+         a.print();
+	}
+}
+
+============================================================
+ B.java
+
+package j0114.test; //자기 패키지에 있다할지라도
+
+public class B {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+         A a=new A();
+         a.i=20;//a.setI(20);
+         a.print();
+	}
+}
+===================================================
+C.java
+
+package j0114.test2; //다른 패키지에 있다할지라도
+
+//외부패키지->어디에 있는 패키지에 있는 클래스를 불러오는지
+//알려줘야 된다.
+import j0114.test.*;//A.java, B.java
+
+public class C {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+         A a=new A();
+         a.i=20;//a.setI(20); private때문에 자기 클래스만 허용
+         a.print();
+	}
+}
+
+
+
+내일 예습->static,final 예약어,abstract 예약어
+                 추상클래스(p375),추상메서드(p376)?
+                 Interface 개요? 상속,다중상속(p385)
+                **메서드 작성방법(p264 참조형 매개변수)
+                                 p268 참조형 반환타입)**
+                 =>call By Reference(참조에 의한 호출방법)
+                 =>자바에서 객체를 생성하는 방법 3가지
+
+
+
+

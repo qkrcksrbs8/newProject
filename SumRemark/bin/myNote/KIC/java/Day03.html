@@ -1,0 +1,236 @@
+3일차(연산자2,형변환,제어문1)
+
+관계,논리연산자=>제어문=>문제 풀때=>1.조건식=>유형
+				    p89 표 3-2
+				     ** 3,4유형 **
+
+관계(=대소관계)-> >.>=,<,<=,!=(같지않다),==
+			      =========
+
+  ==(비교)
+    int x=3
+    int y=3;
+
+1)변수에 들어가 있는 값이 같은지 확인=>if (x==y)
+				      if (x!=y)
+
+2)참조형(=클래스형)=>주소(=저장위치)를 비교
+              사람) 시 구,읍면동(저장 위치)중요 
+================================================
+
+   ex) if (ex!=3)
+
+논리연산자->참과 거짓을 판별
+
+
+ &,|,^,&&,||,!(Not) =>p114
+       =======책
+
+ &&,&(and), ||,|(or),^(XOR)=>배타적인 결합
+  그리고     또는     T    T -> T 두 항이 같으면 거짓 F
+                      F    F -> T
+				  다르면 참
+                              (T  F) or (F  T)=T
+  T  T ->T  T  T ->T
+            T  F ->T
+            F  T ->T
+            F  F ->F
+
+  (2>3) && (5<7) &&,|| =>조건평가
+  =====          첫항의 결과에 따라서 두번째항을
+		 계산할 수도 안할수도 있는 방식 
+   항
+    F        T   => F
+             F   => F
+    T        T   => T
+    T        F   => F
+
+  (2>3) & (5<7) &,| =>모두평가
+		   첫항의 결과와 상관없이 무조건
+                   두번째항을 계산하는 방식
+  
+  ** 요즘=>구분하지 않고 사용한다.**
+
+public static void main(String[] args) {
+		
+		System.out.println("대입,삼항연산자");
+		int a=5,b=7,x=10,y=-10; //byte,shot,int,long=> 정수값 저장->int(계산)
+		//삼항연산자=>변수명=(조건식)? 참인값:거짓인값
+		int absX=(x>0)? x:-x;//10 -> 10,  -10 -> -(-10) = 10 => if문으로 변경
+		int absY=(y>=0)? y:-y;
+		System.out.println("x=10일때 ,x의 절대값="+absX);
+		System.out.println("y=-10일때 y의 절대값="+absY);
+		System.out.println("===================");
+		//a=a+1 => a++, b = b - 1 -> b--
+		//a=a+b => a+=b; +=,-=,*=,/=(실행속도가 빠르다)동시
+		a+=b;//a=a+b; a = 5 + 7
+		System.out.println("a="+a);//12
+		
+		//a=a-b
+		a-=b;//a=a+b; a = 5 + 7
+		System.out.println("a="+a);//5
+		
+		//a=a*b
+		a*=b;//a=a*b; a = 5 * 7
+		System.out.println("a="+a);//35
+		
+		//a=a/b
+		a/=b;//a=a/b; a = 35 / 7
+		System.out.println("a="+a);//5
+		
+		//a=a%b -> 나머지
+		a%=b;//a=a&%; a = 5 % 7
+		System.out.println("a="+a);//5
+	}
+===========================================================================
+  **************************시험나올듯**************
+ **형변환=>연산중간에 형이 변환이 되는 경우 =>객체형변환(Swing)
+
+1.자동형변환(=묵시적인 형변환) 1)값을 저장
+                              2)연산할때 바뀌는 경우
+
+ 소------------------------------------------->대
+ byte->short -> int -> long -> float -> double
+       char
+
+ 소<-------------------------------------------대
+                          float f=3.5;
+
+ boolean은 형변환X
+
+2.강제형변환(=명시적인 형변환)
+
+ =>명확하게 형변환을 표시해줘야 된다.(자료형)변수명
+
+ ex) float f=(float)3.5;
+             ========변환할 자료형
+
+****************************************************
+
+System.out.println("자동 형변환");
+	//1.적은데이터가 큰 데이터공간에 저장 -> 자동으로 형변환
+	short s=12;// 00000000 00001100
+	int n=s;//2btye -> 4byte 00000000 00000000 00000000 00001100
+		
+	//2.계산중간에 자료형이 변환
+	char c='A';//65
+	//소 + 대 => 소 -> 대로 자동으로 변환
+	int n2=c+1;//char(2btye)+int(4byte) -> int(65) + int(1)=66
+	System.out.println("n2=>"+n2);
+	System.out.println("(char)n2=>"+(char)n2);//명시적인 형변환
+	//명시적인 형변환 -> 단점 => 데이터 손실이 일어날 수 있다.
+	int su=(int)3.5;
+	System.out.println("su=>"+su);
+		
+	int x=123;
+	//연산을 기본으로 자동형변환 int -> int을 벗어나는 자료형은 그때 계산달라짐
+	float y=x+123.3f; //int+float => float -> 123.0f+12.3f
+	System.out.println("y=>"+y);//123.3f
+	System.out.println("강제형변환 주의할점");
+	byte s2=12; short s3=45;
+	int re=s2+s3;//기본연산자료형 -> int
+	short re2=(short)(s2+s3);//수식값의 경우에는 ( )로 묶어줄것.
+	System.out.println("re=>"+re);
+	System.out.println("re2=>"+re2);
+
+==============================================================================
+ 종합문제
+int num1=20,num2=30;
+	    //printf(출력양식 ,, 출력할대상자) -> %d(정수값),%c(문자),%s(문자열),%f(소수점)
+		System.out.printf("첫번째 숫자는=%d두번째 숫자는=%d입니다.",num1,num2);
+		System.out.println();//줄바꿈 역할
+		System.out.print('\n');//특수기호를 출력
+		System.out.println("첫번째 숫자는="+num1+",두번째 숫자="+num2);
+		//형변환
+		char ch='A';//char(0~65565) -> int(-21 ~ +21)으로 자동형변환?=>예외조항
+		System.out.printf("문자 %c의 유니코드값은 %d\n",ch,(int)ch);
+		//-------------------------------------------
+		int ch2=ch;//char -> int 으로 변환
+		System.out.println("ch2=>"+ch2);//65
+		//종합문제
+		//총점
+		int java=90,jsp=85,oracle=70;
+		int sum=java+jsp+oracle;
+		System.out.printf("sum=%d입니다.",sum);
+		//평균
+		int avg=sum/3;
+		double avg2=sum/3;//81.0
+		//소수점이 나오는 계산 => 정밀한 값 그대로 저장 -> double형으로 형변환
+		double avg3=(double)sum/3;
+		System.out.printf("avg="+avg+"avg2="+avg2);//81
+		System.out.println("avg3="+avg3);
+		//형식)=>%f -> %.소수점자리수f-> %.2f
+		System.out.printf("평균(avg3):%.2f",avg3);
+	}
+
+
+====================================================================
+ 문장
+
+ ** 1.제어문=>조건에 따라서 실행될 수도 실행되지않을 수도 있는 구문
+
+ 2.순차문=>써진 순서대로 실행이 된 구문
+
+          int su=3;
+          System.out.println(su);
+
+
+  ** 제어문의 종류 **
+
+*** 1.조건문(=분기문)=>if문 ->조건에 따라서 참 or 거짓
+   IFTest.java
+
+    /* if (조건식)
+         *    참인값
+         *  else
+         *    거짓인값
+         */
+
+public class IFTest2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("if문(조건문)");
+		int su = 30;// 사용자로부터 값을 입력->Scanner를 사용X->6장에서 배움
+		// 조건1) su=>1~100까지의 범위에 들어가는 경우->짝수,홀수 계산
+		// 조건2) su=>1~100까지의 범위에 들어가지 않으면->su값은 1~100까지만입력
+		// su(1~100)
+		if ((su >= 1) && (su <= 100)) {
+			if (su % 2 == 0) { // 하나의 조건식->처리해야할 내용 1개이상->{ }
+				System.out.println(su + "은 짝수입니다.");
+			} else {// su%2==1 인경우
+				System.out.println(su + "은 홀수입니다.");
+			}
+		} else { // su(1~100가 아닌경우)
+			System.out.println("su값은 1~100까지의 값만 입력이 가능합니다.");
+		}
+	}
+}
+
+
+    2.선택문->Switch ~case문(추가된 문법)=>다중 if문 대신사용
+
+      if(조건식)  =============>switch(조건식){ //1)숫자만 나올 수있도록
+                                                     설계->문자도 가능
+         참인값;              case 값://2) 범위를 지정할 수가 없다.
+                                      실행문
+      else if(조건식2)                break; //3)원하는 문장만 실행
+         참인값               case 값2:
+                                      실행문
+      else if(조건식3)                break;
+         참인값               
+                              default: 위의 조건식에 해당X =>생략이 가능
+                                       실행문
+      else if(조건식3)                break;
+      ,,,                    }
+      else
+         거짓인값=>p142 
+=======================================>속도 느려짐
+  =>SwitchTest.java
+
+*** 3.반복문->특정조건에 따라서 반복해서 처리->** for,while,do~while문
+    4.탈출문->continue,break,return(추가)
+                             ======
+========================================================================
+
+

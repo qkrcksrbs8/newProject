@@ -1,0 +1,173 @@
+6일차(추상화 정리 및 캡슐화의 개요 및 작성법,생성자)
+
+ 추상화->캡슐화->다형성->배열=>상속성 ===>클래스 만들고 알고
+ ======  ======                           메서드 구현
+ 클래스의
+ 구조(멤버변수,메서드)  
+ ====================      
+
+ ** 메서드의 종류 **
+
+1.매개변수 X,반환값 X
+2.매개변수 O,반환값 X ->입력->계산,출력,저장
+============================================
+3.매개변수 O,반환값 O ->주로 계산 (웹프로그래밍)
+=================================================
+
+  직사각형의 면적? =>RectHandling.java
+  삼각형의 면적?=>Triangle
+  원의 면적?=>Circle
+
+class Rect {
+	int x,y;//가로,세로
+	//계산을 해주는 메서드 작성->매개변수 O , 반환값 O
+	int area(int a,int b) {
+		/*
+		 * int result=a*b; //30*40
+		 *  return result;
+		 */ //return O (형식) return 수식 or 변수
+		return (a*b);
+	}
+	//매개변수 O, 반환값 X ->계산이 된다.
+	void area2(int a,int b) {
+		System.out.println("a*b=>"+(a*b));
+	}
+	//매개변수 X ,반환값 X ->단순,반복->예외 적인 (계산)
+	void area3() {
+		System.out.println("멤버변수값을 가지고 계산=>"+(x*y));
+	}
+}
+
+public class RectHandling {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        Rect r=new Rect();
+        //값을 저장
+        r.x=10; r.y=20;
+        r.area3();
+        //매개변수 O, 반환값 O
+        int reply=r.area(30, 40); //반환받을 변수명=호출할 메서드명(매개변수~)
+        System.out.println("계산받은결과값(reply)=>"+reply);
+        System.out.println("====================");
+        System.out.println("r.area(30, 40)=>"+r.area(30, 40));//직접받아서 출력
+	}
+}
+==============================================================
+ ** 캡슐화(p245) ** =>웹상에서 캡슐화를 적용하는 예
+
+                      빈즈클래스=DTO(Data Transfer Object)
+                      웹상에서 불러다 사용하는 클래스
+ ===========================================================
+ ** 캡슐화의 개요 **
+
+ =>데이터를 보호,은닉하는 목적=>오라클의 제약조건과 의미가 비슷
+ =>올바른 값만 저장하는 방법을 배우자
+
+** 목적 **
+
+1.외부로 부터 데이터(멤버변수에 저장된 값)를 보호하기 위해서
+2.외부로 부터 데이터를 은닉(감추기)하기위해서 
+  =>데이터를 저장시킬때 올바른 값만 입력을 받기위해서 사용하는
+    기법을 말한다.(=>참조 무결성 강화규칙)
+
+
+ ** 캡슐화를 적용시키는 방법 **
+
+1.모든 멤버변수 앞에 private를 붙이면 엉터리값의 저장을 막을 수
+  있다.(외부로부터의 값을 저장시키는 방법을 차단시킨다.)
+
+//1.객체의 공통적인 속성
+
+(or 특성)
+	private String name;//차이름
+        =======
+	private int output;//배기량
+	private int year;//년식
+	private String color;//차의 색깔
+	//상태
+	private int current_speed;//속도
+	private boolean sidong=false;//차의 시동유무
+
+2)따로 멤버변수에 접근해서 데이터를 저장,조회해 줄 수 있는
+  메서드를 작성한다.(Setter Method(저장목적),Getter Method(출력))
+
+  1.Setter Method 형식(저장)=>매개변수 O ,반환값 X
+
+  public  void setXXX(자료형 매개변수명){
+  ======
+  누구나      멤버변수=매개변수;
+          }
+  멤버변수에 접근이 가능
+
+  2.Getter Method=>저장된 멤버변수의 값을 불러올때 
+                 =>매개변수 X ,반환값 O
+  
+  =>public 반환값자료형     getXXXX(){
+         (=멤버변수의 자료형)
+      return 멤버변수;
+   }
+//----------------------------------------------------
+
+public void setName(String n) {
+		name=n;//멤버변수=매개변수
+	}
+	
+	public void setOutput(int o) {
+		output=o;
+	}
+
+,,,
+============================================
+//Getter String name
+	public  String getName() {return name;}
+	public  int getOutput() {return output;}
+	public  int getYear() { return year;}
+	public String getColor() {return color;}
+	public int getCurrent_speed() {return current_speed;}
+	public boolean getSidong() { return sidong;}
+
+===============================================================
+//음수X, 양수도 어느정도 값의 범위만 허락
+	public void setOutput(int ou) {
+		//올바른 값인지를 체크구문=>제어문
+		if(ou <=0 || ou >=1500) {
+			System.out.println("입력받은 값은 음수를 입력할 수 없다.");
+			output=1000;
+			return;//프로그램 종료할때 사용
+		}
+		output=ou;//output=1000;
+	}
+	//음수입력하거나 양수(2019이상 크면 안된다.)
+	public void setYear(int y) {
+		if(y <0 || y>2019) {
+			System.out.println("년도는 음수이거나 2019이상을 입력불가!!!");
+			//멤버변수에 기본적인 올바른 값을 저장할 수 있도록 코딩
+			year=2019;
+		}else {
+		    year=y; //year=2019
+		}
+	}
+	
+
+void speedUp(int speed) { //매개변수=>메서드가 처리해야할 값
+	  if(sidong) { //if (sidong==true) {//1.시동유무
+		  //2.음수이거나 양수->170km인지 아닌지 체크
+		if ((speed < 0) || (current_speed+speed>=170)) {
+		    System.out.println("속도는 음수이거나 170km이상은 불가능합니다.");
+		    current_speed=120;
+		    return;
+		}else { //양수이거나 170km미만일때 증가
+			current_speed+=speed;//current_speed=current_speed+speed;
+			System.out.println(speed+"km만큼 속도가 증가되었습니다.");
+		}
+	  }else { //sidong==false
+		  System.out.println("먼저 시동을 걸어야 속도를 증가시킬 수 있습니다.");
+	  }
+	}
+=============================================================
+ 객체=참조변수=레퍼런스변수=포인터변수(변수 안에 주소값이 들어있다.
+      reverence                                =======-
+				               살고있는 위치
+					       ==============
+                                               공간개념
