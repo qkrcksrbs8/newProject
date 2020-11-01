@@ -1,0 +1,321 @@
+11일차(static,final,추상클래스)
+
+**********************************
+과제 풀이
+
+1.사용자로부터 값을 입력받아 처리하는 Scanner객체를 통해서 
+2진수,8진수,16진수를 출력하는 프로그램을 작성하시오.(추가)
+추가2(정적,일반메서드 작성),추가3 (외부패키지 불러오기)
+  (ThreeTest.java를 편집해서 ThreeTest2.java로 저장)
+
+ex)
+       int a=12;
+       int b=4;
+       int c=19; 
+       입력한다고 가정하면
+
+최대값(max)=>19
+19의 2진수는 10011
+19의 8진수는 23
+19의 16진수는 13
+
+//정적->자주 사용이 되거나 보편적인 기능을 가진 메서드를 작성
+	public static void getMaxPrint(int a,int b,int c) {  //j0115.sub->SuTest
+		int max;//최대값을 저장
+        //두개의 값을 비교->큰값을 선택->나머지값으로 비교->최종 큰값
+        max=(a>b)? a:b; //(12>4)?12:4
+        max=(max > c)?max:c; //(12 > 19)?12:19
+        System.out.println("최대값(max)=>"+max);
+        //2진수,8진수,16진수 구하기
+        System.out.println(max+"의 2진수는"+Integer.toBinaryString(max));
+        System.out.println(max+"의 8진수는"+Integer.toOctalString(max));
+        System.out.println(max+"의 16진수는"+Integer.toHexString(max));
+	}
+
+
+*****************************************************
+
+접근지정자->작성한 클래스=>패키지를 이용->외부에서 필요하는  클래스
+                                    불러올때 제어하기위해
+                                    필요로하는 지정자
+
+  ** 멤버변수,메서드에 부여 **
+ 
+
+1.private 접근지정자=>           같은 패키지에서는 접근X
+                                 다른 패키지에서도 접근X
+                                 자기 클래스내에서만 접근 O
+   A.java, B.java,C.java
+******************************************************************
+  A <-----B에 접근허용=>A클래스의 멤버변수,메서드를 호출하기위해서
+*******************************************************************
+
+  (package 접근지정자(옛날책))
+
+2.(default) 접근지정자=>1)같은 패키지에 있는 클래스들끼리 접근 O
+                        2)다른 패키지에 있는 클래스들끼리 접근X
+                        3)자기 클래스내에서도 접근 O (private)
+                        4)다른 패키지에 있는 상속받은 자식클래스의
+                          객체를 통해서도 접근이 불가능
+
+     멤버변수,메서드 앞에 아무것도 접근지정자를 쓰지 않는 경우(default 권한)
+
+ private < default < protected < public 
+=================================
+
+3.protected 접근지정자=>1)같은 패키지에 있는 클래스들끼리 접근 O
+                        2)다른 패키지에 있는 클래스들끼리 접근X
+                        3)자기 클래스내에서도 접근 O (private)
+                            ===>default권한과 동일하다.=====
+                       **4)다른 패키지에 있는 상속받은 자식클래스의
+                            객체를 통해서도 접근이 가능 O
+                            ->차이점(default 접근지정자)**
+                         =>예외)public 접근지정자와 연관이 있다.
+                                      ========================
+
+4.public 접근지정자=>1)같은 클래스 내부 접근 O
+                     2)같은 패키지 내에서 접근 O
+                     3)다른 패키지 내에서 접근제한이 없이 다 가능
+                     4)상속도 OK
+
+  A,  B
+======================================
+ 접근지정자=>멤버변수,메서드만 생각
+
+ public class A=>A.java
+        class A=>A.java
+------------------------------
+****주의할점 **********************************************
+ public class 로 클래스를 작성=>외부 패키지에서 접근이 가능
+        class 로 클래스를 작성=>내부 패키지에서 접근이 가능
+                                외부 패키지 접근불가
+***********************************************************
+public class 
+       public 멤버변수
+       public 메서드
+============================>100% 접근가능
+
+p264 참조형 매개변수=>객체
+p268 참조형 반환타입=>객체
+
+
+기본형 자료형->8가지
+
+참조형 자료형->1.클래스형(=참조형)->모든  클래스
+               2.배열형->객체로 취급
+               3.인터페이스형
+
+
+** 객체를 생성하는 방법(=얻어오는 방법) **
+
+1.new 연산자를 통해서 얻어오기 =>Car sonata=new Car(),,,
+
+**********************************************************
+2.메서드의 매개변수를 통해서 얻어오는 방법=>참조형 매개변수
+
+  API문서 기준
+
+=====>매개변수 첫번째 String 객체 하나 넣어달라
+==>매개변수명은 아무거나 쓰면 된다.
+format(String format, Object... args) 
+           ------              -------
+ 링크걸린 자료형->callByReference->객체전달 표시
+
+ 링크X    자료형->기본자료형(callByValue)
+                  (예외 배열형태의 기본자료형
+                   ->callByReference->객체전달 표시)
+
+3.메서드의 반환형을 통해서 얻어오는 방법=>참조형 반환타입
+
+ getRuntime() 
+***********************************************************
+  
+   call By Reference(주소에 의한 전달방법)
+   call By Value(값에 의한 전달방법)
+
+   CallByValue.java
+
+//매개변수를 전달(기본자료형(8가지)-->call By Value(값에 의한 전달방법)
+//main(원본)--->change_color(복사본값->변경)=>원본값은 변하지 않는다.
+public class CallByValue {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        int r=-1,g=-1,b=-1;//rgb(0~255)숫자로 표현
+        System.out.println("before:red="+r+",green="+g+",blue="+b);
+        //r,g,b값을 변경
+        change_color(r,g,b);
+        System.out.println("after:red="+r+",green="+g+",blue="+b);
+	}
+
+	//색깔을 변경시켜주는 메서드=>매개변수 O ,반환값  X
+	static void change_color(int r,int g,int b) {  //0~255
+		r+=10;//r=r+10; r->9
+		g+=50;//g=g+50 g->49
+		b+=100;//b=b+100 b=>99
+		System.out.println("메서드 내부의 r="+r+",g="+g+",b="+b);
+	}
+}
+=====================================================================
+ CallByValue.java save as CallByRef
+
+//main(원본)--->change_color(원본)=>원본값은 변경
+class RGBColor{
+	int r,g,b;//0,0,0
+	
+	RGBColor(int r,int g,int b){
+		this.r=r;//color.r=-1;
+		this.g=g;//color.g=-1;
+		this.b=b;//color.b=-1
+	}
+}
+
+public class CallByRef {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		RGBColor color=new RGBColor(-1,-1,-1);
+		System.out.println("color=>"+color);
+       
+        System.out.println("before:red="+color.r+",green="+color.g+",blue="+color.b);
+        //r,g,b값을 변경
+        change_color(color);
+        System.out.println("after:red="+color.r+",green="+color.g+",blue="+color.b);
+	}
+
+	//색깔을 변경시켜주는 메서드=>매개변수 O ,반환값  X
+	static void change_color(RGBColor color1) {  //클래스명 객체명
+		System.out.println("color1="+color1);
+		color1.r+=10;//r=r+10; r->9
+		color1.g+=50;//g=g+50 g->49
+		color1.b+=100;//b=b+100 b=>99
+		System.out.println
+		 ("메서드 내부의 r="+color1.r+",g="+color1.g+",b="+color1.b);
+	}
+====================================================================
+
+//Runtime r=new Runtime();
+		Runtime r=Runtime.getRuntime();//클래스명.정적메서드명()
+		byte test[]=new byte[1024];
+		test[1]=20; test[2]=34;//,,,
+		System.out.println("test=>"+test);
+		System.out.println
+		("사용메모리양=>"+(r.totalMemory()-r.freeMemory())/1024+"K");
+		//자바의 특징->불필요로하는 메모리가 발생=>자동으로 메모리해제
+		test=null;
+		//수동으로 메모리를 제거->System.gc()
+		System.gc();
+		System.out.println
+		("gc사용후 메모리양=>"+(r.totalMemory()-r.freeMemory())/1024+"K");
+
+====================================================================
+Static,Final,추상메서드,추상클래스,,,
+
+  CarFactory.java 저장
+
+ =>FinalTest.java
+======================
+   Final->추상메서드->추상클래스
+
+  final 클래스명 =>모든 메서드 오버라이딩 금지
+  final 메서드 =>메서드의 오버라이딩 금지
+
+  class Test {
+
+     30개->final 붙이면->수정X =>불러다 사용
+  }
+
+  final class Test { =>상속금지 X =>불러다 사용
+  ===== 
+  }
+
+//3.final class 클래스명->상속금지 클래스->허용X=>중요한 클래스(ex System)
+final class Parent {
+	//1.final +멤버변수 또는 지역변수=>상수화가 된다.(고정)=>전부 대문자쓴다.
+	//public static final Color black =>정적상수변수
+	final int COUNT=1;
+	
+	//2.final 메서드->상속은 허용해주지만 오버라이딩(=재정의) 금지 메서드
+	final void sub() {
+		System.out.println("재정의 금지 메서드");
+	}
+	//public int max(int a,int b){}
+}
+========================================================
+ ** 추상메서드 **
+
+
+  ** 메서드의 종류(객체 생성 유무) **
+
+  1.일반메서드->객체생성->호출가능
+  2.정적메서드->객체생성X ->호출이 가능
+  3.추상메서드--->1)메서드의 선언만 되어있는 메서드
+
+                    public abstract void go();  //1) ~메서드명();
+                           ========
+                    abstract public void go(){} //2) ->기능이 없는것
+                    ========                           일반메서드
+                  2)추상메서드를 구분 앞에 abstract 예약어를 써준다.
+                  3)추상메서드를 한개라도 가지고 있는 클래스
+                     =>추상클래스=>일반클래스와 구분 abstract class
+
+  
+========================================================
+  ** 메서드의 종류(기능) **
+
+1.매개변수 X  ,반환형 X
+2.매개변수 O  ,반환형 X
+3.매개변수 O  ,반환형 O
+
+
+    ** 추상클래스(p375) 특성 **
+
+ 1) 추상클래스->클래스 내부에 추상메서드가 한개라도 존재->추상클래스
+               ex) abstract class 추상클래스명
+
+**2) 추상클래스를 상속받은 자식클래스는 무조건 추상메서드를 반드시
+   오버라이딩을 해야 된다는 규칙<->final 메서드(강압,강제 성격)
+
+**3)객체를 생성할 수 가 없다.<->일반 클래스 (객체 생성 O)
+  4)사용목적:설계 목적
+=================================================================
+  =>Test.java
+
+  **메서드의 호출유형**
+
+1.정적메서드(main)->일반메서드->객체생성->객체명.일반메서드(~)
+       정적메서드 내부에서 일반메서드를 참조할 수 없다.
+       ->객체없이는 호출X
+
+2.일반메서드->일반메서드->객체명을 생략->this.일반메서드명(~)
+
+3.정적메서드->정적메서드를 호출=>클래스명.정적메서드명(~)
+                                클래스명을 생략->정적메서드명(~)
+
+4.생성자->다른 생성자호출=>this(매개변수~);
+
+
+================================================================
+  
+ p265 예제 =>setScan(Scanner sc)
+ p268 예제 =>Scanner getScan()
+
+  이해====>Scanner sc=new Scanner(System.in); //ThreeTest.java
+                                                ThreeScan.java
+
+           Scanner클래스 객체를 얻어오는 메서드를 작성
+
+
+
+
+  객체를 얻어오는 방법 3가지
+
+  내일 예습(p381)
+
+    ** 인터페이스  =>클래스 설계,스프링
+    그래픽=>AWT,Swing
+    ***********************************
+
+
+
+

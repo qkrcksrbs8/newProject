@@ -1,0 +1,328 @@
+16일차(입출력2,자바의 컬렉션의 구조 및 작성법)
+
+조건1:GuGuDan.java로 저장->j022패키지
+조건2: 계속 반복해서 입력받을것.(무한루프 이용)
+       빠져나갈 조건->q or Q을 입력받을때 사용
+
+        nextInt(), next() =>순차적으로 입력 받을때 사용
+
+ <실행결과>
+ 출력할 단을 입력하세요?2  =>동시->nextLine()->"2"=>2        
+ ==구 구 단===                     Integer.parseInt()
+     2단
+  2*1=2
+  2*2=4
+  ...
+  2*9=18
+
+ 출력할 단을 입력하세요?
+while(true) { //for(;;){
+    	   int i=1;//1~9(열을 저장)
+    	   System.out.println("몇단?");
+    	   Scanner sc=new Scanner(System.in);
+    	   String str=sc.nextLine();//동시에 2개를 다 받을 수 있도록 next()
+    	   if(str.equals("q") || str.equals("Q"))
+    		   System.exit(0); //프로그램 종료
+    	   int j=Integer.parseInt(str); //"2"->2
+    	   //추가
+    	   if(j<=0 || j>9) {
+    		   System.out.println("단은 음수이거나 9단이상 입력불가");
+    		   return;
+    	   }
+    	   System.out.println("===구구단===");
+    	   System.out.println("=="+j+"단==");
+    	   while (i<=9) {
+    		   System.out.println(j+"*"+i+"="+(j*i));
+    		   i++;
+    	   }
+       }//while
+	}
+=================================================
+조건1 InputTest.java로 저장할것.
+조건2 gradePrint메서드 사용할것
+      setScan,getScan메서드 이용할것.(Scanner객체를 이용)
+      
+ 실행결과
+
+ 이름? 홍길동
+ 국어? 40
+
+ 홍길동의 등급은 가 입니다.->gradePrint메서드(점수에 따라 수,우,미,양,가)
+
+public static void main(String[] args) {
+		// TODO Auto-generated method stub
+         //Scanner sc=new Scanner(System.in);
+		 InputTest it=new InputTest(); //객체를 얻어오는 방법1 new
+		 Scanner sc=it.getScan();
+		 it.setScan(sc);
+	}
+	//입력을 받아서 처리
+	public void setScan(Scanner sc) {//2.메서드의 매개변수 2번째
+		System.out.println("이름?");
+		String name=sc.next();
+		System.out.println("국어?");
+		int kor=sc.nextInt();
+		//this로 구분
+		this.gradePrint(name, kor);
+	}
+	
+	public Scanner getScan() { //3.메서드의 반환형을 통해서 객체 얻어오기
+	   return 	new Scanner(System.in);
+	}
+	
+	public void gradePrint(String name,int kor) { //(int kor,String name)
+		String grade;//등급
+		if(kor >=90) grade="수";
+		else if(kor>=80) grade="우";
+		else if(kor>=70) grade="미";
+		else if(kor>=60) grade="양";
+		else grade="가";
+		System.out.println(name+"님의 등급은"+grade+"입니다.");
+	}
+=================================================================
+Object source=e.getSource();
+		if(source==tf) {//이벤트를 발생시킨 컴포넌트가 tf가 맞다면
+			//불러올 파일명 확인
+			String fileName=tf.getText();
+			System.out.println("fileName="+fileName);
+			tf.setText("");//전에 입력한 파일명을 제거->다시 다른 파일을 불러오기
+			File f=new File(fileName);//f.length() 불러오는 파일의 양을 측정하기위해
+			try {
+				System.out.println("파일의 길이(length)=>"+f.length());
+				int readByte=0;//파일의 내용을 읽어들임(byte[])
+				FileInputStream fis=new FileInputStream(f);
+				byte input[]=new byte[(int)f.length()];
+				//while(!eof)->end of file
+				while((readByte=fis.read(input))!=-1) {
+					//byte input[]->TextArea에 출력(String)
+					String s=new String(input);
+					ta.append(s);//TextArea에 출력
+					System.out.println(s);//콘솔에도 출력
+				}
+				fis.close();//메모리 해제
+			}catch(Exception e2) {
+				System.out.println("경로명 및 파일명을 다시 확인해주세요!!");
+			}
+		}
+==============================================================
+
+문자열로 만 저장(한글데이터)->FileWriter
+--------------------------------------------
+사람이름->문자열,나이,급여->숫자
+->자바의 기본자료형에 맞게 입력받은 값을 파일로 저장
+
+    ---DataOutputStream--FileWriter or FileOutputStream
+       ====
+        =>write자료형(자료형에 맞는값)
+          ex)writeBoolean(true),writeChar('a');~
+
+        DataInputStream->파일로 저장된 데이터(나이(int)
+        ===                                                         급여(double))
+        read자료형()
+         ->readBoolean(),readChar()~
+-------------------------------------------------------------------
+     DataOutTest.java=>Save as DataOutTest2.java
+
+**********************************************************
+     byte []-->String =>생성자를 이용
+     String ->byte[]로 변환시키는 메서드? str.getBytes()
+***********************************************************                                                       
+
+  ** 입력을 받아 저장(입출력 60~70개)**
+
+    ->1.자료형 상관없이 문자열 저장->FileOutputStream,FileWriter(한글)
+
+    ->2.자료형에 맞게 저장->DataInputStream,DataOutputStream->파일저장
+          (멤버변수명 or 지역변수)
+
+    ->3.Person (name,age,addr,sal,,,)->1사람의 정보=>객체를 저장,불러오기
+           ObjectInputStream,ObjectOutputStream->파일저장
+           ======                    ====>writeObject(저장시킬 객체명)
+           readObject()==>객체직렬화(Spring)와 연결
+
+       직렬화->메모리상의 저장된 객체=ObjectOutputStream==>파일로 저장
+                                                               냉동
+                   메모리상의 저장된 객체 <---ObjectInputStream--------파일
+                                                       역직렬화
+
+             네트워크로 전송도 가능
+---------------------------------------------------------------------------------
+ObjectTest.java
+
+** 인터페이스 종류 **
+
+1.직렬화목적으로 만들어진 인터페이스
+   ->추상메서드가 없다.(설계목적X)
+   ->Marker Interface(마커 인터페이스)
+
+2.설계목적으로 만들어진 인터페이스=>통일성,강제성을 부여
+    ->추상메서드가 있다.
+
+3.ActionListener~(이벤트처리 목적)
+
+//조건)객체를 파일로 저장->USB->네트워크로 전송(파일 첨부)=>스프링
+/*
+ * 직렬화가 가능한 클래스->객체를 파일로 저장할때 올바르게 저장될 수 있도록
+ *                                      만들어진 클래스
+ *     직렬화->메모리(객체)--포장->파일로 저장(ex 냉장고에 저장(냉동))
+ *  역직렬화->파일(객체)--포장(푸는역할)--->메모리로 불러오는경우(해동)
+ */
+//직렬화가 가능한 클래스 형식)-> class 클래스명 implements Serializable {
+class Person implements Serializable{
+	String name;
+	int age;
+	String addr;
+}
+----------------------------------------
+  출력객체명.write(~);//출력이 안되는 경우
+  출력객체명.flush(); //버퍼에 쌓아놓지말고 바로바로 출력=> 실시간으로 출력
+
+  자바에서 기본적으로 어느정도의 양이 버퍼에 쌓아놓지 않으면 출력이 안된다
+  배열로 저장된 데이터를 사용하지 않은한 기본적으로 출력X
+  변수에 저장된 값이 바로 출력X
+--------------------------------------------------------------
+  
+
+
+
+
+
+p915 파일의 정보 출력->예제
+  012345678
+  abcde.txt=>abcde만 얻어오고 싶다.
+   substring(0,5)=>0~4번째 파일이름만 얻어온다.
+   substring(번호)->번호부터 문자열끝까지 얻어온다.(확장자)
+======================================
+ System.in.read();//키보드로 값을 입력받을때
+------------>InputStream객체
+ System.out->객체(p894)   System.out.println(~)
+========>PrintStream객체(표준 출력장치)
+ System.err
+
+---------------------------------------------------------------
+자바문법->**예외처리->*입출력->쓰레드->**컬렉션**->*네트워크
+               유틸리티                                  (11장,12장)
+----------------------------------------------------------------------
+p490(Wrapper Class)=>  **컬렉션**(p578 핵심 인터페이스)
+                                                데이터를 저장->메모리 상의 구조
+                                                Collection
+                                                List, Set, Map(속성)
+                                              p580 add(Object o)
+                                                           =====>데이터를 저장(객체만 저장
+                                                                                           가능)
+   기본 자료형(byte,short,int,long,float,double)=>저장X(객체가 아니기
+                    char,boolean                                           때문)
+    =>Wrapper Class->기본자료형의 값을 객체형태로 만들어서
+                                 제공되는 클래스
+           --->기본자료형의 첫글자만 대문자로 쓰면->Wrapper클래스
+byte, ->Byte
+short,->Short
+int,=========>Integer.parseInt(~)
+long,--->Long
+float,-->Float
+double->Double
+char,=========>Character->Character.isDigit(),
+               Charatcer.toUpperCase()->대문자
+
+boolean ->Boolean  ====>** String은 Wrappter Class가 아니다.**
+                           처음부터 참조형
+----------------------------------------------------------------------
+        BoxingTest.java
+
+//자동 boxing-> 자바의 기본자료형-->자바의 객체형으로 변환
+
+/*Double d=new Double(123.45);//~Character c=new Character('a');
+         printDouble(d);*/
+         printDouble(new Double(123.45));
+         printDouble(143.67);//double d=143.67
+	}
+      //double->Double=>자동으로 기본자료형->객체형으로 변환돼서 전달
+	static void printDouble(Double obj2) { //123.45->toString()=>"123.45"
+		System.out.println(obj2.toString());
+	}
+---------------------------------------------------------------------
+자동 unboxing->자바의 객체형(Wrapper)->기본자료형으로 변환 (계산할때)
+//int sum=obj.intValue()+20;  //객체형->기본자료형+기본자료형->계산X
+         //Integer->int으로 변환
+ int sum=obj+20; 
+-------------------------------------------------------------------------
+  스택->한쪽은 막혀있고 한쪽은 open
+  큐-->양쪽이 다 open
+  배열->기차모양처럼 한쪽으로 쭉 늘여뜨린 구조(리스트)
+  사물함->특정키를 이용해서 값을 저장
+ .....>클래스로만 만들어져 있으며 있으면 =>메서드가 통일감X
+
+ 인터페이스 작성(공통 메서드)->Collection
+                                    데이터 저장 구조에 따라서
+                                      List
+                                      Set
+                                      Map
+           |
+        상속->자식클래스
+
+ 데이터를 관리->자바의 컬렉션->구조와 상관없이 공통적으로 사용(기능)
+
+ 테이블의 설계->
+
+***************************************************** 
+ 1.데이터를 저장(추가) ->insert
+ 2.데이터를 삭제 ->delete
+ 3.데이터를 수정 ->원하는 데이터만 수정 -> update 
+ 4.데이터를 검색 ->select
+*****************************************************
+
+** 데이터의 구조(저장구조)에 따른 인터페이스 분류**
+
+1.Set  인터페이스
+  ->데이터가 중복 저장이 안되며 저장 되는 순서가 없다.(ex 항아리)
+  ->HashSet
+
+2.List  인터페이스->중복저장이 가능,저장순서가 있다(인덱스번호로 구분)
+  ->Vector->ArrayList,LinkedList
+
+3.Map 인터페이스->표형태로 저장 (키,값)=>ex)사물함 구조
+                        -=>값을 저장시 키를 부여=>키를 이용->빨리 검색된다.
+   ->HashTable,HsahMap=>세션값을 저장시(web)
+------------------------------------------------------------------------
+  **<자료형> =>제너릭?**
+------------------------------
+
+컬렉션의 특성
+
+1.객체만 저장(기본 자료형은 저장X->Wrapper 클래스를 이용 가능)
+2.정적배열(크기가 정해져 있는 경우)<->동적배열(크기가 유동)
+      byte b[]=new byte[3];
+--------------------------------------------------------------
+3.객체를 저장->형이 Object형으로 변환(어떠한 객체라도 다 저장이 가능
+                                                      하게 만들기위한 목적)
+ --->String(O),다른 데이터 저장X
+
+4.저장된 데이터를 꺼내올때 원래의 형으로 형변환시켜야 된다.
+  ->문제발생->자료형이 문제발생(ex Type mismatch)
+--------------------------------------------------------------------
+=><자료형(String)>=>저장할 자료형을 미리 지정하는 "제너릭"
+=>VectorTest.java
+=>ArrayListTest.java=>ArrayList
+=>리스트 구조내부에 배열이 저장이 된 구조
+
+**컬렉션의 값을 검색**->클래스 마다 조금씩 차이가 있다.(암기)
+                          ArrayList->get(인덱스번호)
+                          Vector->elementAt(인덱스번호)
+                          ,,,,
+
+p614->Iterator(hasNext()->데이터저장 유무확인?,next()->꺼내와라),
+           Enumeration(검색에 관련된 인터페이스)->p617
+                      (hasMoreElement(),nextElement())
+           데이터 저장 구조에 상관없이 공통적인 검색방법을 사용이 가능
+           =>메서드의 매개변수 또는 반환형을 통해서 객체를 얻어옴
+          ===================================
+ 컬렉션(12장)->제너릭의 정리<E>,<K,E>~
+==========================
+p644->HashMap,Hashtable(key,value)->사물함
+p647->표형태로 저장(키를 지정해서 저장)
+========================================
+
+  EnumTest.java
+
+
+

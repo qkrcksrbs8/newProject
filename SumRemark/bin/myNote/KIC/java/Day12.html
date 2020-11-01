@@ -1,0 +1,266 @@
+12일차(인터페이스 개요및 작성법,자바의 윈도우프로그래밍(AWT,Swing)
+
+추상화->캡슐화->다형성->배열->상속성->
+              추상클래스(p375~),인터페이스(p381~)
+==================================================================
+  =>윈도우(그래픽)(문법을 정리목적)->프로젝트
+  =>**8장.예외처리=>***15장. 입출력(p868)->13장.쓰레드(p722)
+  =>**11장.켈력션 프레임워크(p578)->**12장.제네릭,열거형=>
+    *14장.람다=>Typescript(화살표 함수)
+  =>*16장.네트워크?->소켓프로그래밍->프로젝트
+
+** 인터페이스(Interface) ** 
+
+1.추상클래스와 사용목적이 같다.(=>설계목적)
+2.형식) interface 인터페이스명{
+      //멤버변수->상수만 가능->static final를 이용해서 상수선언
+      //추상메서드만 선언이 가능(100%)->일반메서드 사용X
+}
+
+3.추상메서드=>예약어 abstract을 사용X (구분할 필요없다)
+
+  public (static final) 타입 상수이름=값
+               생략가능
+
+  =>public 타입 상수이름=값 으로 인식
+
+  public (abstract) 메서드명;
+              생략가능
+
+** 추상클래스와 공통점 **
+
+4.인터페이스를 상속받은 자식클래스는 역시 인터페이스에서 선언된
+   추상메서드를 반드시 오버라이딩해야 한다.(강제성,통일성 부여)
+                                            ==================
+5.객체를 생성하지 않는다.
+====================================
+
+**추상클래스와의 차이점**
+
+1.일반메서드도 포함시킬 수 있다.->인터페이스는 추상메서드만 작성
+2.추상클래스->단일 상속만   -->인터페이스 **다중상속**이 가능
+--------------------------------------------------------------
+
+ 설계목적
+
+ 음악프로그램->음악연주(사운드 프로그램)->기본적인 기능
+                                   음악 전원스위치 on
+                                   음악 전원스위치 off
+                                   Volume을 올리기
+                                   Volume을 내리기,,,
+         4명의 개발자
+
+  각각 클래스 작성
+                        Volume을 올리기
+ 컴퓨터(A) ->volumeUp()
+ 핸드폰(B) ->soundUp()
+ 라디오(C) ->radioUp()
+ MP3(D)  ->mp3Up()
+
+     =======>장비가 다 틀리다고 해서 각각 기능은 같은데 메서드명을
+            다 다르게 주면 나중에 통합할때 문제가 발생(일관성이 없다)
+
+     ===>강제성이 부여,일관성(통일성=>메서드명을 동일하게 부여)을 부여
+======================================================================
+    추상클래스,인터페이스->업무를 잘 알고있는 중간관리자
+                        모든 클래스에서 공통으로 사용하고자하는 메서드
+                        작성(추상메서드)
+                     |
+     상속->부하직원(추상메서드를 구현)
+,,,
+
+오버로딩->메서드명을 통합(하나의 클래스에서 설정)
+**********************************************************************
+ 추상메서드를 설계==>하나이상의 클래스에서의 통일성을 부여하기 위해서
+                     사용(오버로딩)
+**********************************************************************
+
+  Volume(부모)==>2개만 작성
+       |
+  AdvanceVolume  (자식)=>4개를 다 작성
+       |
+     TV,Radio,,,에서 실행되는 음악프로그램 작성
+
+  VolTest.java
+ v_, c_(규칙성)
+
+                                               *
+//형식) interface 자식인터페이스명 extends 부모인터페이스
+                                                ======
+public interface AdvanceVolume extends Volume {
+                                    *
+//형식) class 자식클래스명 implements 부모인터페이스명
+                           ========(보충한다,보완한다)
+                                    구현한다.
+
+=>인터페이스->설계목적(다중 상속때문에)
+
+class 자식클래스명 extends 부모클래스,부모클래스명2 (X)
+
+class 자식클래스명 implements 부모인터페이스명1,부모인터페이스명2,,,
+
+=>불완전한 다중상속
+
+public class TV implements AdvanceVolume {
+
+ 동시에 2개의 부모로부터 상속을 받고 싶다.
+
+   class 인간  ,  class 늑대
+
+ =>class 늑대인간==>인간+늑대의 기능
+
+ class 늑대인간 extends 인간,늑대 (X)
+
+============================================
+ 동시에 두개의 기능을 상속받기 위해서 설계목적
+
+  class 인간(핵심적인 뼈대)  , 부가적인 기능 interface 늑대
+
+형식)class 늑대인간(자식클래스) extends 인간 implements 늑대,뱀파이어
+                  인간+부가적인 기능(늑대)
+----------------------------------------------------------------------------
+ 원->클래스를 표시 ,직사각형->인터페이스를 의미
+
+     Volume(직사각형)
+          |
+     AdvanceVolume(직사각형)
+          |
+    TV,Radio(원표시)
+                               VolTest.java(원표시)
+===========================================================
+추상클래스와 인터페이스의 응용(활용)->p390
+
+  Drowable(직사각형)        Shape(추상클래스)
+                             면적(res),area()
+
+  //도형을 그린다.->원,직사각형의 면적을 구한다.
+public interface Drawable {
+      public void draw();//abstract 키워드 생략 가능하다.
+     //public double area(int r);
+}                   
+
+public abstract class Shape {
+     public double res=0;//면적을 저장할 변수(모든 도형에서 공통으로 사용하는 면적)
+     //원
+     public abstract double area(int r);//r*r*3.14~
+     //직사각형
+     public abstract double area(int w,int h);
+     //? 삼각형
+     //일반메서드
+     public void printArea() {
+    	 System.out.println("도형의 면적은"+res+"입니다.");
+     }
+}
+=========================================                          
+                             ShapeTest
+
+ 도형의 면적을 구하는 프로그램
+  공통으로 사용되는 기능(메서드?)->1.면적을 구하는 메서드 
+
+ while(true) { //for(;;){
+        	 Scanner sc=new Scanner(System.in);
+        	 System.out.println("원하는 도형선택? 1.원 2.직사각형 3.종료");
+        	 int choice=sc.nextInt();
+        	 switch(choice) {
+        	 case 1://원
+        		 System.out.println("1.원의 반지름을 입력?");
+        		 int r=sc.nextInt();
+        		 ShapeTest st=new ShapeTest();
+        		 st.res=st.area(r);
+        		 st.printArea();
+        		 break;
+        	 case 2://직사각형->가로,세로
+        		 System.out.println("1.사각형의 넓이(가로)?");
+        		 int w=sc.nextInt();
+        		 
+        		 System.out.println("1.사각형의 높이(세로)?");
+        		 int h=sc.nextInt();
+        		 ShapeTest st2=new ShapeTest();
+        		 st2.res=st2.area(w, h);
+        		 st2.printArea();
+        		 break;
+        	 case 3://종료
+        		 System.out.println("프로그램이 정상종료됩니다.!!!");
+        		 System.exit(0);//프로그램 종료->System.gc()->gc가동시켜는것
+        		 //System.exit(-1);//비정상 종료
+        		 break;
+        	 }
+===================================================================
+<실행결과>
+
+원하는 도형을 선택하세요?(1.원 2.사각형 3.종료)
+1
+원의 반지름?5
+->5*5*3.14~->원의면적:?
+
+원하는 도형을 선택하세요?(1.원 2.사각형 3.종료)
+2. ->사각형의 면적?
+1)사각형의 가로? 4
+2)사각형의 세로?5
+  사각형의 면적은 20
+
+원하는 도형을 선택하세요?(1.원 2.사각형 3.종료)
+3
+ 정상적으로 프로그램이 종료됨!
+-----------------------------------------------------
+ 추상클래스,인터페이스를 사용목적->설계목적(프로그램의 규모가 클때 사용)
+========================================================================
+=>신입X(업무)->업무->추상클래스,인터페이스를 이해(회사)
+=>객체의 형변환(Swing~)
+===========================================
+StringTest.java
+
+ConvertTest.java
+
+Scanner sc=new Scanner(System.in);
+        System.out.println("문자열을 입력하세요?");//nextLine(문장),next()단어
+        String input=sc.nextLine();//"hello"<=>HELLO
+        //1.문자열처리->length()
+        //2."abAga"=>charAt()
+        //3.대문자,소문자판별=>Character클래스
+        //System.out.println("input.length()=>"+input.length());
+        char ch;
+<!--         for(int i=0;i<input.length();i++) { -->
+<!--         	ch=input.charAt(i); -->
+<!--         	//ch(대)<->소 =>반환값이 boolean ->isXXXX(char) -->
+        	if(Character.isLowerCase(ch))
+        	    System.out.print(Character.toUpperCase(ch));
+        	else
+        		System.out.print(Character.toLowerCase(ch));
+        }
+===================================
+ Java의 활용
+
+  그래픽=>AWT,Swing=>앱
+
+AWT->운영체제에 영향을 받음
+Swing->운영체제에 독립적(그래픽이 좋고
+                         컴포넌트가 많다)
+
+ ** 7가지 공식 **
+
+  FrameTest.java
+
+java.lang.Object
+   java.awt.Component=>컴포넌트(Button,TextField,Menu,,,) 정보
+                                 =>위치,배경색
+      java.awt.Container=>다른 컴포넌트를 포함시킬 수 있는 컴포넌트 정보
+                                      Frame(창),대화상자
+         java.awt.Window(창)
+            java.awt.Frame =>창->자식창을 가지고 작업
+              javax.swing.JFrame
+
+ 창의 넓이,높이->setSize(w,h),setLocation(x,y)->위치를 지정
+                            |
+                        getSize()->설정된 ,w,h값을 가져와라
+                        setBackground(색깔)->배경색을 부여할때
+                              |
+                        getBackground()->설정된 배경색정보를 가져와라
+
+ 버튼을 누를 수 없는 상태(비활성화)->setEnabled(true || false)
+ 메뉴--------------------------------->setEnabled(~)
+                        setVisible(true || false)->화면에 출력유무
+
+====================================
+
+

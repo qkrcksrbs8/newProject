@@ -1,0 +1,212 @@
+15일차(입출력개요및 작성법1)
+
+오늘 2권=>23일 오전까지의 진도=>수업 범위
+ 입출력1,입출력2,컬렉션=> 이번주 목요일 오후 5:00 시험
+                            재시험 다음주 목요일(1/31)
+ 
+ =>추상화->캡슐화->다형성(화(생성자,오버로딩)
+                   ->상속성(수요일)
+
+ =>메서드의 개요 기본적인 메서드를 작성하는데 문제 없다.
+=======================================================
+ ** 입출력=> 빅데이터에 도움,웹프로그래밍(게시판
+                                     +파일첨부)
+          => 네트워크 프로그래밍(채팅)
+
+ ******************컬렉션(100%)(자료구조)**********************
+
+ p868 입출력개요,스트림?
+
+ 스트림의 종류->p869 바이트기반 스트림(FileInputStream)
+   60~70개 클래스                      AudioInputStream
+                         *read()
+                p872 문자기반 스트림(Reader,Writer)
+
+         FileInputStream---FileReader
+         FileOutputStream--FileWriter
+                         *writer()
+
+ *p879
+ *p883 ->BufferedInputStream,BufferedOutputStream
+ *p886   DataInputStream,DataOutputStream~
+ *p899 FileReader,FileWriter
+ *p905 InputStreamReader ,OutputStreamWriter
+ *p911 RandomAccessFile
+ *p915 File클래스~916
+ *p934 직렬화?=>스프링의 기본 지식
+   935 ObjectInputStream,ObjectOutputStream
+       ======
+  자바강의IO 파일
+
+ 예외처리->자바프로그램을 실행하는데 방해가 되는 에러
+           가 나왔을때 이 에러의 해결책을 제시해주는것
+
+ try{
+  에러
+}catch(예외처리 클래스명 예외객체명){//이유기록
+   System.out.println(e.toString())//이유를 알려줌
+ }
+
+******************************
+Checked 예외처리 클래스=>컴파일 할때 예외처리가 안되어
+                         있으면 에러를 유발시킨다.
+
+1) 입출력 프로그램을 작성할때 ->import java.io.*;
+2) DB연동 프로그램(오라클)    ->import java.sql.*;
+3) 네트워크 프로그램을 작성할때->import java.net.*;
+
+********************************************************
+UnChecked 예외처리 클래스=>컴파일할때 반드시 예외처리
+                           하지 않아도 되는 경우(대부분)
+
+ try~catch 반드시 할 필요없다.
+******************************
+
+스트림->소스와 타켓사이의 데이터 전송을 위한  가상의 통로(무선랜)
+
+Source=>데이터를 전송해주는 쪽 컴퓨터/핸드폰,,,
+Target=>데이터를 받는쪽 컴퓨터/핸드폰,,
+
+** 스트림의 특징 **
+
+1.양방향X ->단방향만 된다.(입력스트림,출력스트림)
+    핸드폰
+2.다단계 결합이 있다.->스트림은 여러개 결합이 가능(생성자로 연결)
+3.무한 대기가 존재한다.->입력받을때 까지 계속해서 대기하는 상태
+    콘솔상태
+======================================
+
+입출력클래스=>70~80개 (잘 쓰는 위주로 예제)
+입출력클래스 분류==>전송해주는 데이터(문자,이미지,동영상,,,,)
+
+1.Byte기반 스트림(p874)->주로 이미지,동영상,문자(영문자)위주로 전송
+
+    입력스트림->read(),close() ======>InputStream
+    출력스트림->write(대상자),close()==>OutputStream
+
+    FileInputStream->외부에서 파일의 정보를 읽어오기
+    ====
+    FileOutputStream=>파일 저장
+    ====
+
+    FilterInputStream=>데이터 가공=>brige class(중간매개체)
+    ======
+    FilterOutputStream
+    ======
+
+    BufferedInputStream
+    =========(대용량)-->읽는속도 빠름
+    BufferedOutputStream
+    ========
+    DataInputStream
+    ====(자바의 기본자료형의 데이터(byte,short~8가지 자료형)
+    DataOutputStream
+    ====
+
+2.문자기반(char)기반->p898(영어권외 한글~)
+                             =>FileReader,FileWriter(한글위주)
+==============================================================
+ 자바에서 예외처리를 해야되는 경우
+
+1.선택적으로 예외처리하는 경우->try~catch구문
+                                       un-checked Exception
+
+2.필수로 예외처리하는 경우->checked Exception클래스
+
+ ->입출력,네트워크접속,DB접속을 할때(무조건 예외처리해야한다.)
+ ->throws Exception
+ ----------------------------------------
+ 만약에 예외처리구문을 쓰지 않으면 컴파일할때 에러유발
+
+unhandled Exception type IOException
+=>입출력하는  프로그램을 작성할때에는 반드시 예외처리를 하라는
+     경고성 에러메세지
+
+********************************************************
+System.out.print(변수명)=>변수의 저장된 값을 확인
+System.out.write(변수명)=>데이터의 값을 변환시켜서
+                          출력(숫자(아스키코드)=>문자
+                          로 변환해서 출력
+==================================
+                    SimpleIn.java
+
+// 메서드명() throws 예외처리클래스명,,,,
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+        //키보드로부터 값을 입력->저장->출력
+		int charRead;//System.in.read()=>키보드로 읽어들여라->아스키코드값
+		                    // 더이상 읽어들이지 않으면 -1을 리턴
+		//char->0~65535
+		//횟수가 정해져 있지 않은 경우->반복문 while
+		//try{
+		System.out.println("입력하고자하는 문자열을 아무거나 입력?");
+		while((charRead=System.in.read())>=0)
+			System.out.write(charRead);//저장된 숫자값을 문자로 변환
+			//System.out.println(charRead);
+		//catch(IOException e){ System.out.println(e);}
+	}
+
+                    FileInputTest.java=>Save as FileInputTest2.java
+====================================================================
+public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		//FileInputStream(File file) ->파일객체를 만들어서 생성자 인수
+		//FileInputStream(String name) ->경로포함해서 파일명->c:\~.txt
+		//자바프로그램->경로 c:\-> 인식X  \\ or /로 써줘야 된다.
+        FileInputStream fis=new FileInputStream("C:/webtest/3.java/HelloTest222.java");
+        int read=0;//파일을 읽어들여서 임시로 저장
+        
+        while(read!=-1) {//read의 값이 -1이 아닌동안
+        	read=fis.read();//파일로부터 읽어들여서 변수 read에 저장하라
+        	System.out.write(read);//콘솔에 변환해서 출력하라
+        }
+	}
+
+====================================================================
+Exception in thread "main" java.io.FileNotFoundException: C:\webtest\3.java\readme2.txt (지정된 파일을 찾을 수 없습니다)
+->경로가 틀렸거나 파일명이 틀린경우 =>파일의 내용을 불러오지
+    못했을 경우의 에러메세지
+
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at j0615.FileInputTest.main(FileInputTest.java:11)
+------------------------------------------------------------------
+Koala.jpg==>복사(파일명 변경)
+epp420_64bit.exe=>복사
+
+FileInputStream fis=new FileInputStream("C:/webtest/3.java/Koala.jpg");
+        int read=0;//파일을 읽어들여서 임시로 저장
+        /* (1)
+        FileOutputStream fos=new FileOutputStream("C:/webtest/3.java/abc.jpg");
+        */
+        /* (2)
+        File f=new File("C:/webtest/3.java/abc22.jpg");
+        FileOutputStream fos=new FileOutputStream(f);
+        */
+        // (3) 출력스트림 2개를 생성자를 통해서 연결시킨 구문
+        FileOutputStream fos=new FileOutputStream
+        		           (new File("C:/webtest/3.java/abc333.jpg"));
+        
+------------------------------------------------------------------
+FileInputStream->read()->단순히 읽어들이는 경우(파일의 내용 직접)
+                 read(byte[] b)=>이미 불러올 파일의 내용을
+                                 메모리에 저장된 상태의 문자열을
+                                 불러올때 사용하는 메서드
+                     byte[]=>불러올 파일의 내용만큼 크기를 지정해준다
+----------------------------------------------------------------------
+C:/webtest/3.java/readme.txt
+
+ ** 다단계결합->입력스트림이 한개이상 연결된 상태(가공처리) **
+
+  FilterTest.java
+
+ =>BufferedInputStream
+ =>InputStreamReader<-->OutputStreamWriter(p 905)
+
+ 키보드로 한글로 된 데이터를 입력을 받아서 콘솔에 출력하는 프로그램
+-------System.in
+-------한글이 깨지지 않도록 설정->입력(InputStreamReader)
+-------한꺼번에 많은 양의 데이터를 읽어들이기(BufferedInputStream)
+------>Scanner
