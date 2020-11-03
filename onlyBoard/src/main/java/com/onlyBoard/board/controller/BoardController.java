@@ -34,39 +34,51 @@ public class BoardController {
 								, @RequestParam(value="keyWord", required =false) String keyWord
 								) {
 
-		logger.info("start");
-		logger.info("keyField : "+keyField);
+		logger.info("boardList() : start");						//boardList 시작
+		logger.info("keyField : "+keyField);					
 		logger.info("keyWord : "+keyWord);
 		
-		List<BoardVO> boardList = new ArrayList<BoardVO>();//게시판 리스트
+		List<BoardVO> boardList = new ArrayList<BoardVO>();		//게시판 리스트
 		Map<String, Object> map = new HashMap<String, Object>();//페이징 map
-		map.put("keyField", keyField);//검색분야
-		map.put("keyWord", keyWord);//검색어
+		map.put("keyField", keyField);							//검색분야
+		map.put("keyWord", keyWord);							//검색어
 		
-		int count = boardService.selectBoardCnt(map);//게시판 리스트 수		
-		logger.info("count : "+count);		
-		
-		PagingUtil page;
+		int count = boardService.selectBoardCnt(map);			//게시판 리스트 수 조회
+		logger.info("count : "+count);							//게시판 리스트 수 로그로 찍기
+
+		PagingUtil page;//페이징 처리를 위한 객체 선언
 		
 		if(keyWord == null) {
-			page = new PagingUtil(currentPage, count, 5,2, "boardList.do");
+			page = new PagingUtil(currentPage, count, 5,2, "boardList.do");							//검색어가 있다면
 		}else {
-			page = new PagingUtil(keyField, keyWord, currentPage, count, 5,2, "boardList.do",null);
+			page = new PagingUtil(keyField, keyWord, currentPage, count, 5,2, "boardList.do",null);	//검색어가 없다면
 		}
 		
 
-		
-		ModelAndView  mav = new ModelAndView("board");
-		mav.setViewName("main/board");//jsp 경로
-		mav.addObject("count", count);//총레코드수
-		mav.addObject("boardList", boardList);//게시판 리스트
-		mav.addObject("pagingHtml", page.getPagingHtml());//링크문자열을 전달
+		//--------------------------------
+		//start->페이지당 맨 첫번째 나오는 게시물번호
+		//--------------------------------
+		map.put("start", page.getStartCount());	//시작 게시물번호
+		map.put("end", page.getEndCount());		//마지막게시물번호
 
-		mav.addObject("keyWord", keyWord);
+		//---------------------------
+		//게시물이 1개 이상 존재하면 리스트 조회
+		//---------------------------
+		if(count > 0) {
+			
+			boardList = boardService.selectBoardList(map);//게시판 리스트 조회
+			
+		};//if
 		
-		logger.info(boardList.toString());
+		ModelAndView  mav = new ModelAndView("board");		//board model 선언
+		mav.setViewName("main/board");						//jsp 경로
+		mav.addObject("count", count);						//총레코드수
+		mav.addObject("boardList", boardList);				//게시판 리스트
+		mav.addObject("pagingHtml", page.getPagingHtml());	//링크문자열을 전달
+		mav.addObject("keyWord", keyWord);					//검색어 전달
 		
-		logger.info("end");
+		logger.info(boardList.toString());					//VO 로그로 찍어보기
+		logger.info("boardList() : end");					//board 종료
 		return mav;
 	}
 	
