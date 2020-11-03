@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+      
+<mapper namespace="com.onlyReport.report.dao.ReportDAO">  
+  
+ 
+<select id="selectReportCnt" parameterType="map" resultType="int" >
+	SELECT COUNT(*)
+	FROM REPORT_MST
+	WHERE USEFLAG = 1
+    <if test="keyWord!=null and keyField=='onlyTitle'">
+	   and report_title like '%' || #{keyWord} || '%'
+    </if>
+    <if test="keyWord!=null and keyField=='onlyName'">
+       and created_by like '%' || #{keyWord} || '%'
+    </if>
+    <if test="keyWord!=null and keyField=='titleContent'">
+       and report_content like '%' || #{keyWord} || '%'
+    </if>
+</select>
+
+<select id="selectReportList" parameterType="map" resultType="com.onlyReport.report.model.ReportVO">
+	SELECT  
+        REPORT_SEQ
+	    , REPORT_TITLE
+	    , REPORT_CONTENT
+	    , REGEXP_REPLACE(CREATED_DATE, '[^0-9]') AS CREATED_DATE
+	    , CREATED_BY
+	    , rnum
+	FROM(
+	    SELECT
+	        a.*,
+	        rownum rnum
+	    FROM (
+	        SELECT   *
+	        FROM REPORT_MST
+	        WHERE USEFLAG = 1
+	        <if test="keyWord!=null and keyField=='onlyTitle'">
+    		   and report_title like '%' || #{keyWord} || '%'
+   		    </if>
+   		    <if test="keyWord!=null and keyField=='onlyName'">
+   		       and created_by like '%' || #{keyWord} || '%'
+   		    </if>
+   		    <if test="keyWord!=null and keyField=='titleContent'">
+   		       and report_content like '%' || #{keyWord} || '%'
+   		    </if>
+	        ORDER BY REPORT_SEQ desc
+	        )a
+	)
+	<![CDATA[
+	WHERE rnum >= #{start} AND rnum <= #{end}
+	]]>
+</select>
+
+<select id="selectReport" parameterType="Integer" resultType="com.onlyReport.report.model.ReportVO">
+	SELECT 
+		REPORT_SEQ
+	    , REPORT_TITLE
+	    , REPORT_CONTENT
+	    , REGEXP_REPLACE(CREATED_DATE, '[^0-9]') AS CREATED_DATE
+	    , CREATED_BY
+	FROM REPORT_MST
+	WHERE USEFLAG = 1
+	AND report_seq = #{report_seq}
+</select> 
+
+<update id="updateReport" parameterType="map"> 
+	UPDATE REPORT_MST SET
+		last_update_date	= SYSDATE
+		,last_update_by		= #{user_name} 
+		,report_title		= #{report_title}
+		,report_content		= #{report_content}
+	WHERE report_seq		= #{report_seq}
+	
+</update> 
+
+<update id="deleteReport" parameterType="map"> 
+	UPDATE REPORT_MST SET
+		last_update_date = SYSDATE
+		,last_update_by = #{user_name} 
+		,USEFLAG = 0
+	WHERE report_seq = #{report_seq}
+	
+</update> 
+
+<insert id="insertReport" parameterType="map">
+	Insert into REPORT_MST (
+		REPORT_SEQ
+		,REPORT_TITLE
+		,REPORT_CONTENT
+		,CREATED_DATE
+		,CREATED_BY
+		,LAST_UPDATE_DATE
+		,LAST_UPDATE_BY
+	) values (
+		REPORT_SEQUENCE.nextval
+		, #{report_title}
+		, #{report_content}
+		, SYSDATE 
+		, #{created_by}
+		, SYSDATE
+		, #{last_update_by}
+	)
+
+</insert>
+
+</mapper>
+
+
+
+
+
+
+
