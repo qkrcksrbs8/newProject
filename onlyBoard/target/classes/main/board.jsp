@@ -119,7 +119,7 @@ button {
 							${pagingHtml}
 						</li> 						
 					</ul>		 									 
-					<button id="boardInsertBtn" class="btn btn-success" >글작성</button>  			
+					<button id="boardInsertBtn" class="btn btn-success" style="margin-top: 50px">글작성</button>  			
 				</div>
 			</div>
 		</div>
