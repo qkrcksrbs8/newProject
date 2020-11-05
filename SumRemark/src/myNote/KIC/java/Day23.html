@@ -1,0 +1,180 @@
+23일차(JDBC Programming 작성법3-고객관리(등록,수정,삭제,조회))
+
+else if(e.getSource()==btnOk) {//확인
+			insertCustomer();//데이터 입력
+			//데이터 입력후 입력전의 상태로 다시 전환
+			txtCirum.setEditable(false);
+			txtCjunhwa.setEditable(false);
+			txtCjuso.setEditable(false);
+			btnInsert.setText("신규");
+			btnOk.setEnabled(false);//확인버튼 비활성화
+		}
+==========================================================
+private void insertCustomer() {
+		try {
+			//1.sql구문  X   2.NullPointerException =>객체생성X 메서드호출 O
+			//형식) insert into 테이블명 values(값,'값2',,,,);
+			sql="insert  into customer values("+
+			        txtCbun.getText()+", '"+
+					txtCirum.getText()+"', '"+
+					txtCjunhwa.getText()+"', '"+
+					txtCjuso.getText()+"', 0,' ')";
+			System.out.println("sql=>"+sql);
+			int insert=stmt.executeUpdate(sql);//정수형값을 반환->1(성공),0(실패)
+			System.out.println("데이터 성공유무(insert)=>"+insert);
+			init();//DB데이터를 다시 오름차순으로 읽어들여라
+			rs.last();//추가후 전체 레코드수를 갱신(수정)하기위해서 이동
+			display();//변환된 레코드수를 다시 화면에 재 출력
+		}catch(Exception e) {
+			System.out.println("insertCutomer()메서드 호출시 문제발생=>"+e);
+		}
+	}
+
+===========================================================
+실행결과
+
+stmt=>oracle.jdbc.driver.OracleStatementWrapper@61a485d2
+접속 conn=>oracle.jdbc.driver.T4CConnection@2e5c649
+sql=>insert  into customer values(11, '홍길동', '02-123-0987', '서울시 강남구 대현빌딩 3층 2강의실', 0,' ')
+데이터 성공유무(insert)=>1
+
+==============================================================
+ 수정
+
+else if(e.getSource()==btnUpdate) {//수정
+			if(isUpdate==false) {//수정버튼을 처음 누른경우라면
+				txtCirum.setEditable(true);//이름변경이 가능
+				txtCjunhwa.setEditable(true);
+				txtCjuso.setEditable(true);
+				//이동버튼 불가->btnF.setEnabled(false);~
+				btnUpdate.setText("완료");
+				isUpdate=true;
+			}else {//완료인 경우에 누른경우
+				updateCustomer();
+				txtCirum.setEditable(false);//다시 초기화
+				txtCjunhwa.setEditable(false);
+				txtCjuso.setEditable(false);
+				//이동버튼 가능->btnF.setEnabled(true);~
+				btnUpdate.setText("수정");
+				isUpdate=false;
+			}
+=================================================================
+private void updateCustomer() {
+		try {
+			//형식) update 수정할테이블명 set 수정할 필드명='수정할값',,,
+			//         where 조건식(수정할 데이터를 찾는 조건식) 필드명 연산자 값
+			sql="update customer set c_irum='"+
+					txtCirum.getText()+
+					"', c_junhwa='"+txtCjunhwa.getText()+
+					"', c_juso='"+txtCjuso.getText()+
+					"'  where c_bun="+txtCbun.getText();
+			System.out.println("수정할 sql=>"+sql);
+			//추가=>현재행을 구해->이동
+			int currentRow=rs.getRow();//현재행(수정할 현재행)을 구한다
+			int update=stmt.executeUpdate(sql);//정수형값을 반환->1(성공),0(실패)
+			System.out.println("데이터 수정유무(update)=>"+update);
+			init();//DB데이터를 다시 오름차순으로 읽어들여라
+			rs.absolute(currentRow);//rs.absolute(이동할 행번호)->행번호로 이동
+			//데이터를 수정하고나서 스크롤을 적용시켜야 수정이 되기때문에
+			display();//변환된 레코드수를 다시 화면에 재 출력
+		}catch(Exception e) {
+			System.out.println("updateCutomer()메서드 호출시 문제발생=>"+e);
+		}
+	}
+===============================================================
+//도서관리->고객->책을 빌려간 상태->삭제X->반납을 다한 뒤에 삭제O
+	private void deleteCustomer() {
+		try {
+			//1)삭제시킬 레코드가 없는경우->삭제할 수 없다는 에러메세지 출력
+			if(rs.getRow()==0) {
+				JOptionPane.showMessageDialog(this,"삭제시킬 자료가 없습니다.");
+				return;
+			}
+			//2)현재 대여중인 고객은 삭제X ->taCmemo항목에 빌린책의 정보가 기록
+		if(taCmemo.getText().equals("") || taCmemo.getText()==null) {
+			int currentRow=rs.getRow();//삭제시킬 행번호
+			//sql="delete from customer where c_bun=?";
+			sql="delete from customer where c_bun="+txtCbun.getText();
+			int delete=stmt.executeUpdate(sql);
+			System.out.println("데이터 삭제성공유무(delete)=>"+delete);
+			init();//고객테이블을 다시 정렬
+			//삭제시 레코드를 이동할지를 결정
+			if(currentRow==1) {
+				;//현재 상태 그대로 유지(레코드 한개만 존재->이동X)
+			}else {//행번호가 1번이 아닌경우
+				rs.absolute(currentRow-1);//현재행-1 빠진 이전행으로 이동
+			}
+			display();//바뀐내용을 반영->새로 고침
+		}else {
+			JOptionPane.showMessageDialog(this,"도서반납 후에 삭제가능 합니다");
+		}
+		}catch(Exception e) {
+		   System.out.println("deleteCustomer() 메서드=>"+e);	
+		}
+	}
+	
+================================================================
+else if(e.getSource()==btnDel) {//삭제
+			//사용자에게 진짜 삭제유무?=>confirm->showConfirmDialog()
+			//1.부모창(this) 2.메세지 내용 3.창의 제목 4.옵션(yes|no)
+			int re=JOptionPane.showConfirmDialog
+					(this,"현재 고객자료를 정말로 삭제할까요?",
+							"삭제",JOptionPane.YES_NO_OPTION);//yes,no버튼
+			if(re==JOptionPane.YES_OPTION) //예라고 눌렀다면
+				deleteCustomer();
+		}
+==============================================================
+else if(e.getSource()==btnFind) {//검색
+			     findCustomer();
+		}
+---------------------------------------------------------------
+private void findCustomer() {
+		/*
+		 * 1.사용자로부터 값을 입력->JOptionPane.showInputDialog
+		 * 2.간단한 경고 메세지-> showMessageDialog
+		 * 3.사용자에게 물어볼때? =>showConfirmDialog
+		 */
+		String re=JOptionPane.showInputDialog(this,"검색할 고객번호를 입력?");
+		if(re==null) return;//입력하지 않으면 취소
+		try {
+			rs.beforeFirst();//rs.first()보다 위에 커서를 이동->full Scan
+			int couFind=0;//동명이인 찾은횟수
+			while(rs.next()) { //검색할 데이터가 있는 동안
+				String str=rs.getString(1);//고객번호->내부적으로 1~
+				if(re.equals(str)) {//내가 찾고자하는 고객번호=테이블의 고객번호가 맞다면
+					txtCbun.setText(str);
+					//<td><%=rs.getString("c_irum")%></td>
+					txtCirum.setText(rs.getString("c_irum"));
+					txtCjunhwa.setText(rs.getString("c_junhwa"));
+					txtCjuso.setText(rs.getString("c_juso"));
+					txtCdaesu.setText(rs.getString("c_daesu"));//대여수
+					taCmemo.setText(rs.getString("c_memo"));//메모내용
+					couFind++;//찾은 횟수
+					lblRec.setText(rs.getRow()+"/"+iTotal);//찾은행(5)/전체레코드수(10)
+					break;
+				}
+			}//while
+			if(couFind==0) {//찾은 레코드가 없다면
+				JOptionPane.showMessageDialog(this,"검색자료를 찾을 수 없습니다.");
+			}
+		}catch(Exception e) {
+			System.out.println("findCustomer() 메서드 오류=>"+e);
+		}
+	}
+==============================================================
+<과제>
+
+ html5,css3,javascript=>+Java=>jsp(Web)
+
+ eclipse=>plugin이라는 항목(설치)
+블러그 주소
+
+https://kamang-it.tistory.com/entry/%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8WindowBuilder
+
+===================================================
+** 윈도우빌더 사용법 **
+
+다운로드 받는 주소
+
+https://download.eclipse.org/windowbuilder/latest/
+====================================================

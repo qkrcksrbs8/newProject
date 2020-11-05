@@ -1,0 +1,321 @@
+7일차(JQuery의 Ajax를 이용한 DB연동 방법 및 활용)
+
+  04.$.ajax().xml.html
+
+  $(function(){ 
+	 //1.url요청문서 2.매개변수를 전달 {,,} 3.콜백함수
+	 $.ajax('getXml.jsp',{
+		 //data:~ 매개변수가 전달하지 않기때문에 생략가근
+		 success:function(data){
+			 //분리작업(파싱분석) parse->find() or filter()
+			 $(data).find('person').each(function(){
+				 var name='<li>'+$(this).find('name').text()+'</li>'
+				 var job='<li>'+$(this).find('job').text()+'</li>'
+				 var age='<li>'+$(this).find('age').text()+'</li>'
+				 //<div>에 출력
+				 $('#output').append('<ul>'+name+job+age+'</ul>')
+			 })//each
+		 }//success
+	 })//$.ajax
+ })
+=============================================
+Xml ->구조가 복잡하다.=>불러오는데 불편
+
+ JSON 표기법으로 구성된 파일이 많이 사용
+ =======================
+JSON 공식 사이트(http://www.json.org)에서의 JSON 설명
+                                                       특징1)
+   “JSON(JavaScript Object Notation)는 경량의 데이터 교환 포맷이다.
+                                                          ==============(용량이 작다)
+                                                        2)컴퓨터가 좋아하는 구조
+   인간에게 있어서 읽고 쓰기가 용이하고, 기계에 있어서도 간단하게 파싱이나 생성을 행할 수 있는 형식이다.
+                          --------------------------------------------------------------
+   JavaScript 프로그램 언어(ECMA-262 표준 제 3판 1999년 12월)의 일부를 베이스로 만들어져 있다.
+   JSON(은)는 완전하게 언어로부터 독립한 텍스트 형식이지만, 
+   C,C++,C#,Java,JavaScript,Perl,Python, 그 외 많은 C패밀리의 언어를 사용하는프로그래머에게 있어서는, 
+   친숙한규약이 사용되고 있다.이러한 성질이,JSON를 이상적인 데이터 교환 언어로 하고 있다.”
+ 
+ 
+ 
+- JSON 관련 사이트에서 JSON 설명
+ 
+   “영어 그대로 해석하자면 자바스트립트를 객체형식으로 표현하는 것이다.
+                3)
+    JSON은 XML보다 빠르고 변환하기도 쉬워 많이 대체해서 쓰고 있다.
+                 ----------------------------------------------------------
+    적은양의 데이터가 송수신 되므로 모바일쪽에서 쓰기에도 부담이 적다.”
+               4)------------------------------------------------------------
+               5) 서로 다른 운영체제끼리에서의 데이터 교환이 자유롭다.
+                ----------------------------------------------------------------
+   “JSON은 이종 시스템간 데이터 교환시에 사용할 수 있는 이상적인 방법이다.
+    JSON은 자바스크립트에 기반하고 있기 때문에 모든 웹 브라우저에서 호환 된다고 할 수 있다.”
+
+********************
+xml의 장점
+
+1.작성하기가 간편하다(tag구조)
+2.XML 사람이 읽기가 쉽다. (즉 각 장보들이 의미하는 바를 한눈에 보기가 좋다.
+3.DTD 등 XML자체의 기능을 확장할 여지가 많이 있다.
+
+4.파싱 : DOM 또는 SAX 
+
+xml의 단점
+
+1.하나의 데이타를 정의하기 위한 부수적인 정의가 너무 많이 필요하다(치명적 단점)
+2. 배열형식이나 반복구조의 경우 불필요한 데이터가 계속 해서 나타난다.==>구조가 복잡
+3. 결국 이로 인해 파싱이 힘들어지고 속도는 느려진다.
+------------------------------------------------------------------------
+JSON의 장점
+
+1.내용이 함축적으로 최소한의 정보만을 가지고있다.
+ 그렇기 때문에 XML대비 용량이 획기적으로 줄어들고 속도는 그만큼 빨라지게 된다.
+2. 객체구조와 {} 배열구조의 [] 적절한 만남으로 아주 효율적인 데이터 구성이 가능하다. 
+3.파싱이 매우 간편하고, 때로는 일반적인 변수처럼 사용도 가능하다. 즉, 사용하기 쉽다. 
+
+JSON의 단점
+
+1.내용이 함축적이다 보니 내용의 의미파악은 힘들수 있다.
+                                   --------------------------------- 
+2.아무래도 적은 규격의 데이터 전송에 적합한 방식이기떄문에 XML보다는 빠르지만, 
+   대용량급의 데이터 송수신엔 부적합 모습도 있다. =>모바일에 최적화
+
+3.JSONP : URL을 통해서 Get 방식 (약 2KB 용량 제한) ->요청,전송이 가능->Angular에서 사용
+=======================================================
+** 05.json.html **
+
+<script>
+    //Json표기법-> 키명:저장할값(숫자,문자열,논리적인값,객체,배열(객체묶음))
+    var myjson={
+    		"name":"홍길동", /* key:value */
+    		"sung":"남자",
+    		"func":"function(){alert('test')}" /* 함수 정의 부분을 문자형태로 저장 */
+    		//json표기법에서 함수의 정의부분을 문자형태로 저장->꺼내와서 함수로 만들어서 출력
+    		//eval()함수->문자열로 되어있는 자바스크립트코드->자바스크립트코드로 변환
+    		//ex) "var re"+"sult=123"->eval("var reulst=123")->var result=123
+    		//var a=function(){alert('test')} ->alert(a())
+    }
+    var myjson2={"number":123} /* 객체명.키명(읽기), 객체명.키명=값(저장) */
+    var myjson3={"temp":true}
+    //배열 구조
+    var myjson4={"temp":["aaa","bbb","ccc"]} /* [] 배열을 의미 */
+    var mem={name:'홍길동',fColor:['파랑','녹색','빨강색']}
+    
+    function print1(){
+    	var msg=mem.name+"님이 좋아하는 색깔은"+mem.fColor.length+"개이고,"
+    	      msg+="그 중에서 제일 좋아하는 색깔은 "+mem.fColor[1]+"입니다."
+    	   alert(msg)
+    }
+</script>
+</head>
+<body>
+  <input type="button" value="test"  onclick="print1()">
+  <input type="button" value="이름 변경"
+             onclick="myjson.name='테스트';alert(myjson.name)">
+  <input type="button"  value="함수 호출"
+             onclick="alert(myjson.func);eval('a='+myjson.func);a()">           
+</body>
+</html>
+----------------------------------------------------------------------------------------------------
+ item2.json ->1)순수 파일로 작성된거 불러오기=>06.$.ajaxjson.html
+                     2)DB에서 데이터를 불러와서 웹상에 JSON 표기법으로 출력
+                     3)외부의 JSON파일을 불러와서 출력->접속해서 불러오는 경우
+
+ var item= {
+   "id":"1",
+   "name":"레몬",
+   "price":"3000",
+   "description":"피로회복에 좋고 비타민C 풍부"
+  }
+**********************************************************************
+    item.id   ==>불러오는 각 객체를 가리키는 용어=>$(this)=>태그객체 or this (일반객체)
+
+*******************
+    06.$.ajaxjson.html =>save as 07.$.getJSON().html
+                                                  ============
+
+$(function(){ 
+	 /*   요청문서 (url)  dataType:문서종류 
+	   (1)
+	 $.ajax({
+		  url:'item2.json',
+		  dataType:'json',  
+		  success:function(data){ */
+	  //(2)$.getJSON('경로포함해서 불러올 파일명(사이트주소)',function(매개변수){})
+	   $.getJSON('item2.json',function(data){
+			  //분리작업:파싱->find() or filter()
+			 $('#treeData').append('<tr><td>id</td>'+'<td>name+</td>'
+					                          +'<td>price</td>'+'<td>description+</td></tr>') 
+			   //불러올 데이터가 태그덩어리->$(선택자).each(~)	                          
+			  //불러올 데이터가 태그X ->$.each(컬렉션객체(배열),호출할 함수명 or 익명함수)
+			  $.each(data,function(){
+				  $('#treeData').append('<tr><td>'+this.id+'</td><td>'
+						                           +this.name+'</td><td>'
+						                           +this.price+'</td><td>'
+						                           +this.description+'</td></tr>')
+			  })//.each
+	 })//$.getJSON
+ })
+ ---------------------------------------------------------------------------------------------
+08.$.getJSON().html ->사이트 주소를 이용해서 외부에서 불러오기
+---------------------------------------------------------------------
+
+http://api.flickr.com/services/feeds/photos_public.gne?tags=raccoon&tagmode=any&format=json&jsoncallback=?
+
+<!--  
+         "title": "Recent Uploads tagged raccoon",
+		"link": "http:\/\/www.flickr.com\/photos\/tags\/raccoon\/",
+		"description": "",
+		"modified": "2019-03-17T19:43:03Z",
+		"generator": "http:\/\/www.flickr.com",
+		"items": [
+	   {
+			"title": "Lost \u2601\ufe0f",
+			"link": "http:\/\/www.flickr.com\/photos\/pure_embers\/32463827727\/",
+			"media": {"m":"http:\/\/farm8.staticflickr.com\/7847\/32463827727_92fe9aa458_m.jpg"},
+			"date_taken": "2019-03-15T02:42:29-08:00",
+			"description": " <p><a href=\"http:\/\/www.flickr.com\/people\/pure_embers\/\">pure_embers<\/a> posted a photo:<\/p> <p><a href=\"http:\/\/www.flickr.com\/photos\/pure_embers\/32463827727\/\" title=\"Lost \u2601\ufe0f\"><img src=\"http:\/\/farm8.staticflickr.com\/7847\/32463827727_92fe9aa458_m.jpg\" width=\"240\" height=\"235\" alt=\"Lost \u2601\ufe0f\" \/><\/a><\/p> <p>Vincent and Rackety got a little bit lost in the fog... they stopped to look around and work out the best way home but it was all whiteness &lt;3 <br \/> <br \/> ~<br \/> Circus bear by LindseyThomasMakes, raccoon by ZozoZolala<\/p>",
+			"published": "2019-03-17T19:43:03Z",
+			"author": "nobody@flickr.com (\"pure_embers\")",
+			"author_id": "63432462@N03",
+			"tags": "pure embers laura uk pureembers photography kitty teddy circus bear tricycle woods art lindsey thomas makes raccoon zozo zolala needlefelted fog lost"
+	   },
+-->
+
+<script>
+ $(function(){ 
+	 $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?"
+			 +"tags=raccoon&tagmode=any&format=json&jsoncallback=?",
+				function(data){
+		  //1.컬렉션객체(배열)(items항목만),function(인덱스번호,항목(item))
+		  $.each(data.items,function(i,item){
+			  //$("<h1>"+item.title+"</h1>").appendTo("#images")
+			  //<img src="경로포함해서 불러올 파일명">
+			  $("<img>").attr("src",item.media.m).appendTo("#images");
+			  //$("#images")append($("<img>").attr("src",item.media.m));
+			  //전체의 이미지 중에서 0~4 인덱스에 해당하는 이미지만 불러오기
+			  //$("<h1>"+item.title+"</h1>").appendTo("#images")
+			  /*
+			  if(i==4)
+				  return false; */
+				  
+		      if(i%2==1)  /* 인덱스가 1이 되면 더이상 불러오기 금지 */
+		    	  return false; 
+		  })//$.each
+	 })//function(data)
+ })
+ 
+</script>
+</head>
+<body>
+  <div id="images">
+  
+  </div>
+</body>
+--------------------------------------------------------------------------------------------------
+ 09.getBoardJson.jsp  =>DB상의 데이터를 불러와서 출력->JSON파일형태로 변환->출력
+
+    import="java.sql.*,lys.board.*" %>
+[
+  <%
+     Connection con=null;
+     PreparedStatement pstmt=null;
+     ResultSet rs=null;
+     DBConnectionMgr pool=null;
+     String sql="";
+     
+     try{
+           pool=DBConnectionMgr.getInstance();
+           con=pool.getConnection();
+           System.out.println("con=>"+con);
+           sql="select * from board order by num asc";
+           pstmt=con.prepareStatement(sql);
+           rs=pstmt.executeQuery();
+           while(rs.next()){
+        	   int num=rs.getInt("num");
+        	   String writer=rs.getString("writer");
+        	   String subject=rs.getString("subject");
+        	   String content=rs.getString("content");
+        	   //[{num:1,writer:'홍길동',~},{num:2,writer:'테스트',~}]
+        	  if(rs.getRow() >1) { //한개이상이라면	
+        		  out.print(",");
+        	  }%>
+        	  {
+        	     "num":<%=num%>,<br>
+        	     "writer":<%=writer%>,<br>
+        	     "subject":<%=subject%>,<br>
+        	     "content":<%=content%><br>
+        	  }
+    <% 
+           }//while
+     }catch(Exception e){
+    	 System.out.println("getBoardJson.jsp에러유발=>"+e);
+     }finally{
+    	 pool.freeConnection(con, pstmt,rs);
+     }
+  %>
+
+]
+---------------------------------------------------------------------------------
+06.$.ajaxjson.html을 save as
+
+10.$.get().html  <->$.post()와 반대로 get방식으로 ajax를 구현하고 싶을때 사용
+
+------------------------------------------------------------
+ 11.$.getScript().html
+ 12.종합예제=>실시간으로 db조회해서 웹에 출력 -> 실시간 특정단어 검색
+ --------------------------------------------------------------------------
+ 12.autoid.html
+
+
+
+
+<script>
+ $(function(){ 
+	 $('#submit').click(function(){
+		 $('#result').empty()//<->remove(태그+내용까지 통째로 삭제)->전의 내용 삭제
+		 var form_data=$('form').serializeArray() //json형식의 문자열로 변환
+		 //{seq:1,username=~,}
+		 /* (1) 입력받은값을 서버에 전송하기전에 확인절차
+		 $.each( form_data,function(index,value){ //폼의 입력받은 순서->인덱스번호
+			 $('#result').append(value.name+"="+value.value+"<br>")//앞(항목) 뒤(저장값)
+		 })
+		 */
+		 /*(2)
+		 var form_data=$('form').serialize()//쿼리문자열 형태로 전달 ->함수
+		 $('#result').text(form_data)  */
+		 //seq=1&username=%EC%9E%84%EC%8B%9C&password=1234&hobby=yoga&hobby=reading
+		 
+		 $.post('form.jsp',form_data,function(args){
+			 $('#result').html(args)
+		 })
+		 
+	 })
+ })
+ 
+</script>
+</head>
+<body>
+<!-- 
+     {매개변수명:전달할값,매개변수명2:전달할값2,,,}
+     폼에 입력한 데이터를 JSON형식의 문자열로 변환=>전송함수(serializeArray())
+ -->
+  <form>
+    <input type="hidden" name="seq"  value="1">
+    <label>이름을 입력하세요:</label>
+    <input type="text" name="username"><br>
+    <label>암호를 입력하세요:</label>
+    <input type="password" name="password"><br>
+    <input type="checkbox" name="hobby" value="music">music
+    <input type="checkbox" name="hobby" value="yoga">yoga
+    <input type="checkbox" name="hobby" value="reading">reading<br>
+    <input type="button" id="submit" value="전송">
+  </form>
+  <hr>
+  <div id="result"></div>
+</body>
+</html>
+
+
+
+
+

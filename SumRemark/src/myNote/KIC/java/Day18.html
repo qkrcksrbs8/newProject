@@ -1,0 +1,288 @@
+18일차(컬렉션 작성법2,쓰레드의 개요및 작성법)
+
+package j0124;
+******************************************************
+//메서드의 매개변수로써 전달받을때 사용가능한 제너릭
+ 2)<?  extends T> =>상속관계로 이루어진 클래스만 자료형으로 받겠다는 표시
+   ? 자식클래스(Man,Woman), T(부모클래스 Person)
+     부모클래스 뿐만아니라 자식클래스만 임의의 자료형을 입력받겠다
+********************************************************
+
+import java.util.*;
+
+
+class Test {    //부모클래스 T
+	String name;
+	//Person(){}
+}
+
+class Person {    //부모클래스 T
+	String name;
+	//Person(){}
+}
+
+//Man
+class Man extends Person{
+	//String name;
+	Man(String name){
+		this.name=name;//m.name="임시";
+	}
+	@Override
+	public String toString() {  //public String getName() {return name;}
+		// TODO Auto-generated method stub
+		return name;
+	}
+}
+
+//Woman
+class Woman extends Person{
+	//String name;
+	Woman(String name){
+		this.name=name;
+	}
+	@Override
+	public String toString() { 
+		// TODO Auto-generated method stub
+		return name;
+	}
+}
+
+public class WildExtend {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        //Man
+		List<Man> list=new ArrayList<Man>();
+		//Man m=new Man("임시");
+		list.add(new Man("임시"));
+		list.add(new Man("테스트"));
+		printData(list);
+		
+		//Woman
+		List<Woman> list2=new ArrayList<Woman>();
+		
+		list2.add(new Woman("유관순"));
+		list2.add(new Woman("신사임당"));
+		printData(list2);
+		
+		//Person
+		List<Person> list3=new ArrayList<Person>();
+	
+		list3.add(new Person());
+		printData(list3);
+		
+		//Test
+		List<Test> list4=new ArrayList<Test>();
+		
+		list4.add(new Test());
+		//printData(list4); <? extends Person> 적용 안됨 에러유발
+	}
+	//public static void printData(List<?> list) { 모든 클래스 다 적용
+	  public static void printData(List<? extends Person> list) { //상속관계만
+		for(Object obj:list)
+			System.out.println(obj);//obj.toString()->문자로 출력
+	}
+
+}
+==========WildSuper.java============================
+package j0124.super2;
+//메서드의 매개변수로써 전달받을때 사용가능한 제너릭
+/* 3)<?  super T> =>T(자식클래스)를 고정으로 지정해주고 자식클래스와 연관이
+ *                             부모클래스는 누구나 다 적용이 된다.(매개변수로 전달)
+ * 
+*/
+
+import java.util.*;
+
+
+class Person {    
+	String name;
+	Person(){}
+	Person(String name){
+		this.name=name;
+	}
+	public String toString() {
+		return name;
+	}
+}
+
+//Man
+class Man extends Person{ //T(Man)->자식클래스
+	//String name;
+	Man(String name){
+		this.name=name;//m.name="임시";
+	}
+	@Override
+	public String toString() {  
+		return name;
+	}
+}
+
+//Woman
+class Woman extends Person{ // T(자식클래스)
+	//String name;
+	Woman(String name){
+		this.name=name;
+	}
+	@Override
+	public String toString() { 
+		return name;
+	}
+}
+
+public class WildSuper {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        //Man
+		List<Man> list=new ArrayList<Man>();
+		//Man m=new Man("임시");
+		list.add(new Man("임시"));
+		list.add(new Man("테스트"));
+		printData(list);
+		
+		//Woman
+		List<Woman> list2=new ArrayList<Woman>();
+		
+		list2.add(new Woman("유관순"));
+		list2.add(new Woman("신사임당"));
+		printData(list2);
+		
+		//Person
+		List<Person> list3=new ArrayList<Person>();
+	
+		list3.add(new Person("사장님"));
+		list3.add(new Person("이사님"));
+		printData(list3);
+		
+		//Test
+		List<Double> list4=new ArrayList<Double>();
+		
+		list4.add(12.6); list4.add(45.6); list4.add(78.9);
+		printData(list4); //<? extends Person> 적용 안됨 에러유발
+	}
+	public static void printData(List<?> list) { //모든 클래스 다 적용
+	//public static void printData(List<? extends Person> list) { //상속관계만
+	//public static void printData(List<? super Person> list) { Person만 적용(Person 부모가 없기때문에)
+	//public static void printData(List<? super Man> list) { //Man,Person만 적용
+	//public static void printData(List<? super Woman> list) {//Woman,Person적용
+		for(Object obj:list)
+			System.out.println(obj);//obj.toString()->문자로 출력
+	}
+
+}
+
+Last In First Out ->LIFO=>스택
+=====================================================
+ThreadTest.java로 저장
+
+Thread->***자바의 자료구조(Collection)***=>네트워크
+
+p722
+
+   입출력->컬렉션->쓰레드->네트워크=>채팅프로그램
+   ================================
+   =>JDBC Programming(Oracle작업)
+=================================================
+
+**프로세스(process)->현재 실행중인 응용프로그램의 실행단위
+                  ->foreground process
+                    background process->support
+
+**쓰레드->응용프로그램 내에서 실행되는 최소 실행 단위
+
+쓰레드=>여러개 존재->동시에 실행되는 것처럼(멀티 쓰레드)
+         =>데이터를 공유해서 작업=>동기화 작업
+           =====================================
+
+** 쓰레드의 종류
+
+1.p724(사용자 정의 쓰레드)->?
+2.메인쓰레드 존재->main()
+
+                //Thread의 이름->getName(),고유의 id로 구분->getId()
+		System.out.println(Thread.currentThread().getName());//main
+		System.out.println(Thread.currentThread().getId());//1
+		while(true) { //무한루프도 쓰레드의 한종류
+			System.out.println("main Thread 실행중!!!");
+		}
+====================================
+
+웹브라우저->특정 사이트에 접속=======>
+            1.접속(쓰레드)
+                  홈페이지를 보여주는 프로그램
+            =>2.홈페이지를 보여주는 쓰레드
+              3.동영상,문자,데이터를 보여주는 쓰레드
+               쓰레드=>여러개 작동->멀티쓰레드
+
+   웹프로그래밍->JSP(홈페이지 작성)->톰캣서버(다양한 요청->처리)
+                                    **쓰레드 단위로 요청을 처리
+                                      ->메모리 적게 사용
+=====================================================================
+ ThreadTest.java
+
+채팅프로그램->실시간 문자전송,게임,주식
+
+** 쓰레드의 작성 방법 및 순서 **
+
+ 1.Thread클래스를 상속받는 경우(권장)
+
+public static void sleep(long millis)=>1000=>1초
+                  throws InterruptedException=>Exception
+
+
+1.Thread클래스 상속받는다->run()때문에
+2.run()를 작성->쓰레드의 기능을 작성(A~Z 반복출력)
+3.쓰레드객체를 생성->start()->Thread을 실행(내부적으로 run()실행)
+-------------------------------------------------------------------------
+
+  2.Runnable인터페이스를 상속받는 경우
+
+1.Runnable인터페이스를 상속받은 자식클래스를 작성
+2.Thread클래스의 객체를 생성
+3.Thread클래스의 객체를 생성할때 생성자의 인수로써
+   Runnable인터페이스를 상속받은 자식클래스의 객체를 사용
+  ->start()를 호출하기전에 
+
+public static void main(String[] args) {
+		// TODO Auto-generated method stub
+         MyThread my=new MyThread();//1.Runnable 객체 생성
+         Thread t=new Thread(my,"테스트"); //1.Runnable객체 2.쓰레드이름
+         t.start();//->run()  ->기존의 main쓰레드는 유지가 되면서 다른 쓰레드를 가동
+         //t.run();->기존의 main쓰레드는 멈춘상태에서 다른 쓰레드를 가동
+         //               성능에 영향을 미친다.(나쁜방향)
+         System.out.println("MainThread Terminated!!");
+	}
+-------------------------------------------------------------------
+
+   MultiThread2
+
+실행시킬 단을 입력?
+4
+4단:4*1=4
+4단:4*2=8
+4단:4*3=12
+4단:4*4=16
+4단:4*5=20
+4단:4*6=24
+4단:4*7=28
+4단:4*8=32
+4단:4*9=36
+
+한개이상의 쓰레드를 가동->서로 경쟁적으로 실행이 된다.
+----------------------------------------------------------
+p738->쓰레드 우선순위=>실행할 시간을 많이 준다.
+1~5~10=>멤버변수
+ =>정적상수
+
+ *** p767 쓰레드의 동기화 ***
+ ** 16장 네트워크 **
+==================================
+  미니 프로젝트 (채팅)
+ =======================
+ JDBC Programming
+
+
+
+
+

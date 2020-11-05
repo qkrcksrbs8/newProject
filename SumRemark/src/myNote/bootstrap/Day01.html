@@ -1,0 +1,293 @@
+8일차(jQuery의 Ajax마무리 및  부트스트랩개요및 작성법)
+
+ 13.serialize().html
+
+<script>
+ $(function(){ 
+	 $('#submit').click(function(){
+		 $('#result').empty()//<->remove(태그+내용까지 통째로 삭제)->전의 내용 삭제
+		 var form_data=$('form').serializeArray() //json형식의 문자열로 변환
+		 //{seq:1,username=~,}
+		 /* (1) 입력받은값을 서버에 전송하기전에 확인절차
+		 $.each( form_data,function(index,value){ //폼의 입력받은 순서->인덱스번호
+			 $('#result').append(value.name+"="+value.value+"<br>")//앞(항목) 뒤(저장값)
+		 })
+		 */
+		 /*(2)
+		 var form_data=$('form').serialize()//쿼리문자열 형태로 전달 ->함수
+		 $('#result').text(form_data)  */
+		 //seq=1&username=%EC%9E%84%EC%8B%9C&password=1234&hobby=yoga&hobby=reading
+		 
+		 $.post('form.jsp',form_data,function(args){
+			 $('#result').html(args)
+		 })
+		 
+	 })
+ })
+ 
+</script>
+</head>
+<body>
+<!-- 
+     {매개변수명:전달할값,매개변수명2:전달할값2,,,}
+     폼에 입력한 데이터를 JSON형식의 문자열로 변환=>전송함수(serializeArray())
+ -->
+  <form>
+    <input type="hidden" name="seq"  value="1">
+    <label>이름을 입력하세요:</label>
+    <input type="text" name="username"><br>
+    <label>암호를 입력하세요:</label>
+    <input type="password" name="password"><br>
+    <input type="checkbox" name="hobby" value="music">music
+    <input type="checkbox" name="hobby" value="yoga">yoga
+    <input type="checkbox" name="hobby" value="reading">reading<br>
+    <input type="button" id="submit" value="전송">
+  </form>
+  <hr>
+  <div id="result"></div>
+</body>
+</html>
+
+------------------------------------------------------------------------
+BootStrapTest =>새 프로젝트명
+
+  부트스트랩을 다운로드 받아서 =>프로젝트에 적용->압축풀어서 처리
+  ---------------------------------------------------------------------
+ 영문버전->4.3.1 =>http://boostrap.com
+ 한글버전->3.3.1 =>http://bootstrapk.com/
+
+===============
+**부트스트랩의 장점**
+
+ ** 개요 **
+ 디자인을 위한 프레임워크->html5,css,js에 관련된 모든 환경설정이 구축된
+                                       템플레이트
+
+1.다양한 스타일이 정의되어있어 디자인이 간편=>클래스 선택자를 알고 있어야
+2.CSS클래스명만 바꾸면 쉽게 디자인 적용 및
+  수정 가능
+
+3.반응형을 고려한 프레임워크->모바일 디자인도 같이 해결(반응형)
+4.무료 오픈 소스(다운로드 간편)
+5.다양한 예시 제공 (초보자도 쉬움)
+
+---------------------------------------------------------------------------
+
+**부트스트랩 단점**
+
+1.디자인이 정형화 됨 =>완전히 새로운 틀로 작성하기가 어렵다.
+                                  필요로 하는 부분만 편집=>프로젝트에 맞게 편집
+
+2.심플한 디자인 형태로 국내 정서랑 안맞음
+->Single Page 기준
+
+3.구조변경을 위한 프레임워크 수정시 구조를 잘 알아야 된다.=>수업
+===================================
+www.w3schools.com
+
+bootstrap/
+├── css/
+│   ├── bootstrap.css
+│   ├── bootstrap.css.map
+│   ├── bootstrap.min.css
+│   ├── bootstrap-theme.css
+│   ├── bootstrap-theme.css.map
+│   └── bootstrap-theme.min.css
+├── js/
+│   ├── bootstrap.js
+│   └── bootstrap.min.js
+└── fonts/
+    ├── glyphicons-halflings-regular.eot
+    ├── glyphicons-halflings-regular.svg
+    ├── glyphicons-halflings-regular.ttf
+    ├── glyphicons-halflings-regular.woff
+    └── glyphicons-halflings-regular.woff2
+
+====template=================
+
+<!DOCTYPE html>
+<html lang="ko">->웹페이지에 한글사용표시(<->en)
+  <head>
+    <meta charset="utf-8">->브라우저에서 다양한 언어를 사용해도
+                                            해당언어가 제대로 보이게 설정
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    =>현재 사용되는 IE버전을 최신으로 사용하라는 표시=>윈도우10
+
+    ************************************************************ (반응형 웹사이트)
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   ***************************************************************
+    =>반응형 웹페이지를 적용해주는 부분(모바일,데스크탑(해상도가 다르기때문에
+                                                         각자 맞는 웹페이지 설정)
+    =>content="width=device-width(장비에 맞게 넓이는 자동적으로 설정)
+
+    <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+    <title>부트스트랩 101 템플릿</title>
+
+    <!-- 부트스트랩 -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+->IE9 버전이하의 브라우저를 사용하는 경우에 html5을 지원을 해주는 옵션
+
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+
+    <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
+
+=====================================
+ 장비마다 클래스선택자가 구분이 되어있다.
+
+모바일폰(<768px) .col-xs-1~12
+태블릿(>=768px)=>.col-sm-1~12
+데스크탑(>=992px)=>.col-md-1~12
+데스크탑(>=1200px)=>.col-lg-1~12
+==========================
+
+   BootstrapTest
+           |
+            -WebContent
+                    |
+                     -css
+                       font
+                       js
+                    1.grid->grid1.html
+
+** 그리드 **
+
+1.부트스트랩의 핵심 레이아웃
+2.총 12열로 구성=>(1열씩 12개, 8,4, 4,4,4,6,6)로 레이아웃이 가능
+3.그리드의 합은 항상 12가 되어야 한다. 합이 12를 넘거나 부족하면
+   화면 레이아웃을 구성하는 데 문제가 발생할 수 있다.
+
+4.클래스 선택자를 기반으로 화면의 레이아웃을 잡아주는 역할
+5.클래스 접두사 분류
+
+모바일폰(<768px)=>.col-xs-
+태블릿(>=768px)=>.col-sm-
+데스크탑(>=992px)=>.col-md-
+데스크탑(>=1200px)=>.col-lg_
+
+ grid1.html->그리드의 기본구조,한행당 열이 12개를 구성
+
+ <div class="row">
+        <div class="col-md-4">.col-md-4</div>
+        <div class="col-md-4">.col-md-4</div>
+        <div class="col-md-4">.col-md-4</div>
+     </div>
+    <div class="row">
+        <div class="col-md-6">.col-md-6</div>
+        <div class="col-md-6">.col-md-6</div>
+    </div>
+
+ grid1.html save as grid2.html(중첩이 가능 내부 12까지 구성가능)
+
+<div class="container">
+     
+     <div class="row">
+        <div class="col-md-8">.col-md-8
+        	<div class="row">
+        	    <div class="col-md-4 pad10">내부 4개 col-md4</div>
+        	    <div class="col-md-8 pad10">내부 8개 col-md8</div>
+        	</div>
+        </div>
+        <div class="col-md-4">.col-md-4
+              <div class="row">
+        	    <div class="col-md-6 pad10">내부 6개 col-md6</div>
+        	    <div class="col-md-6 pad10">내부 6개 col-md6</div>
+        	</div>
+        </div>
+     </div>
+   ========================================
+  grid2.html save as grid3(offset).html
+
+  <div class="row">
+        <div class="col-md-5">.col-md-5</div>
+        <div class="col-md-5 col-md-offset-2">.col-md-5 col-md-offset-2</div>
+     </div>
+     <!-- bootstrap의 기본 css을 변경하고 싶다. 
+            원본파일을 편집하지 말고 재정의하는 방법을 사용할것.
+       -->
+     <div class="row">
+        <div class="col-md-4">.col-md-4</div>
+        <div class="col-md-7 col-md-offset-1">.col-md-7 col-md-offset-1</div>
+     </div>
+     
+     <div class="row">
+        <div class="col-md-3">.col-md-3</div>
+        <div class="col-md-6 col-md-offset-3">.col-md-6 col-md-offset-3</div>
+     </div>
+------------------------------------------------------------------
+  grid3.html save as grid4(2단).html
+
+http://fonts.googleapis.com/earlyaccess/nanumgothic.css
+
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+     @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+     header {height:100px;background-color:rgba(125,211,242,0.5);
+                  border-radius:15px;padding:10px;margin:10px 0;
+                  font-family:'Nanum Gothic',sans-serif;
+                  text-align:center;
+                  }
+     footer {font-family:'Nanum Gothic',sans-serif;text-align:center;}
+     ul.nav {background-color:rgba(210,201,201,.5);
+                  border-radius:10px;padding:10px;}
+    </style>
+==========================================
+ grid4(2단).html save as grid5(3단).html
+
+.banner {
+                  background-color:rgba(210,201,201,.5);
+                  border-radius:10px;padding:10px;
+                  height:200px;
+      }
+
+ ->오른쪽에 사이드바형태로 추가
+---------------------------------------------------------------------------
+grid5(3단).hml ->save as grid6(중첩2단).html
+
+******************************************************
+ <div class="col-md-9"><!-- 내부에 중첩된 그리드를 배치  -->
+           <div class="row">
+               <div class="col-md-5">
+                   <p>
+        디지털 경제의 확산으로 우리 주변에는 규모를 가늠할 수 없을 정도로 많은 정보와
+        데이터가 생산되는 '빅데이터(Big Data)' 환경이 도래하고 있다. 
+        빅데이터란 과거 아날로그 환경에서 생성되던 데이터에 비하면 그 규모가 방대
+        하고, 생성 주기도 짧고, 형태도 수치 데이터뿐 아니라 문자와 영상 데이터를 
+        포함하는 대규모 데이터를 말한다.
+               </p>
+               </div>
+               <div class="col-md-7">
+                <p>
+     PC와 인터넷, 모바일 기기 이용이 생활화되면서 사람들이 도처에 남긴 발자국
+     (데이터)은 기하급수적으로 증가하고 있다(정용찬, 2012a). 쇼핑의 예를 들어 
+     보자. 데이터의 관점에서 보면 과거에는 상점에서 물건을 살 때만 데이터가 
+     기록되었다. 반면 인터넷쇼핑몰의 경우에는 구매를 하지 않더라도 방문자가
+      돌아다닌 기록이 자동적으로 데이터로 저장된다.
+       어떤 상품에 관심이 있는지, 얼마 동안 쇼핑몰에 머물렀는지를 알 수 있다.
+      쇼핑뿐 아니라 은행, 증권과 같은 금융거래, 교육과 학습, 여가활동, 자료검색과
+       이메일 등 하루 대부분의 시간을 PC와 인터넷에 할애한다. 
+       사람과 기계, 기계와 기계가 서로 정보를 주고받는 사물지능통신
+       (M2M, Machine to Machine)의 확산도 디지털 정보가 폭발적으로 증가하게
+        되는 이유다.     
+     </p>
+               </div>
+           </div><!-- 안쪽의 row -->
+        </div>
+****************************************************
+ form2(inline)
+
+ form3(select,check,radio).html

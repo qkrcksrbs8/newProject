@@ -1,0 +1,472 @@
+10일차(부트스트랩 작성-component)
+
+ 1.css =>1~5.button 6.image->image.html
+--------------------------------------------------
+ <!--
+       이미지도 그리드시스템과 혼합해서 사용
+       1.img-rounded->둥근 테두리
+       2.img-circle->원형 이미지(ex 졸업앨범 사진)
+       3.img-thumnail->썸네일 (그림 주위에 테두리 쳐진형태)
+       4.img-responsive(반응형)->브라우저 크기를 줄이면 기본 이미지를 제외한 크기가 줄어둠)
+     
+       -->
+    <div class="container">
+        <h1>이미지 설정예제</h1>
+        <div class="col-sm-6">
+              <h5>기본 이미지(default)</h5>
+              <img src="../img/photo1.jpg" width="250" height="250">
+        </div>
+        <div class="col-sm-6">
+              <h5>둥근테두리</h5>
+              <img src="../img/photo2.jpg" class="img-rounded img-responsive" width="250" height="250">
+        </div>
+        <div class="col-sm-6">
+              <h5>원형 이미지</h5>
+              <img src="../img/photo1.jpg" class="img-circle img-responsive" width="250" height="250">
+        </div>
+        <div class="col-sm-6">
+              <h5>썸네일 이미지</h5>
+              <img src="../img/photo1.jpg" class="img-thumbnail img-responsive" width="250" height="250">
+        </div>
+    </div>
+
+--------------------------------------------------
+
+ 2.compoent =>웹디자인 정리(마무리) 6~10까지=>상단메뉴(메뉴,툴바)
+                      +언어쪽 부분
+
+            7.component->1.dropdown.html
+  ------------------------------------------------------------------------
+**드롭다운 특성**
+
+1.메뉴를 눌렀을때 하단으로 펼쳐지는 것
+2.단독으로 사용할 수없고 부트스트랩에 포함된 자바스크립트와 jQuery를 같이 사용 해야 한다.
+3.일반적으로 드롭다운 부분은 ul과 li로 구성된 리스트 태그에 적용된다.
+  --><nav></nav>와 연관->메뉴부분과 연관
+4.jquery에 관련된 파일을 불러와야 제대로 작동이 된다.
+
+ -----------------------------------------------------------------------                        
+   <div class="container">
+    <h1>드롭다운예제</h1>								
+    <h4>기본적인 드롭다운</h4>
+    <!--  
+        드롭다운해서 나오는 메뉴부분을 감싸주는 선택자->(dropdown)
+        메뉴를 표시->role(menu), 메뉴항목(=서브메뉴)->role(menuitem)
+        메뉴항목을 현재 안보이게 설정->ul class="dropdown-menu"
+        클릭했을때 드롭다운할 수 있도록 설정->data-toggle="dropdown"
+        tab키를 이용해서 특정메뉴를 선택해서 처리->tabindex="-1"
+        tab키로 여기를 클릭하세요로 이동 enter->메뉴 펼쳐질수 있도록 설정
+    -->
+      <div class="dropdown">
+          <a data-toggle="dropdown" href="#">여기를 클릭하세요</a>
+          <ul class="dropdown-menu" role="menu">
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">회원로그인</a></li>
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">자유게시판</a></li>
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">설문조사</a></li>
+          </ul>
+      </div>
+    </div>
+------------------------------------------------------------------------
+ 1.dropdown.html save as 2.dropdown(위치,분리선,사용불가).html
+
+  <h1>드롭다운예제</h1>								
+    <h4>기본적인 드롭다운</h4>
+    <!--  
+       드롭다운에 별도의 헤더를 추가
+       li태그내부에 class="dropdown-header"
+       어느특정 메뉴는 메뉴불활성화(사용불가)->li태그 내부에 class="disabled"
+    -->
+      <div class="dropdown">
+         <!--  <a data-toggle="dropdown" href="#">여기를 클릭하세요</a> -->
+         <input type="button" data-toggle="dropdown" 
+                                         class="btn btn-default btn-primary"  value="여기를 클릭하세요">
+          <ul class="dropdown-menu" role="menu">
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">회원로그인</a></li>
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">자유게시판</a></li>
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">설문조사</a></li>
+             <li role="presentation" class="divider"></li><!-- 분리선 -->
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">관리자 로그인</a></li>
+          </ul>
+      </div>
+      <hr>
+      <h4>눌렀을때 오른쪽에 배치(pull-right)</h4>
+       <div class="dropdown">
+          <a data-toggle="dropdown" href="#">여기를 클릭하세요</a>
+          <ul class="dropdown-menu pull-right" role="menu">
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">메뉴1</a></li>
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">메뉴2</a></li>
+             <li role="presentation" class="disabled"><a role="menuitem"  tabindex="-1"  href="#">메뉴3</a></li>
+             <li role="presentation" class="divider"></li><!-- 분리선 -->
+             <li role="presentation"><a role="menuitem"  tabindex="-1"  href="#">분리된 메뉴</a></li>
+          </ul>
+      </div>
+      
+    </div>
+---------------------------------------------------------------------------
+ button1.html을 save as 3.buttongroup(설정).html
+  
+<div class="container">
+    <h1>버튼그룹을 설정</h1>
+    <h4 class="text-primary">버튼그룹을 설정하지 않은 경우(default)</h4>
+    <input type="button" class="btn btn-default"  value="기본 모양 버튼">
+    <input type="button" class="btn btn-primary"  value="중요한 버튼">
+    <input type="button" class="btn btn-success"  value="긍정적 의미 버튼">
+    <input type="button" class="btn btn-info"  value="정보제공 버튼">
+    <p>
+    <hr>
+    <!-- 
+        1.버튼의 그룹을 설정(버튼을 div태그로 묶어주고 div태그 내부에 btn-group 선택자로 설정
+        2.버튼그룹의 크기를 일괄적으로 조절(btn-group-lg,btn-group-sm,btn-group-xs
+                                                                          ~-lg,~-sm,~-xs)
+     -->
+    <div class="btn-group btn-group-lg">
+    <input type="button" class="btn btn-default"  value="기본 모양 버튼">
+    <input type="button" class="btn btn-primary"  value="중요한 버튼">
+    <input type="button" class="btn btn-success"  value="긍정적 의미 버튼">
+    <input type="button" class="btn btn-info"  value="정보제공 버튼">
+    </div>
+    <p>
+    <hr>
+    <!-- 버튼그룹(1개 이상)을 툴바형식으로 변환
+         서로 다른 종류의 버튼그룹을  div태그로 묶어준뒤 class="btn-toolbar"로 설정
+         툴바형태의 버튼그룹에서는 버튼의 크기를 일정하게 유지
+      -->
+    <div class="btn-toolbar">
+	   <div class="btn-group btn-group-sm">
+	    <input type="button" class="btn btn-default"  value="버튼1">
+	    <input type="button" class="btn btn-primary"  value="버튼2">
+	    <input type="button" class="btn btn-success"  value="버튼3">
+	    <input type="button" class="btn btn-info"  value="버튼4">
+	    </div>
+    
+	    <div class="btn-group btn-group-xs">
+	    <input type="button" class="btn btn-default"  value="버튼5">
+	    <input type="button" class="btn btn-primary"  value="버튼6">
+	    </div>
+    </div>
+    
+    </div><!--container  -->
+ 
+  3.buttongroup(설정).html save as 4.buttongroup(정렬,중첩).html
+
+   <div class="container">
+    <h1>드롭다운 활용 예제</h1>
+    <h4 class="text-primary">버튼그룹의 중첩을 이용한 서브메뉴 이용</h4>
+    <!-- 
+       caret(캐럿)->메뉴를 펼치게 해주는 화살표
+                        메뉴이름<span class="caret"></span>
+                        dropdown-toggle->버튼의 클래스 선택자->둥근모서리 설정가능
+     -->
+    
+    <div class="btn-group">
+	    <button type="button" class="btn btn-default">버튼1</button> 
+	    <button type="button" class="btn btn-primary">버튼2</button>
+	    <div class="btn-group">
+	    <button type="button" data-toggle="dropdown" 
+	                class="btn btn-default dropdown-toggle">클릭<span class="caret"></span>
+	    </button>
+	         <ul class="dropdown-menu">
+	             <li><a   tabindex="-1"  href="#">공지사항</a></li>
+	             <li><a   tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a   tabindex="-1"  href="#">자료실</a></li>
+          </ul>
+	    </div><!--안쪽의 btn-group  -->
+    </div>
+    
+    <p>
+    <hr>
+    <!-- 
+        버튼그룹의 수직(btn-group-vertical),양쪽 정렬하기
+      -->
+    <div class="btn-group-vertical">
+	    <button type="button" class="btn btn-default">버튼1</button> 
+	    <button type="button" class="btn btn-primary">버튼2</button>
+	    <div class="btn-group">
+	    <button type="button" data-toggle="dropdown" 
+	                class="btn btn-default dropdown-toggle">클릭<span class="caret"></span>
+	    </button>
+	         <ul class="dropdown-menu">
+	             <li><a   tabindex="-1"  href="#">공지사항</a></li>
+	             <li><a   tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a   tabindex="-1"  href="#">자료실</a></li>
+          </ul>
+	    </div><!--안쪽의 btn-group  -->
+    </div>
+    <p>
+    <hr>
+    <!--양쪽정렬과 예외사항(button태그에서는 안된다)  -->
+    <h4>a태그로 이루어진 버튼의 경우에 양쪽정렬하기(btn-group-justified)</h4>
+    <div class="btn-group btn-group-justified">
+       <a href="#"  class="btn btn-default">버튼1</a>
+       <a href="#"  class="btn btn-default">버튼2</a>
+       <a href="#"  class="btn btn-default">버튼3</a>
+    </div>
+    
+    <h4>butto태그로 이루어진 버튼그룹의 경우에는 양쪽정렬이 적용안된다.</h4>
+    <div class="btn-group btn-group-justified">
+	    <button type="button" class="btn btn-default">버튼1</button> 
+	    <button type="button" class="btn btn-default">버튼2</button>
+	    <button type="button" class="btn btn-default">버튼3</button>
+    </div>
+---------------------------------------------------------------------------------------
+ 4.buttongroup(정렬,중첩).html  save as 5.buttondropdown.html
+
+<div class="container">
+    <h1>드롭다운 활용 예제3</h1>
+    <h4 class="text-primary">분할된 버튼그룹의 구분(색깔)</h4>
+    <!-- 안쪽의 기존의 버튼그룹을 제거하고 밖의 버튼그룹의 구성요소로 합류
+           캐럿이 적용된 버튼의 이름을 제거->다른 메뉴와 같이 결합
+     -->
+    <div class="btn-group">
+	    <button type="button" class="btn btn-default">버튼1</button> 
+	    <button type="button" data-toggle="dropdown" 
+	                class="btn btn-default dropdown-toggle"><span class="caret"></span>
+	    </button>
+	         <ul class="dropdown-menu">
+	             <li><a   tabindex="-1"  href="#">공지사항</a></li>
+	             <li><a   tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a   tabindex="-1"  href="#">자료실</a></li>
+          </ul>  
+    </div>
+    
+    <p>
+    <hr>
+    <!-- 2.버튼의 색깔을 부여 -->
+    <div class="btn-group">
+	    <button type="button" class="btn btn-default btn-danger">버튼2</button> 
+	    <button type="button" data-toggle="dropdown" 
+	                class="btn btn-default dropdown-toggle btn-danger"><span class="caret"></span>
+	    </button>
+	         <ul class="dropdown-menu">
+	             <li><a   tabindex="-1"  href="#">공지사항</a></li>
+	             <li><a   tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a   tabindex="-1"  href="#">자료실</a></li>
+          </ul>  
+    </div>
+    <p>
+    <hr>
+   <!-- 3. 버튼드롭다운의 크기 조절 ->btn-lg,btn-sm,btn-xs
+       버튼이 2개이기때문에 일관된 크기를 유지
+   -->
+    <h4>버튼드롭다운의 크기 조절</h4>
+    <div class="btn-group">
+	    <button type="button" class="btn btn-default btn-lg">버튼3</button> 
+	    <button type="button" data-toggle="dropdown" 
+	                class="btn btn-default dropdown-toggle btn-lg"><span class="caret"></span>
+	    </button>
+	         <ul class="dropdown-menu">
+	             <li><a   tabindex="-1"  href="#">공지사항</a></li>
+	             <li><a   tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a   tabindex="-1"  href="#">자료실</a></li>
+          </ul>  
+    </div>
+    <p><p>
+    <hr>
+    <h4>드롭다운,드롭업</h4>
+    <!-- 브라우저 하단에 위치->드롭업(dropup) -->
+    <div class="btn-group dropup">
+	    <button type="button" class="btn btn-default btn-sm">버튼4</button> 
+	    <button type="button" data-toggle="dropdown" 
+	                class="btn btn-default dropdown-toggle btn-sm"><span class="caret"></span>
+	    </button>
+	         <ul class="dropdown-menu">
+	             <li><a   tabindex="-1"  href="#">공지사항</a></li>
+	             <li><a   tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a   tabindex="-1"  href="#">자료실</a></li>
+          </ul>  
+    </div>
+   
+------------------------------------------------------------------------
+  드롭다운+버튼+버튼그룹 적용=>상단메뉴=>네비게이션
+                                                6.navigation(종류).html
+
+  www.jspstudy.co.kr
+
+부트스트랩의 내비게이션 기능
+
+->1) 내비게이션,  2)내비게이션바
+
+****************************************************
+내비게이션=>.nav 클래스 선택자 사용(상단메뉴)
+                  문서 내부 또는 메인 메뉴 또는 서브 메뉴를 만들때 사용
+                  종류->탭형, 알약형->디자인상의 차이는 없다.
+   
+*****종류*********
+            
+  탭형-><ul class=“nav nav-tabs”>와 같이 사용된다.
+  알약형-><ul class=“nav nav-pills”>와 같이 사용된다.
+
+내비게이션바=>.nav-bar 클래스 선택자 사용
+                    주로 메인 메뉴를 만들때 사용
+
+---** 네비게이션의 차이점 **---
+탭형 내비게이션=>메뉴 하단에 선이 있다.
+알약형 내비게이션=>메뉴 하단에 선이 없다.
+---------------------------------------------
+active상태에서의 메뉴 모양이 알약과 같은형태
+
+ 탭형과는 달리 알약형은 수직으로도 정렬이 가능하다
+
+8.naviagtion->navbar.html
+
+**
+navigation,navbar,pagination
+
+6.navigation(종류).html
+------------------------------
+<h1>BootStrap 예제</h1>
+    <div class="container">
+       <h1>네비게이션</h1>
+       <h4>탭형 네비게이션</h4>
+       <ul class="nav nav-tabs">
+             <li><a href="#"> 회원관리</a></li>
+             <li><a href="#">공지사항</a></li>
+             <li><a href="#">자유게시판</a></li>
+             <li><a href="#">자료실</a></li>
+       </ul>
+       <br>
+       <h4>미리 특정 메뉴를 선택해서 화면에 출력(class="active")</h4>
+       <ul class="nav nav-tabs">
+             <li><a href="#"> 회원관리</a></li>
+             <li class="active"><a href="#">공지사항</a></li>
+             <li><a href="#">자유게시판</a></li>
+             <li><a href="#">자료실</a></li>
+       </ul>
+       <p>
+       <hr>
+       <h4>알약형 네비게이션</h4>
+       <ul class="nav nav-pills">
+             <li><a href="#">Java</a></li>
+             <li><a href="#">Jsp</a></li>
+             <li><a href="#">Ajax</a></li>
+             <li><a href="#">jQuery</a></li>
+       </ul>
+       <br>
+       <h4>미리 특정 메뉴를 선택해서 화면에 출력(class="active")</h4>
+       <ul class="nav nav-pills">
+             <li><a href="#"> Java</a></li>
+             <li class="active"><a href="#">Jsp</a></li>
+             <li><a href="#">Ajax</a></li>
+             <li><a href="#">jQuery</a></li>
+       </ul>
+       <p>
+       <h4>알약형 수직정렬(nav-stacked)</h4>
+       <ul class="nav nav-pills nav-stacked">
+             <li><a href="#"> Java</a></li>
+             <li class="active"><a href="#">Jsp</a></li>
+             <li><a href="#">Ajax</a></li>
+             <li><a href="#">jQuery</a></li>
+       </ul>
+    </div>
+
+------------------------------
+6.navigation(종류).html save as 7.navigation(정렬,비활성화).html
+
+  <h4>탭형 네비게이션 양쪽정렬(nav-justified)</h4>
+       <ul class="nav nav-tabs nav-justified">
+             <li><a href="#"> 회원관리</a></li>
+             <li><a href="#">공지사항</a></li>
+             <li><a href="#">자유게시판</a></li>
+             <li><a href="#">자료실</a></li>
+       </ul>
+       <br>
+       <h4>미리 특정 메뉴를 선택해서 화면에 출력(class="active")</h4>
+       <ul class="nav nav-tabs">
+             <li><a href="#"> 회원관리</a></li>
+             <li class="active"><a href="#">공지사항</a></li>
+             <li><a href="#">자유게시판</a></li>
+             <li><a href="#">자료실</a></li>
+       </ul>
+       <p>
+       <hr>
+       <h4>알약형 네비게이션 양쪽정렬 및 메뉴비활성화(class=disabled)</h4>
+       <ul class="nav nav-pills nav-justified">
+             <li><a href="#">Java</a></li>
+             <li><a href="#">Jsp</a></li>
+             <li class="disabled"><a href="#">Ajax</a></li>
+             <li><a href="#">jQuery</a></li>
+       </ul>
+       <br>
+----------------------------------------------------------------------------------
+6.navigation(종류).html save as 8.navidropdown.html
+
+   <h1>네비게이션+드롭다운</h1>
+       <h4>탭형 네비게이션 드롭다운</h4>
+       <ul class="nav nav-tabs">
+             <li><a href="#">공지사항</a></li>
+             <li><a href="#">자유게시판</a></li>
+             <li><a href="#">Q&A</a></li>
+            <!-- div태그 대신에 li태그로 묶어준다.(=감싸준다)=>class="dropdown" -->
+             <li class="dropdown">
+	          <a data-toggle="dropdown" href="#">사용자<span class="caret"></span></a>
+	          <ul class="dropdown-menu" role="menu">
+	             <li><a role="menuitem"  tabindex="-1"  href="#">회원로그인</a></li>
+	             <li><a role="menuitem"  tabindex="-1"  href="#">자유게시판</a></li>
+	             <li><a role="menuitem"  tabindex="-1"  href="#">설문조사</a></li>
+	             <li class="divider"></li>
+	             <li><a role="menuitem"   href="#">관리자</a></li>
+	          </ul>
+         </li>
+         <!--  -->
+       </ul>
+------------------------------------------------------------------------------------
+  8.navigationbar ->1.navbar.html
+
+<h1>네비게이션바 구현</h1>
+    <div class="container">
+   <!-- 
+        navbar-header->사이트로고가 들어가는 부분과 모바일 상태에서의 아이콘이 나오는 부분
+        navbar-brand->로고 이미지 처리
+        <span class="icon-bar">아이콘 이미지 </span>
+        glyphicon glyphicon-접두어
+        
+    -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+        <!-- 
+           1.navbar-toggle->네비게이션의 화면 출력 유무
+           2.data-toggle=collapse"->모바일 상태에서 클릭하면 메뉴가 나오게 설정
+           3.data-target="찾아가는 문자열(.navbar-ex1-collapse)"
+                                 ->모바일 상태의 메뉴동작과 연동부분
+         -->
+	        <button type="button" class="navbar-toggle"
+	                     data-toggle="collapse"
+	                     data-target=".navbar-ex1-collapse">
+	        <span class="sr-only">navigation title</span>
+	        <!-- 
+	         <span class="glyphicon glyphicon-phone-alt"></span>
+	        <span class="glyphicon glyphicon-camera"></span> -->
+	        <span class="icon-bar"></span>
+	        </button>
+	        <a class="navbar-brand" href="#">회사의 로고이미지</a>
+        </div>
+        <!-- pc와 모바일부분이 같이 나오게 설정하는 부분
+              모바일 상태에서 나오게 설정하는 부분(메뉴)
+          1.맨처음에는 안보이게 설정(collapse)
+          2.navbar-collapse->모바일 상태에서 생긴 아이콘을 클릭하면 서브메뉴가
+                                       보여지게 해주는 역할을 하는 선택자
+          3.navbar-ex1-collapse=>모바일 상태에서 찾아가게 해주는 선택자
+          4.navbar-nav->네비게이션 바의 메뉴 설정
+        -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+             <li><a href="#">공지사항</a></li>
+             <li><a href="#">자유게시판</a></li>
+             <li><a href="#">Q&A</a></li>
+          </ul>
+          <!--검색폼(role="search")과 버튼 추가
+               1.navbar-form->네비게이션바에 추가된 폼
+               2.네비게이션의 항목->navbar-right(선택자)=>오른쪽에 배치
+           -->
+          <form class="navbar-form navbar-right" role="search">
+               <div class="form-group">
+                <input type="text" class="form-control"  placeholder="검색어 입력">
+               </div>
+               <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div>
+        
+    </nav>
+================================================
+ 3.jQuery
+----------------------------------------

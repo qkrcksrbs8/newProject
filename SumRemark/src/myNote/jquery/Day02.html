@@ -1,0 +1,400 @@
+4일차(jQuery의 DOM 작성법 및 이벤트처리방법)
+
+                                                 ********
+ 1.selector->2.dom->3.event->4.effect->5.Ajax(DB)
+                                                 *********
+
+ jQueryTest
+          |
+           -01Selector->01~09.html,10.filter.html, 11.filter2.html
+---------------------------------------------------------------------
+ 10.filter.html
+
+->같은태그의 출력되는 순서를 기준으로 설정
+	요소:odd->홀수번째 위치한 태그를 찾기
+	요소:even->짝수
+	요소:first->첫번째 위치를 가진 태그찾기
+	요소:last->마지막번째 위치를 가진 태그찾기
+	
+	요소:contains(찾는문자열)->찾는 문자열을 가진 태그찾기
+	요소:eq(n)->n번째 위치를 가진 태그찾기
+	요소:gt(n)->n번째보다 큰 위치를 가진 태그찾기 ex) >3
+	요소:lt(n)->n번째보다 작은위치(인덱스번호) 위치를 가진 태그찾기 <2
+	요소:not(선택자)->선택자와 일치하지 않은  태그찾기
+	요소:has(특정 태그)->특정태그를 찾을때 사용
+
+*/
+	 //$('tr:eq(0)').css('font-size','23pt').css('background','yellow')//$('tr:first')
+	 $('tr').eq(4).css('font-size','23pt').css('background','yellow')//$('tr:first')
+	 $('td:contains(A형)').css('background','purple')
+	 //$('tr:gt(2)').css('font-family','바탕체').css('font-size','16pt').css('color','red')
+	 $('tr:lt(2)').css('font-family','바탕체').css('font-size','16pt').css('color','red')
+	 $('tr').not(':even').css('color','green')//$('tr:not(':even')')~ 홀수번째를 찾아서 색깔 변경
+
+---------------------------------------------------------------------------------
+                   태그를 새로 생성추가,수정,삭제,조회,삽입,,,속성부여=>DOM
+
+      02dom->01.addClass.html
+
+      /*
+	    jQuery에서 스타일을 적용
+	    css()->속성명->속성값을 부여(하나씩 부여)->css({키명:속성명,,,})
+	    addClass(적용시킬 클래스명)->한꺼번에 여러개의 스타일을 동시에 설정하고 싶다.
+	     <-->removeClass(해제시킬 클래스명)
+	            toggleClass()
+	 */
+	 //$('h1').addClass('high_light_0') ->each()를 사용하지 않은 경우
+	 $('h1').addClass(function(index){//각 태그를 구분하는 인덱스번호를 브라우저가 전달
+		 //alert(index)//0,1,2,3,4
+		 return 'high_light_'+index;
+	 })
+
+   02.filter.html
+   
+    //jQuery->특정태그를 검색->contains(단어),not(찾는선택자)(범위)
+	 //형식)$('선택자').filter('찾는 조건에 해당하는 선택자(태그 or 속성선택자)')
+	 //$('h3:even').css({backgroundColor:'Black',color:'White'})
+	 /*
+	 $('h3').filter(':even').css({backgroundColor:'Black',color:'White'})
+	 $('h3:odd').css({backgroundColor:'Yellow',color:'Red'})
+	 */
+	 $('h3').filter(function(index){
+		               return index%2==0
+	      }).css({backgroundColor:'Black',color:'White'})
+	 //제어문 ->if형식과 비슷 ->$('선택자').is('찾을 조건')->true,false 
+	 $('h3').each(function(){
+	  	if($(this).is('.select')){  //$(this)=>조건에 만족하는 h3
+		  $(this).css('background','yellow').css('font-size','16pt')
+	  	}else{
+	  	  $(this).css('background','green')	
+	  	}
+	 })
+----------------------------------------------------------------------------------
+03.append.html
+
+  /*
+	       함수           설명
+	 $(A).appendTo(B)->A를 B의 기존자식의 뒤에 추가할때 사용
+	 $(A).prependTo(B)->A를 B의 기존자식의 앞에 추가할때 사용
+	 
+	 $(A).insertAfter(B)->A를 B뒤에 추가할때 사용(자식에 추가 X)
+	 $(A).insertBefore(B)->A를 B앞에 추가할때 사용(자식에 추가 X)
+	 */
+	 // (1)$('<h1>jQueryTest</h1>').appendTo('div')
+	 // (2)$('<h1>jQueryTest</h1>').prependTo('div')
+	 //(3)$('<h1>DOMTest </h1>').insertAfter('div')
+	 $('<h1>DOMTest </h1>').css('color','red').insertBefore('div')
+	 $('img').attr('width',300).insertBefore('div')
+
+03.append.html=>save as 04.append2.html
+
+  /*
+	       함수           설명
+	 $(A)->부모   B->자식
+	 $(A).append(B)->B를 A의 기존자식의 뒤에 추가할때 사용
+	 $(A).prepend(B)->B를 A의 기존자식의 앞에 추가할때 사용
+	 
+	 $(A).after(B)->B를 A뒤에 추가할때 사용(자식에 추가 X)
+	 $(A).before(B)->B를 A앞에 추가할때 사용(자식에 추가 X)
+	 */
+	 //(1)$('div').append('<h1>jQueryTes222</h1>')
+	 //(2)$('div').prepend('<h1>jQueryTest444</h1>')
+	 //(3)$('div').after('<h1>DOMTest 555</h1>')
+	 //(4)$('div > h1').css('color','red').before('<h1>DOMTest 6666 </h1>')
+	   $('img').attr('width',300).before('<h1>DOMTest 666</h1>') //이미지 앞에 배치
+------------------------------------------------------------------------------------
+    05.append3.html
+
+   /*  
+	 형식) 1.$(부모태그 > 자식태그)->부모태그 바로밑의 자식태그를 찾을때 (자손 포함 X)
+	         2.$(부모태그  자식태그)->부모태그 바로밑의 자식태그를 찾을때 (자손 포함 O)
+	         3.$(부모태그+자식태그)->부모태그 바로 옆에 인접한 형제태그(짝궁) 찾기
+	         4.$(부모태그~자식태그)->부모태그 바로 옆에 짝궁+다른 인접한 태그까지 찾기
+	          $('선택자').append(자식 태그)
+	 */
+	 $('*').addClass('textstyle')
+	 $('em~a').css('background-color','yellow')
+	     .each(function(){
+	    	 $('.result1').append($(this))
+	     })
+-----------------------------------------------------------------------------------
+  06.image.html
+
+  $('img').css('width',250)
+	 
+	 setInterval(function(){
+		 //clone()->복사하라
+		 // $('img').first() =>$('img:eq(0)') or $('img').eq(0) or $('img:first')
+		 $('img').first().clone().appendTo('body')
+	 },2000) //1.실행 반복할 함수,2.초단위(1000->1초)
+
+  07.extend.html =>jQuery에서 처리해주는 함수(2종류)
+
+  $(function(){ 
+	 //형식)$('선택자').함수(css,addClass,html,text,,,)=>특정 태그와 연관이 함수호출
+	 //형식)선택자와 상관없이 단독으로 호출해서 사용할 수 있는함수 $.함수명(~) ->$.ajax()
+	 var object1={} //비어있는 객체(내용이 없는)//var object1=new Object();
+	 //동적으로 속성(=멤버변수)을 추가->객체명.속성=값
+	 object1.name='임시';
+	 object1.addr='서울시 강남구 대현빌딩 3층';
+	 object1.age=23;
+	 alert(object1.name+'님의 주소는 '+object1.addr+'이고요, 나이는'+object1.age+'입니다.')
+	 
+	 //$.extends(기존의 객체명,객체명,객체명2,,,)=>객체배열 관리->$.each 처리
+	 var object2={name:'테스트'}
+	 $.extend(object2,{   //기존의 객체에 속성에 해당하는 내용을 추가시킬 목적
+		region:'서울시 강북구', 
+		age:34,
+		sung:'남자'
+	 })
+	 //출력=>자바->확장 for문=>자바스크립트의 jQuery->$.each
+	 //형식) $.each(1.출력할 객체명,2.매개변수로 index와 value값을 갖는 함수 호출)
+	 var output='';//출력할값을 저장할 변수
+	 $.each(object2,function(key,item){
+		 output+=key+':'+item+'\n'
+	 })
+	 alert(output);
+ })
+------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+  03.event
+        |
+         -01.bind.html
+
+$(function(){ 
+	 $('img').css('width',250)
+	 
+	 //형식) window.on이벤트종류명=호출할 함수명 or 익명함수
+	 //형식2)window.addEventListener(이벤트종류명,실행할 함수명)
+	 //형식3) $(이벤트발생 대상자 선택자).bind(등록할 이벤트종류명,함수명)
+	 //태그의 기본적인 기능(원래기능(링크(a)->이동,전송버튼(submit (X))))
+	 //event =>마우스의 클릭상태,좌표값(x,y)->매개변수로 전달 받으면 된다.
+	// $('a').bind('click',function(){ //(1)
+     $('a').bind('click',function(event){	 //(2)
+		 //alert('이벤트 연습중')
+		 //$(this) ->같은 태그를 구분하는 키워드 사용(이벤트 처리할때)
+		 var href=$(this).attr('href') //$('a').attr('href',값) 속성추가
+		 //alert(href)
+		 //$('img').attr('src',href)
+		 $('img').attr('src',$(this).attr('href'))
+		 //return false //(1)
+		 event.preventDefault()//(2)
+	 })
+ })
+ 
+</script>
+</head>
+<body>
+<ul><!--링크걸기(기본기능(페이지 이동기능))  -->
+  <li><a href="../picCats/Persian.jpg">Persian</a></li>
+  <li><a href="../picCats/RussianBlue.jpg">RussianBlue</a></li>
+  <li><a href="../picCats/BritishShorthairs.jpg">BritishShorthairs</a></li>
+</ul>
+
+<!-- <img src="../picCats/Persian.jpg"> -->
+<img>
+</body>
+</html>
+------------------------------------------------------------------------------
+
+4일차(jQuery의 DOM 작성법 및 이벤트처리방법)
+
+                                                 ********
+ 1.selector->2.dom->3.event->4.effect->5.Ajax(DB)
+                                                 *********
+
+ jQueryTest
+          |
+           -01Selector->01~09.html,10.filter.html, 11.filter2.html
+---------------------------------------------------------------------
+ 10.filter.html
+
+->같은태그의 출력되는 순서를 기준으로 설정
+	요소:odd->홀수번째 위치한 태그를 찾기
+	요소:even->짝수
+	요소:first->첫번째 위치를 가진 태그찾기
+	요소:last->마지막번째 위치를 가진 태그찾기
+	
+	요소:contains(찾는문자열)->찾는 문자열을 가진 태그찾기
+	요소:eq(n)->n번째 위치를 가진 태그찾기
+	요소:gt(n)->n번째보다 큰 위치를 가진 태그찾기 ex) >3
+	요소:lt(n)->n번째보다 작은위치(인덱스번호) 위치를 가진 태그찾기 <2
+	요소:not(선택자)->선택자와 일치하지 않은  태그찾기
+	요소:has(특정 태그)->특정태그를 찾을때 사용
+
+*/
+	 //$('tr:eq(0)').css('font-size','23pt').css('background','yellow')//$('tr:first')
+	 $('tr').eq(4).css('font-size','23pt').css('background','yellow')//$('tr:first')
+	 $('td:contains(A형)').css('background','purple')
+	 //$('tr:gt(2)').css('font-family','바탕체').css('font-size','16pt').css('color','red')
+	 $('tr:lt(2)').css('font-family','바탕체').css('font-size','16pt').css('color','red')
+	 $('tr').not(':even').css('color','green')//$('tr:not(':even')')~ 홀수번째를 찾아서 색깔 변경
+
+---------------------------------------------------------------------------------
+                   태그를 새로 생성추가,수정,삭제,조회,삽입,,,속성부여=>DOM
+
+      02dom->01.addClass.html
+
+      /*
+	    jQuery에서 스타일을 적용
+	    css()->속성명->속성값을 부여(하나씩 부여)->css({키명:속성명,,,})
+	    addClass(적용시킬 클래스명)->한꺼번에 여러개의 스타일을 동시에 설정하고 싶다.
+	     <-->removeClass(해제시킬 클래스명)
+	            toggleClass()
+	 */
+	 //$('h1').addClass('high_light_0') ->each()를 사용하지 않은 경우
+	 $('h1').addClass(function(index){//각 태그를 구분하는 인덱스번호를 브라우저가 전달
+		 //alert(index)//0,1,2,3,4
+		 return 'high_light_'+index;
+	 })
+
+   02.filter.html
+   
+    //jQuery->특정태그를 검색->contains(단어),not(찾는선택자)(범위)
+	 //형식)$('선택자').filter('찾는 조건에 해당하는 선택자(태그 or 속성선택자)')
+	 //$('h3:even').css({backgroundColor:'Black',color:'White'})
+	 /*
+	 $('h3').filter(':even').css({backgroundColor:'Black',color:'White'})
+	 $('h3:odd').css({backgroundColor:'Yellow',color:'Red'})
+	 */
+	 $('h3').filter(function(index){
+		               return index%2==0
+	      }).css({backgroundColor:'Black',color:'White'})
+	 //제어문 ->if형식과 비슷 ->$('선택자').is('찾을 조건')->true,false 
+	 $('h3').each(function(){
+	  	if($(this).is('.select')){  //$(this)=>조건에 만족하는 h3
+		  $(this).css('background','yellow').css('font-size','16pt')
+	  	}else{
+	  	  $(this).css('background','green')	
+	  	}
+	 })
+----------------------------------------------------------------------------------
+03.append.html
+
+  /*
+	       함수           설명
+	 $(A).appendTo(B)->A를 B의 기존자식의 뒤에 추가할때 사용
+	 $(A).prependTo(B)->A를 B의 기존자식의 앞에 추가할때 사용
+	 
+	 $(A).insertAfter(B)->A를 B뒤에 추가할때 사용(자식에 추가 X)
+	 $(A).insertBefore(B)->A를 B앞에 추가할때 사용(자식에 추가 X)
+	 */
+	 // (1)$('<h1>jQueryTest</h1>').appendTo('div')
+	 // (2)$('<h1>jQueryTest</h1>').prependTo('div')
+	 //(3)$('<h1>DOMTest </h1>').insertAfter('div')
+	 $('<h1>DOMTest </h1>').css('color','red').insertBefore('div')
+	 $('img').attr('width',300).insertBefore('div')
+
+03.append.html=>save as 04.append2.html
+
+  /*
+	       함수           설명
+	 $(A)->부모   B->자식
+	 $(A).append(B)->B를 A의 기존자식의 뒤에 추가할때 사용
+	 $(A).prepend(B)->B를 A의 기존자식의 앞에 추가할때 사용
+	 
+	 $(A).after(B)->B를 A뒤에 추가할때 사용(자식에 추가 X)
+	 $(A).before(B)->B를 A앞에 추가할때 사용(자식에 추가 X)
+	 */
+	 //(1)$('div').append('<h1>jQueryTes222</h1>')
+	 //(2)$('div').prepend('<h1>jQueryTest444</h1>')
+	 //(3)$('div').after('<h1>DOMTest 555</h1>')
+	 //(4)$('div > h1').css('color','red').before('<h1>DOMTest 6666 </h1>')
+	   $('img').attr('width',300).before('<h1>DOMTest 666</h1>') //이미지 앞에 배치
+------------------------------------------------------------------------------------
+    05.append3.html
+
+   /*  
+	 형식) 1.$(부모태그 > 자식태그)->부모태그 바로밑의 자식태그를 찾을때 (자손 포함 X)
+	         2.$(부모태그  자식태그)->부모태그 바로밑의 자식태그를 찾을때 (자손 포함 O)
+	         3.$(부모태그+자식태그)->부모태그 바로 옆에 인접한 형제태그(짝궁) 찾기
+	         4.$(부모태그~자식태그)->부모태그 바로 옆에 짝궁+다른 인접한 태그까지 찾기
+	          $('선택자').append(자식 태그)
+	 */
+	 $('*').addClass('textstyle')
+	 $('em~a').css('background-color','yellow')
+	     .each(function(){
+	    	 $('.result1').append($(this))
+	     })
+-----------------------------------------------------------------------------------
+  06.image.html
+
+  $('img').css('width',250)
+	 
+	 setInterval(function(){
+		 //clone()->복사하라
+		 // $('img').first() =>$('img:eq(0)') or $('img').eq(0) or $('img:first')
+		 $('img').first().clone().appendTo('body')
+	 },2000) //1.실행 반복할 함수,2.초단위(1000->1초)
+
+  07.extend.html =>jQuery에서 처리해주는 함수(2종류)
+
+  $(function(){ 
+	 //형식)$('선택자').함수(css,addClass,html,text,,,)=>특정 태그와 연관이 함수호출
+	 //형식)선택자와 상관없이 단독으로 호출해서 사용할 수 있는함수 $.함수명(~) ->$.ajax()
+	 var object1={} //비어있는 객체(내용이 없는)//var object1=new Object();
+	 //동적으로 속성(=멤버변수)을 추가->객체명.속성=값
+	 object1.name='임시';
+	 object1.addr='서울시 강남구 대현빌딩 3층';
+	 object1.age=23;
+	 alert(object1.name+'님의 주소는 '+object1.addr+'이고요, 나이는'+object1.age+'입니다.')
+	 
+	 //$.extends(기존의 객체명,객체명,객체명2,,,)=>객체배열 관리->$.each 처리
+	 var object2={name:'테스트'}
+	 $.extend(object2,{   //기존의 객체에 속성에 해당하는 내용을 추가시킬 목적
+		region:'서울시 강북구', 
+		age:34,
+		sung:'남자'
+	 })
+	 //출력=>자바->확장 for문=>자바스크립트의 jQuery->$.each
+	 //형식) $.each(1.출력할 객체명,2.매개변수로 index와 value값을 갖는 함수 호출)
+	 var output='';//출력할값을 저장할 변수
+	 $.each(object2,function(key,item){
+		 output+=key+':'+item+'\n'
+	 })
+	 alert(output);
+ })
+------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+  03.event
+        |
+         -01.bind.html
+
+$(function(){ 
+	 $('img').css('width',250)
+	 
+	 //형식) window.on이벤트종류명=호출할 함수명 or 익명함수
+	 //형식2)window.addEventListener(이벤트종류명,실행할 함수명)
+	 //형식3) $(이벤트발생 대상자 선택자).bind(등록할 이벤트종류명,함수명)
+	 //태그의 기본적인 기능(원래기능(링크(a)->이동,전송버튼(submit (X))))
+	 //event =>마우스의 클릭상태,좌표값(x,y)->매개변수로 전달 받으면 된다.
+	// $('a').bind('click',function(){ //(1)
+     $('a').bind('click',function(event){	 //(2)
+		 //alert('이벤트 연습중')
+		 //$(this) ->같은 태그를 구분하는 키워드 사용(이벤트 처리할때)
+		 var href=$(this).attr('href') //$('a').attr('href',값) 속성추가
+		 //alert(href)
+		 //$('img').attr('src',href)
+		 $('img').attr('src',$(this).attr('href'))
+		 //return false //(1)
+		 event.preventDefault()//(2)
+	 })
+ })
+ 
+</script>
+</head>
+<body>
+<ul><!--링크걸기(기본기능(페이지 이동기능))  -->
+  <li><a href="../picCats/Persian.jpg">Persian</a></li>
+  <li><a href="../picCats/RussianBlue.jpg">RussianBlue</a></li>
+  <li><a href="../picCats/BritishShorthairs.jpg">BritishShorthairs</a></li>
+</ul>
+
+<!-- <img src="../picCats/Persian.jpg"> -->
+<img>
+</body>
+</html>
+------------------------------------------------------------------------------
+
