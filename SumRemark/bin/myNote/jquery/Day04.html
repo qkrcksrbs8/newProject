@@ -1,0 +1,270 @@
+6일차(jQuery의 effect 및 Ajax 프로그래밍)
+
+시험범위:JSP 1일차~,Git,JQuery,Bootstrap
+----------------------------------------------
+  모델링 테이블,필드(프린트)->3:30시 ->화,수,목(발표)
+                                      ->개발일정
+----------------------------------------------------------
+jQueryTest
+       |
+        -04.effect-
+     01.slide.html=>save as 
+
+$(function(){ 
+	 //slideup
+	 $('#slideup').click(function(){
+		 //형식) $('선택자').slideUp() or ~slideUp(유지시간,함수)
+		 $('div').slideUp()
+	 })
+	 //slidedown
+	 $('#slidedown').click(function(){
+		//형식) $('선택자').slideDown() or ~slideDown(유지시간(초,문자열(slow,fast)),함수)
+		 $('div').slideDown("slow")
+	 })
+	 //slideToggle
+	 $('#slideToggle').click(function(){
+		//형식) $('선택자').slideToggle() or ~slideToggle(유지시간(초,문자열(slow,fast)),함수)
+		 $('div').slideToggle("slow") //height 조절
+	 })
+ })
+ 
+</script>
+</head>
+<body>
+  <button id="slideup">slideup</button>
+  <button id="slidedown">slidedown</button>
+  <button id="slideToggle">slideToggle</button>
+  <p>
+  <div></div><div></div><div></div><div></div>
+</body>
+</html>
+----------------------------------------------------------
+     02.fade.html
+
+$(function(){ 
+	 //fadeIn
+	 $('#fadeIn').click(function(){
+		 //형식) $('선택자').fadeIn(애니매이션 유지시간->,함수호출)->서서히 화면이 보이는경우
+		 $('div').fadeIn(3000,function(){ //3초동안 서서히 보여준뒤
+			 $('span').fadeIn(100)//0.1초
+		 })
+	 })
+	 //fadeOut->불투명도 감소->서서히 사라짐(투명도)
+	 $('#fadeOut').click(function(){
+		//형식) $('선택자').fadeOut(유지시간(초,문자열(slow,fast)),함수)->서서히 사라짐(투명도)
+		  $('div').fadeOut(3000,function(){ //3초동안 사라진다
+			 $('span').fadeIn(100)//0.1초 보여준다.
+		 })
+	 })
+	 //fadeToggle->fadeIn,fadeOut이 번갈아 가면서 화면에 출력
+	 $('#fadeToggle').click(function(){
+		//형식) $('선택자').fadeToggle() or ~slideToggle(유지시간(초,문자열(slow,fast)),함수)
+		 $('div').fadeToggle(3000,function(){ //3초동안
+			 $('span').fadeIn(100)//0.1초 보여준다.
+		 })
+	 })
+ })
+--------------------------------------------------------------
+ 03.TabMenu.html ->필수 디자인
+
+ <title>jQuery 실습</title>
+<style type="text/css">
+  * {                 /* 모든 태그는 좌측상단 0,0을 기준으로 배치 */
+        margin:0;
+        padding:0;
+    }
+  #container {
+     width:500px;
+     margin:50px auto; /* 양쪽 여백은 자동으로 설정 */
+  }
+  ul.tab li {  /* 탭의 제목에 대한 스타일 적용 */
+     list-style-type:none; /* 마커 제거 */
+     width:100px;
+     height:40px;
+     float:left; /* 왼쪽부터 정렬 */
+  }
+  ul.tab li a{ /* 탭의 글자색,정렬,탭이미지 불러오기 */
+    background:url("../img/tab.jpg");
+    display:block;
+    color:blue; /* 탭제목의 글자색 */
+    line-height:40px; /* 행간 */
+    text-align:center; /* 탭제목의 글자는 정가운데 배치 */
+  }
+  ul.tab li a.selected {  /* 맨 처음에 자바스크립트탭을 설정 */
+   background:url("../img/tab_selected.jpg");
+   text-decoration:none; /* 텍스트밑줄(underline,overline,line-through) */
+   color:#333;
+   cursor:default; /* 손가락이 아닌 default 화살표 */
+  }
+  
+  /* 선택된 탭에 대한 내용을 스타일 적용 */
+  ul.panel{
+      clear:both;/*위의 배치방법을 초기화 */
+      border:1px solid #9FB7D4;
+      border-top:none;
+      padding:0;
+  }
+  ul.panel li {
+      list-style-type:none;
+      padding:10px; /* 위,아래,오른쪽,왼쪽 전부 10px */
+      text-indent:1em; /* 맨 처음 나오는 행의 들여쓰기 설정(현재 폰트크기만큼) */
+      color:#333;
+  }
+  
+  
+</style>
+<script>
+ $(function(){ 
+	 //첫번째탭을 제외한 나머지탭의 내용은 안보이게 설정
+	 //not #tab1->#tab1을 제외한 나머지 #tab2~#tab5 안보이게 설정
+	 $("ul.panel li:not("+$("ul.tab li a.selected").attr("href")+")").hide()
+	 $("ul.tab li a").click(function(){
+		 $("ul.tab li a").removeClass("selected")//현재 선택된 탭에 설정된 스타일 해제
+		 $(this).addClass("selected")//현재 방금 선택된 탭으로 스타일 적용
+		 $("ul.panel li").hide();//전의 내용은 감춘다.(전부)
+		 $($(this).attr("href")).show();//현재 선택된 tab의 내용만 보여달라
+	 })
+ })
+ 
+</script>
+</head>
+<body>
+  <div id="container">
+     <ul class="tab"><!-- 탭제목만 따로 설정,링크걸때 #키워드 찾아간다. -->
+        <li><a href="#tab1" class="selected">JavaScript</a></li>
+        <li><a href="#tab2">CSS</a></li>
+        <li><a href="#tab3">HTML</a></li>
+        <li><a href="#tab4">jQuery</a></li>
+        <li><a href="#tab5">XHTML</a></li>
+     </ul>
+     
+     <ul class="panel"><!-- 선택된 탭에 따라서 내용이 나오는 부분 -->
+          <li id="tab1"><!-- JavaScript -->
+    ,,,
+====================================
+
+ 04.largeimage.html ->fadeIn,fadeOut 종합예제
+
+<style>
+  .small img {border:none;margin:10px;width:60px;height:60px;}
+</style>
+<script>
+ $(function(){ 
+	 $('.small a').hover(function(){
+	 var imgname=$(this).attr('href')
+	 //alert(imgname) fadeIn,fadeOut->fadeTo(유지시간,투명도(0 or 1),효과완료후 처리할 함수)
+	 $('.large').fadeTo("slow",0,function(){  //서서히 안보이게 설정하고 나서  0은 안보이게
+		 $('.large').attr('src',imgname)//$('.large').attr('src',$(this).attr('href'))
+	 }).fadeTo("slow",1)//서서히 눈에 보인다.(투명도 1)
+	 },function(){})
+ })
+ 
+</script>
+</head>
+<body>
+  <div class="small">
+  <a href="../img/photo1.jpg"><img src="../img/photo1.jpg"></a>
+  <a href="../img/photo2.jpg"><img src="../img/photo2.jpg"></a>
+  <a href="../img/photo3.jpg"><img src="../img/photo3.jpg"></a>
+  <a href="../img/photo4.jpg"><img src="../img/photo4.jpg"></a>
+  <a href="../img/photo5.jpg"><img src="../img/photo5.jpg"></a>
+  <a href="../img/photo6.jpg"><img src="../img/photo6.jpg"></a>
+  </div>
+  <img src="../img/photo1.jpg"  class="large">
+</body>
+</html>
+----------------------------------------------------------------
+        *** 05.Ajax ***->자바스크립트=>DB연동해서 어떻게
+                                   원하는 위치에 출력?
+
+   01.load.html
+   02.$.post().html
+
+$(function(){ 
+	 //$.post()->$.ajax()를 실행->post방식으로 서버에 요청->서버에 요청한 문서결과
+	 //                                         콜백함수전달->콜백함수가 받아서 원하는 위치에 출력
+	 //http://localhost:8090/jQueryTest/aa.jsp?name='홍길동'
+	$('#saveButton').click(function(){
+		var value=$('#name').val()
+		//alert(value)
+		/* 형식) $.post(1.url(요청문서),2.전달할 매개변수명{매개변수명:전달할값})
+		                       3.콜백함수명 4.요청문서종류(생략이 가능)
+		                       request.getParameter(name)
+		                       
+		*/
+		$.post('aa.jsp',{name:value},function(args){
+			//<%=name%>님 jQuery Ajax 환영합니다.^^
+			$('#resultDIV').html(args);//전달받은 문자열이 만약에 태그를 포함
+		})
+	})	
+	//지우기
+	$('#clearButton').bind('click',function(){
+		$('#resultDIV').empty();//내용만 제거
+	})
+ })
+ 
+</script>
+</head>
+<body>
+  이름:<input type="text" id="name"><br><p>
+  <button id="saveButton">전송</button>
+  <button id="clearButton">지우기</button>
+  <div id="resultDIV"></div>
+</body>
+</html>
+-------------------------------------------------------------
+  03.$.ajax().html
+
+<script>
+ $(function(){ 
+	 //$.ajax(1.url(요청문서),2.매개변수(생략가능),3.콜백함수)
+	 //~aa2.jsp?name='test'&age=23&addr='서울시 강남구 대현빌딩3'
+	 $.ajax({
+		 url:'aa2.jsp',  //1.url(속성명):value값만 변경가능
+		 data:{name:'test',age:23,addr:'서울시 강남구 대현빌딩3'}, //2.data:{변수:값,변수2:값2}
+		 success:function(args){ //3.success:성공적으로 보내준경우 익명함수(매개변수명)
+			 $('body').append(args)
+		 }//success
+	 })//$.ajax
+ })
+</script>
+----------------------------------------------------------------
+04.$.ajax().xml.html로 작성
+
+   =>1.getXml.jsp=>파일의 내용은 xml
+
+<%@ page language="java" contentType="text/xml; charset=UTF-8"
+    pageEncoding="UTF-8"                           =======>xml문서형태로
+                                                                                     서버에게 요청이가능
+    trimDirectiveWhitespaces="true"%>=>태그와 태그문자열사이에 공백이
+                                                               들어있으면 에러유발
+                                                               공백을 제거시키라는 옵션
+    <?xml version="1.0" encoding="UTF-8" ?> =>xml의 선언문 먼저 작성
+    <people>======================>xml의 최상위태그는 반드시
+                                                                          한개는 존재해야 한다.
+       <person>
+           <name>홍길동</name>
+           <job>학생</job>
+           <age>23</age>
+       </person>
+       <person>
+           <name>테스트</name>
+           <job>웹프로그래머</job>
+           <age>27</age>
+       </person>
+       <person>
+           <name>임시</name>
+           <job>직장인</job>
+           <age>34</age>
+       </person>
+    </people>
+
+
+
+        2.순수 xml파일을 불러오는 경우
+
+---------------------------------------------
+       API문서=>**** json파일 *****
+
+
+ 

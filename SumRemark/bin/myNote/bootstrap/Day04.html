@@ -1,0 +1,164 @@
+11일차(부트스트랩 작성-component2)
+
+   1.navbar.html save as => 2.navbardropdown.html
+
+ <h1>네비게이션바 구현</h1>
+    <div class="container">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+	        <button type="button" class="navbar-toggle"
+	                     data-toggle="collapse"
+	                     data-target=".navbar-ex1-collapse">
+	        <span class="sr-only">navigation title</span>
+	        <span class="icon-bar"></span>
+	        </button>
+	        <a class="navbar-brand" href="#">로고그림</a>
+        </div>
+        <!-- pc와 모바일 부분에서 출력되는 메뉴부분 -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+             <li class="dropdown">
+		          <a data-toggle="dropdown" href="#">사용자<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		             <li><a   href="#">회원로그인</a></li>
+		             <li><a   href="#">자유게시판</a></li>
+		             <li><a   href="#">설문조사</a></li>
+		          </ul>
+            </li>
+            <!--드롭다운 부분을 추가2  -->
+            <li class="dropdown">
+		          <a data-toggle="dropdown" href="#">관리자<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		             <li><a   href="#">관리자로그인</a></li>
+		             <li><a   href="#">공지사항</a></li>
+		             <li><a   href="#">통계처리</a></li>
+		          </ul>
+            </li>
+            <!-- 드롭부분3 -->
+            <li class="dropdown">
+		          <a data-toggle="dropdown" href="#">Q&A<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		             <li><a   href="#">자료실</a></li>
+		             <li><a   href="#">자유게시판</a></li>
+		             <li><a   href="#">설문조사2</a></li>
+		          </ul>
+            </li>
+            <!--  -->
+          </ul>
+-------------------------------------------------------------------------
+ 2.navbardropdown.html save as 3.navbardropdown(정렬,배치).html
+
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+        <!-- navbar을 오른쪽에 배치(navbar-right<->navbar-left) -->
+          <ul class="nav navbar-nav navbar-right">
+             <li class="dropdown">    ==========
+		          <a data-toggle="dropdown" href="#">사용자<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		             <li><a   href="#">회원로그인</a></li>
+		             <li><a   href="#">자유게시판</a></li>
+		             <li><a   href="#">설문조사</a></li>
+		          </ul>
+            </li>
+
+<!--검색폼(role="search")과 버튼 추가
+               1.navbar-form->네비게이션바에 추가된 폼
+               2.네비게이션의 항목->navbar-right(선택자)=>오른쪽에 배치
+           -->
+          <form class="navbar-form     navbar-left" role="search">
+               <div class="form-group"> ------------
+                <input type="text" class="form-control"  placeholder="검색어 입력">
+               </div>
+               <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+------------------------------------------------------------------
+
+3.navbardropdown(정렬,배치).html save as 4.navbardropdown(fixed).html
+
+<body>
+     <!--  
+         네비게이션바를 상단에 고정->nav태그에 navbar-fixed-top에 적용
+         넓이가 100%로 확장된다.(단점)=>navbar-static-top을 주면 양쪽 padding값 해결
+                                                                  navbar-fixed-bottom(하단에 적용)
+         navbar-inverse->네비게이션의 배경색과 텍스트색을 반전                                                         
+     -->
+    <div class="container">
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+
+<!-- 
+             1.네비게이션바에 버튼->navbar-btn
+             2.네비게이션바에 들어가는 문자열->navbar-text
+             3.네비게이션바에 들어가는 링크문자열->navbar-link (pull-right) 오른쪽에 배치
+           -->
+           <button type="button" class="btn btn-default navbar-btn">단순버튼</button>
+           <p class="navbar-text">로그인 </p>
+           <p class="navbar-text pull-right">
+              <a href="#" class="navbar-link">회원가입</a>
+           </p>
+----------------------------------------------------------------------------
+9.page
+
+  <!--  bmpage.html  ========>save as bmpage2(크기,이전,다음).html
+
+            <ul class="pagination"> 페이징처리 스타일 적용
+             활성화->li class="active"
+             비활성화=>li class="disabled"
+         -->
+        <ul class="pagination">
+         <li><a href="#"><<</a></li>
+         <li class="active"><a href="#">1</a></li>
+         <li><a href="#">2</a></li>
+         <li><a href="#">3</a></li>
+         <li><a href="#">4</a></li>
+         <li><a href="#">5</a></li>
+         <li><a href="#">6</a></li>
+         <li><a href="#">7</a></li>
+         <li><a href="#">8</a></li>
+         <li><a href="#">9</a></li>
+         <li class="disabled"><a href="#">10</a></li>
+         <li><a href="#">>></a></li>
+        </ul>
+
+ <!-- 
+           크기->pagination-lg,pagination-sm
+         -->
+        <ul class="pagination pagination-lg">
+	         <li class="disabled"><a href="#"><<</a></li>
+	         <li class="active"><a href="#">1</a></li>
+	         <li><a href="#">2</a></li>
+	         <li><a href="#">3</a></li>
+	         <li><a href="#">4</a></li>
+	         <li><a href="#">5</a></li>
+	         <li><a href="#">>></a></li>
+         </ul>
+         <hr>
+         
+         <ul class="pagination pagination-sm">
+	         <li class="disabled"><a href="#"><<</a></li>
+	         <li class="active"><a href="#">6</a></li>
+	         <li><a href="#">7</a></li>
+	         <li><a href="#">8</a></li>
+	         <li><a href="#">9</a></li>
+	         <li><a href="#">10</a></li>
+	         <li><a href="#">>></a></li>
+         </ul>
+         <hr>
+         <h4>페이지 가운데 정렬(class="pager")</h4>
+         <ul class="pager">
+            <li><a href="#">이전 페이지</a></li>
+            <li><a href="#">다음 페이지</a></li>
+         </ul>
+         <hr>
+         <h4>페이지 양쪽끝 정렬</h4>
+         <!-- 
+              class="previous"(왼쪽)  next(오른쪽)
+              페이지 비활성화->disabled
+          -->
+         <ul class="pager">
+            <li class="previous disabled"><a href="#">이전 페이지</a></li>
+            <li class="next"><a href="#">다음 페이지</a></li>
+         </ul>
+        
+   
+10.badge
+----------------------------------------------------------------------------
+ =>7.webMobile

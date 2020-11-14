@@ -1,0 +1,192 @@
+22일차(JDBC Programming 작성법2-고객관리)
+
+1.JDBC Programming 할려면 환경설정->오라클 드라이버 불러오기
+
+  프로젝트->오click->속성(화면캡처)
+
+2.오라클 접속(scott/tiger)
+
+create table person(
+name varchar2(15),
+age varchar2(3),
+tel varchar2(20));
+
+3.DB_Person.java에 DB접속->
+
+  insert->select
+====================================
+ 생성자에서 호출할 두개의 메서드를 작성
+
+//1.DB의 초기화 코드->connect(단순,반복->매개변수X 반환값X)->private
+	private void connect() {
+		
+        try {
+      	  //DB연결 실패=>java.lang.ClassNotFoundException: 
+      	  //                      oracle.jdbc.driver.OracleDriver
+      	  //1.접속할 드라이버를 메모리에 올리기(상위패키지.하위패키지...클래스명)
+      	  Class.forName("oracle.jdbc.driver.OracleDriver");
+      	  String url="jdbc:oracle:thin:@localhost:1521:orcl";//접속 오라클의 위치
+      	  //2.접속하기위해서 인증 ->1.접속경로 2.계정명 3.암호
+      	  con=DriverManager.getConnection(url,"scott","tiger");
+      	  System.out.println("접속 con=>"+con);
+      	  //oracle.jdbc.driver.T4CConnection@2d38eb89
+        }catch(Exception e) {
+      	  System.out.println("DB연결 실패=>"+e);
+        }
+	}
+	
+	//2.select결과만 따로 단순,반복=>select * from person
+	public void select() {
+		try {
+			String sql="select  *  from  person";//실행sql저장
+			//stmt=con.createStatement(sql);
+			pstmt=con.prepareStatement(sql);//con->pstmt객체를 생성
+			System.out.println("pstmt=>"+pstmt);
+			rs=pstmt.executeQuery();
+			System.out.println("rs=>"+rs);//NullPointerException 때문에 확인
+			//레코드 불러와서->model에 데이터를 넣어주면->JTable에 보여준다.
+			while(rs.next()) { //찾은 레코드가 있으면 이동하라(rs.next())
+				String name=rs.getString("name");//rs.get자료형("필드명")
+				String age=rs.getString("age");//rs.getInt("age");  number
+				String tel=rs.getString("tel");
+				//모델에 값을 저장->Object []->model에 추가->JTable에 결과확인
+				Object data[]= {name,age,tel}; //tf1.getText(),,,
+				model.addRow(data);
+				System.out.println(name+","+age+","+tel);
+			}
+		}catch(Exception e) {
+			System.out.println("select()메서드 실행오류=>"+e);
+		}
+	}
+	
+====================================================================
+actionPerformed메서드에 추가
+
+//똑같이 테이블에도 데이터가 들어갈 수 있도록 처리
+			//String sql="insert into person values('테스트2','34','02-123-0987');
+			try {
+				String sql="insert  into  person  values(?,?,?)";
+				pstmt=con.prepareStatement(sql);
+				pstmt.setString(1, tf1.getText());
+				pstmt.setString(2, tf2.getText());
+				pstmt.setString(3, tf3.getText());
+				int insert=pstmt.executeUpdate();//1->성공수행,0->실패
+				System.out.println("데이터 성공유무(insert)=>"+insert);
+				//select
+			    sql="select  *  from  person";//실행sql저장
+				pstmt=con.prepareStatement(sql);//con->pstmt객체를 생성
+				rs=pstmt.executeQuery();
+				while(rs.next()) { //찾은 레코드가 있으면 이동하라(rs.next())
+					String name=rs.getString("name");//rs.get자료형("필드명")
+					String age=rs.getString("age");//rs.getInt("age");  number
+					String tel=rs.getString("tel");
+					System.out.println(name+","+age+","+tel);
+				}
+			}catch(Exception e2) {
+				System.out.println("person테이블에 데이터입력 실패=>"+e2);
+			}
+
+===================================================================
+MDI창을 만드는 방법=>SDI창
+
+  JInternalTest.java
+  
+  도서관리=>책을 관리 프로그램(고객관리)
+  학점관리
+  자동차관리(판매,대여)
+  ,,,
+
+ 개인->BookCustomer.java 모델 작성(테이블 1개)
+ 2명=>테이블 1~2개이상
+ 3명=>테이블 2~3개이상
+=================================================
+
+//DB 접속
+	private void accDb() { //자바->입출력,DB접속,네트워크(Check Exception)
+		try {
+	      	  //1.접속할 드라이버를 메모리에 올리기(상위패키지.하위패키지...클래스명)
+	      	  Class.forName("oracle.jdbc.driver.OracleDriver");
+	      	  String url="jdbc:oracle:thin:@localhost:1521:orcl";//접속 오라클의 위치
+	      	  //2.접속하기위해서 인증 ->1.접속경로 2.계정명 3.암호
+	      	  conn=DriverManager.getConnection(url,"scott","tiger");
+	      	  //추가(신규,수정->레코드 이동=>자동으로 스크롤 이동시 수정이 반영)
+	      	  stmt=conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+	      			   ResultSet.CONCUR_UPDATABLE);
+	      	  System.out.println("stmt=>"+stmt);
+	      	  /*
+	      	   * ResultSet.TYPE_SCROLL_SENSITIVE->양방향으로 스크롤이 동시 업데이트반영
+	      	   * ResultSet.CONCUR_UPDATABLE->현재 커서위치에서 정보 업데이트 가능
+	      	   */
+	      	  System.out.println("접속 conn=>"+conn);
+	      	  //oracle.jdbc.driver.T4CConnection@2d38eb89
+	        }catch(Exception e) {
+	      	  System.out.println("DB연결 실패=>"+e);
+	        }
+	}
+	//고객테이블의 고객번호순으로  정렬(오름차순)
+	private void init() {
+		try {
+			sql="select * from customer order by c_bun asc";
+			//sql="select max(c_bun) from customer";
+			rs=stmt.executeQuery(sql);
+			//맨 마지막 레코드번호 이동->현재행->마지막 레코드수
+			rs.last();//10
+			iTotal=rs.getRow();//현재 행번호(맨 마지막 레코드번호)
+			iLast=rs.getInt("c_bun");//마지막 레코드행의 고객번호만 구하기
+			rs.first();//첫번째 레코드로 이동 rs.previous, rs.next()
+		}catch(Exception e) {
+			System.out.println("고객테이블 불러오기 실패->"+e);
+		}
+	}
+	//현재 DB에 접속한 행을 보여주는 메서드(단순하고 반복적인 구문)
+	private void display() {
+		try {
+			//형식) 필드값 불러오기=>rs.getString("필드명") ,rs.getInt("필드명");
+			txtCbun.setText(rs.getString("c_bun"));//txtCbun.setText("1");
+			txtCirum.setText(rs.getString("c_irum"));//txtCbun.setText("이광민");
+			txtCjunhwa.setText(rs.getString("c_junhwa"));//고객전화
+			txtCdaesu.setText(rs.getString("c_daesu"));//대여수
+			txtCjuso.setText(rs.getString("c_juso"));//주소
+			taCmemo.setText(rs.getString("c_memo"));//메모
+			
+			lblRec.setText(rs.getRow()+"/"+iTotal);//현레코드번호/전체 레코드수
+		}catch(Exception e) {
+			System.out.println("display()실행 오류=>"+e);
+		}
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		//레코드 이동=>다중 if문
+		try {
+			if(e.getSource()==btnF) {//<<
+				rs.first();//레코드가 첫번째 이동
+				display();//다시 보여달라
+			}else if(e.getSource()==btnP) {//<
+				if(rs.isFirst()) return;//첫번째행->이전행으로 이동X
+				rs.previous();
+				display();
+			}else if(e.getSource()==btnN) {//>
+				if(rs.isLast()) return; //마지막 레코드라면 이동불가
+				rs.next();
+				display();
+			}else if(e.getSource()==btnL) {//>>
+				rs.last();
+				display();
+			}
+		}catch(Exception e2) {
+			System.out.println("레코드 이동오류=>"+e2);
+		}
+		
+	}
+=========================================================
+
+
+
+
+
+
+
+
+

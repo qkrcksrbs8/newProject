@@ -17,7 +17,6 @@
 	<bean class="com.onlyReport.report.service.impl.ReportServiceImpl" />
 	<bean class="com.onlyReport.report.dao.ReportDAO" />
 	
-
     <!-- (4) viewResolver(위치)(prefix), 이동할페이지의 확장자를 지정(suffix) -->
 <bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

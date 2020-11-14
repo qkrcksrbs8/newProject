@@ -1,0 +1,168 @@
+5일차(jQuery의 이벤트처리방법2)
+
+ jQueryTest
+       |
+        -03.event
+                01.bind.html
+                02.toggleClass.html
+
+-------------------------------------------------------------
+<style>
+   p {margin:4px;font-size:16px; 
+        font-weight:bolder;cursor:pointer    /*마우스 모양*/}
+   .blue {color:blue}
+</style>
+<title>jQuery 실습</title>
+<script>
+ $(function(){ 
+	 //$('p').bind('click',function(){
+     //jQuery에서의 이벤트 연결방법2 ->$(선택자).이벤트종류명(function(){})
+     $('p').click(function(){
+		 //형식 $(선택자).toggleClass(클래스 선택자(설정된))  addClass()<->removeClass()
+		 $(this).toggleClass('blue') //같은 태그 구분(이벤트를 발생시킨 태그)->$(this)
+	 })
+ })
+----------------------------------------------------------------------
+              03.bind2.html
+
+ //이벤트 연결방식->2가지 차이점?   
+	 /*  형식) 등록할 이벤트명:function(){} ->익명함수형태로 코딩
+	   1.bind를 사용하는 경우->현재 발생시킬 이벤트 뿐만아니라 다른 이벤트도 연결이 가능
+	   2.bind를 사용X ->click->발생시킨 이벤트만 처리
+	 */
+	 $('img').bind({  //<->unbind()=>이벤트 연결해제시켜주는 함수
+		 mouseout:function(){
+			 $('img').attr('src','../picCats/Persian.jpg')
+		 },
+		 mouseover:function(){
+			 $('img').attr('src','../picCats/RussianBlue.jpg')
+		 },
+		 click:function(){
+			 alert('bind함수를 이용한 연결테스트입니다.')
+		 } 
+	 })
+	 //$('img').mouseout(funtion(){})
+	 //$('img').mouseover(funtion(){})
+	 //$('img').click(funtion(){})
+-----------------------------------------------------------------------
+ 04.remove.html
+
+*************************************************
+ 1)remove() 함수=>전체 다삭제(구조를 삭제->내용도 같이 삭제)
+ 2)empty()함수=>구조는 유지가 되는데 내용만 삭제시킬 경우
+*************************************************
+
+$(function(){ 
+	 //$('#button1').bind('click',function(){})
+	 $('#button1').click(function(){
+		 $('#div1').remove() //전체 삭제->drop table 테이블명(구조까지 삭제)
+	 })
+	 //
+	 $('#button2').click(function(){
+		 $('#div1').empty()//=>특정태그의 자식태그를 포함한다면 자식태그들도 삭제
+	 })
+	 //
+	 $('#button3').click(function(){
+		 //1.empty->태그의 내용을 삭제시킬때 사용-><p>div second</p>-><p> </p>
+		 $('.test').empty() //delete from 테이블명->내용만 삭제
+	 })
+-------------------------------------------------------------------------
+05.event.html
+========================================
+ 1.발생된 이벤트를 딱 한번만 실행시키고 싶다.->one함수
+ 2.연결된 이벤트를 해제시키고 싶으면 unbind('해제시킬 이벤트종류명')
+                                                   unbind() ->전부 해제
+ 이벤트를 발생시키는 객체를 얻어오는 방법
+
+ $(event.target)  or $(this)
+========================================
+$(function(){ 
+	 //이벤트객체->이벤트를 발생시킨 객체에 대한 정보를 가지고 있는 객체(target속성에 저장)
+	 //$('img').bind('dblclick',function(event){
+	 $('img').one('dblclick',function(event){	 
+		 //alert('이미지 더블클릭')
+		 //var $target=$(event.target)
+		 var $target=$(this)
+		 alert($target.width()+","+$target.height())//120,120
+		 $target.width($target.width()*2)
+		 //형식2) $(이벤트발생대상자 선택자).unbind('해제시킬 이벤트종류명')
+		 //형식3)$('이벤트발생대상자 선택자').unbind()->모두 연결해제
+		 //$target.unbind() //$target.unbind('dblclick')
+	 })
+ })
+------------------------------------------------------------
+06.hover.html
+
+ $(function(){ 
+	//형식) $('선택자').hover(1.mouseover|function(){},2.mouseout|function(){}) 
+	// mouseover와 mouseout을 번갈아 가면서 호출해주는 함수->hover
+	$('h1').hover(function(){
+		$(this).addClass('reverse')
+	},function(){
+		$(this).removeClass('reverse')
+	})
+ })
+---------------------------------------------------------------
+07.keyup.html
+
+ $(function(){ 
+	 //사용자가 글자를 입력했을때 발생하는 이벤트->keyUp
+	 //$('input').bind('keyup',function(){})
+	 $('input').keyup(function(){
+		 var value=$(this).val()
+		 //출력구문
+		 report(value)
+	 })
+	 //버튼을 눌렀을때 input의 내용지우고 커서 입력
+	 $('button').click(function(){
+		 //$('input').val('val 함수 연습중')
+		 $('input').val('')
+		 $('input').focus()
+	 })
+	 //div태그에 입력받은 값을 추가시켜주는 함수 작성
+	 function report(msg){
+		 $('#console').text(msg) //<->$('#console').text()(Getter 함수)
+	 }
+----------------------------------------------------------------------
+08.change.html->combobox
+
+$(function(){ 
+	 $('#sel').change(function(event){
+		 var imgSrc=$(event.target).val()
+		 //var imgSrc=$(this).val()
+		 $('#img').attr('src',imgSrc)
+	 })
+ })
+
+09.formevent.html
+
+$(function(){ 
+	 $('h1').css({'color':'red','text-decoration':'underline'})
+	 //형식) $('자식선택자').wrap('부모태그 내용')
+	 $('#message').wrap('<h2>요소안에 자료를 넣기</h2>')
+	 //onfocus이벤트->커서가 들어가는 경우 발생
+	 $('input').focus(function(){  //$('input').bind('focus',function(){})
+		 $(this).addClass('focused') //커서가 들어간 inputbox를 의미
+	 })
+	 //onblur이벤트->현재 input에서 커서가 벗어났을때 발생하는 이벤트
+	 $('input').blur(function(){
+		 $(this).removeClass('focused')
+	 })
+	 //전송버튼의 기본적인 기능->데이터를 전송(action="aa.jsp")
+	 $('#frm').submit(function(event){  //회원가입->onSubmit이벤트 발생시
+		var new_line=$('<li>'+$('#data').val()+'</li>')
+		 $('#disp').append(new_line)
+		 //추가
+		 $('#data').val('')//전의 데이터 지우기
+		 $('#data').focus()//커서입력
+		 //---------------------
+		 event.preventDefault()//전송을 하지 못하게 설정
+		// return false
+	 })
+	 //지우기 버튼을 클릭
+	 $('#clear').click(function(){
+		 $('#disp').empty()
+	 })
+ })
+ ----------------------------------------------------------------
+10.input.html(회원가입)->input.js를 만들어서 따로 불러오기

@@ -1,0 +1,165 @@
+20일차(네트워크2,소켓프로그래밍(채팅))
+
+ 입출력->** 컬렉션 **->쓰레드=>네트워크=>자바 어플리케이션(미니 프로젝트)
+                                    250라인
+
+ =>JDBC=>Web(html5,css3,javascript,java)=>jsp(javascript)
+  =======================================
+  프로젝트->DML+join까지(오라클 2일차)
+
+ //import를 안하는 방법 ->최상위패키지명.하위패키지명...클래스명
+		 java.util.Scanner sc=new java.util.Scanner(System.in);
+		 System.out.println("접속할 사이트명?(http://도메인이름)");
+		 String domain=sc.next();//sc.nextLine()
+         new URLTest2(domain);//index.html
+
+  ==============================================================
+  URL url=new URL(s);//접속할때 반드시 http프로토콜을 써야 된다.
+		//2.접속한 컴퓨터-스트림을 이용--내컴퓨터를 연결
+		InputStream in=url.openStream();//반환형을 통해서 객체를 얻어온다.
+		//InputStream in=new InputStream();
+		//3.데이터를 가져와서 저장(변수)->콘솔에 출력
+		String ss;
+		BufferedReader br=new BufferedReader
+				              (new InputStreamReader(in));//System.in(내컴퓨터)
+		//출력스트림 추가
+		FileWriter fw=new FileWriter("c:/webtest/3.java/url2.txt");
+		while((ss=br.readLine())!=null) {//계속 읽어들일 수 있는 상태라면
+			  //콘솔에 출력
+			  System.out.println(ss);
+			  //파일에 출력->FileOutputStream,FileWriter
+			  fw.write(ss);
+		}
+		in.close(); br.close();
+====================================================================
+******
+ 채팅서버----------------------------채팅클라이언트 연결
+
+ServerSocket(클라이언트와 접속하기위해)     ----- Socket
+Socket(데이터 전송하기위해 필요)-  ---------클라이언트와 통신
+==========================
+InetAddress 클래스는 자바 프로그램 안에서 IP 번호와 
+                     URL 주소를 알아내고 싶을 때 사용한다
+
+네트워크정보를 확인==>NetWorkTest.java
+
+//www.naver.com->ip주소
+		InetAddress ia=null;
+		InetAddress ia2[];//컴퓨터가 한대이상의 주소를 관리(웹서버)
+		//원격컴퓨터에 접속->도메인 이름
+		ia=InetAddress.getByName("www.naver.com");//unknownHostException
+		System.out.println("서버주소=>"+ia.getHostAddress());//125.209.222.142
+	    //서버가 한대이상->getAllByName
+		System.out.println("====================");
+		ia2=InetAddress.getAllByName("www.naver.com");//ip주소가 몇개
+		//확장 for문
+		for(InetAddress aa:ia2)
+			System.out.println("서버들 주소=>"+aa.getHostAddress());
+		System.out.println("==자기 컴퓨터의 정보==");
+		InetAddress host=InetAddress.getLocalHost();//자기 컴퓨터의 정보
+		System.out.println("내 컴퓨터명=>"+host.getHostName());//문자열
+		System.out.println("내 ip주소=>"+host.getHostAddress());//숫자
+URL,URLConnection=>접속->접속한 컴퓨터의 정보를 가져오기
+
+                              =>파일로 저장
+URLTest.java
+=====================================
+ <<예습>>
+
+소켓 프로그래밍
+************************
+TCP & UDP*(차이점,특성)
+************************
+
+TCP 소켓 =>채팅 프로그램(표준)->p960~971 (채팅소스 분석)
+          p964~965 (채팅의 내부적인 처리방법)
+
+ =>Swing 2=>미니 프로젝트(JTable,JInternal 클래스)
+ =>DB접속
+=======================================================
+ TCP 소켓의 장점
+
+ 상호 연결된 상태에서 통신하는 방법이기에 
+ 높은 신뢰성이 요구되는 애플리케이션에 적합하다. 
+  ==>데이터를 전송->확인->문제발생->다시 재전송을 한다.
+ 하지만, 
+
+ TCP 소켓의 단점
+
+ 높은 신뢰성이 요구되지 않거나 많은 양의 데이터를 전송할 경우에 TCP 소켓은 적합하지 않다.
+ 왜냐하면 네트워크에 부담을 주기 때문이다. (속도가 느리기 때문에)
+
+
+UDP
+ User Datagram Protocol의 약자로서 TCP 소켓에 비해
+ 신뢰성과 안정성 측면에서는 뒤떨어진다.(상대방이 제대로 받았는지 확인을 하지
+ 않기 때문에 신뢰성이 떨어진다.)->많은양의 데이터를 전송할때는 적합
+연결을 설정하지 않으므로 네트워크의 부담을 주지 않는다는 장점이 있다. 
+
+ ex)인강할때 
+
+=====================================================================
+Socket ->자바프로그램에서 통신을 하기위해서 설계된 네트워크 클래스
+       ->요청하는 컴퓨터(클라이언트)
+
+ServerSocket->서버(제공해주는 컴퓨터)
+Socket
+
+    ChatGUIServer.java
+
+       public ChatGUIServer() { //멤버변수의 초기값
+		//서버를 가동->클라이언트가 접속할때 기다린다.(무한루프)->무한대기
+		v=new Vector();//생성자에서는 다른 클래스 객체명 사용가능
+		try {
+			ss=new ServerSocket(5432);//책 7777
+			System.out.println("ss=>"+ss);
+			System.out.println("채팅서버 가동중....");
+			//무한대기
+			while(true) {
+				s=ss.accept();//접속->접속한 클라이언트의 정보s
+				System.out.println("Accepted from "+s);
+			}
+		}catch(Exception e) {
+			System.out.println("서버접속 실패=>"+e);
+		}
+	}
+
+================================================================
+  ChatGUIClient.java
+
+  생성자
+
+  //서버와 연결하는 구문
+	   try{
+		   //1.접속할 컴퓨터ip주소(192.168.0.8),포트번호(5432)
+		   s=new Socket("192.168.0.8",5432);
+		   System.out.println("s="+s);
+	   }catch(Exception e){
+		   System.out.println("접속오류="+e);
+	   }
+================================================================
+1권 6장 클래스와의 관계=>한개이상의 클래스를 연결시키는 방법
+
+*****************************************************************
+        1)has a 관계--->두 개의 클래스를 서로 연결시키는 방법
+                           ->서로 간의 메서드가 필요
+         //-------------------------------------------------------
+         1.상대방의 객체를 자기 클래스의 멤버변수에 선언
+         2.자기 클래스의 생성자에서 상대방 클래스의 객체를 생성
+         3.객체명.메서드 호출
+         //--------------------------------------------------------
+******************************************************************
+        2)is a 관계----->상속할때
+
+=================================================
+class ServerThread extends Thread {
+	
+	Socket s;//클라이언트와 통신
+	ChatGUIServer cg;//1.상대방 클래스의 객체선언
+	
+	//2.생성자내부에서 상대방의 객체를 생성(매개변수로 전달)
+	public ServerThread(ChatGUIServer cg,Socket s) {
+		this.cg=cg;
+		this.s=s;//접속한 클라이언트의 정보
+	}
+===================================================

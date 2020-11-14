@@ -3,6 +3,6 @@
 <!DOCTYPE html>
 <html>
 <%
-	response.sendRedirect("reportList.do");//게시판 이동
+	response.sendRedirect("menuList.do");//게시판 이동
 %>
 </html>

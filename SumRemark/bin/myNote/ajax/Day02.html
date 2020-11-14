@@ -1,0 +1,325 @@
+2일차(Ajax Programming의 개요 및 작성법)=>jQuery용 Ajax를 사용->DB연동
+                                                             =>짧고 간결? (이해하기가 쉽지않다)
+-----------------------------------------------------------------------------------
+//형식) var 객체명=new Object();//형이 정해져 있지 않다.->java.lang.Object 처럼
+	   //        var Studuent=new Student();//학생만 저장
+	   var mem=new Object();
+	   //동적으로 멤버변수가 선언->객체명.동적멤버변수명=저장할값
+	   mem.id=1234; //private int id=1234;
+	   mem.name="테스트"; //String name="테스트";
+	   mem.hobby="바둑";//->음악감상,,,
+	   mem.sung="남자";//private String sung="남자"
+	   //자바->Setter=>public void setXXXX(자료형 매개변수명){this.멤버변수=매개변수}
+	   //형식)객체명.함수명=function(매개변수명) {this.멤버변수=값}
+	   mem.setHobby=function(hobby){
+		   this.hobby=hobby;
+	   }
+	   //Getter ->public 반환값 get멤버변수명(){ return this.멤버변수명}
+	   //형식)객체명.함수명=function() { return this.멤버변수명}
+	   mem.getHobby=function(){
+		   return this.hobby;
+	   }
+	   //public String toString(){}
+	   mem.toString=function(){
+		   return this.id+", "+this.name+", "+this.hobby+", "+this.sung
+	   }
+	   //객체명.함수명(저장할값)
+	   mem.setHobby("음악감상");
+	   alert(mem.toString());
+   }
+------------------------------------------------------------------------------------------
+ 4.domob3.html
+
+<script>
+   /* 형식) var(=let) 객체명={
+		   속성명(=멤버변수명):저장할값,
+		   속성명2:속성값,,,
+		   
+		   함수명:function(매개변수~) {~}
+   } */
+   var person={
+		   name:'홍길동', //key(속성명):값(value)
+		   age:23,
+		   eat:function(food){ //public void setEat(String food){}
+			  alert(this.name+'은 오늘'+food+'을 먹습니다.') 
+		   }
+   }
+   //객체명.속성명(키명)
+   document.write(person.name);
+   person.eat('도시락')
+</script>
+==================================================
+
+ ****Ajax Programming과 기존방식의 차이점***********
+
+ 1.XHR객체가 요청을 받아서 처리해준다.(직접 서버에 요청X)
+ 2.페이지 이동없이 원하는 위치에 실행결과를 출력시켜준다.
+
+**********************************************
+  Ajax Programming작성 순서
+
+Step 1 : XMLHttpRequest 객체 구하기
+Step 2 : 웹 서버에 요청 전송하기
+Step 3 : 웹 서버의 응답을 화면에 반영하기->DOM
+
+simple.txt의 응답 텍스트  =>새파일명으로 저장
+파일형식->utf-8
+==================
+simple2.txt의 응답 텍스트
+파일형식->ansi
+===================
+
+<%@ page contentType="text/plain; charset=utf-8" %>
+simple.jsp의 응답 텍스트
+text/plain=>문자열 위주   text/html->텍스트형태의 html문서형태로 전송
+===================================
+파일형식->utf-8
+==================================
+<%@ page contentType="text/plain; charset=euc-kr" %>
+simple2.jsp의 응답 텍스트
+파일형식->ansi
+=============================================
+
+ Ajax를 사용하기위해서는 html->xhtml을 주로 사용한다.
+                                               ->xml문서의 성격+html문서의 성격을 가진 문서
+                                                  임의로 태그를 만들어서 사용이 가능
+
+                                            jsp->xhtml이 적용된 jsp를 보통 사용
+
+===============================================
+prototype.js<---jQuery->다양한 함수를 불러다 사용이 가능하기때문에 사용
+-----------------------------------------------------------------
+0.prototype.js를 JspMember 프로젝트에 복사
+
+1.xhtml을 지원해주는 jsp 선언부분  =>Register.jsp save as Register2.jsp(백업)
+
+ Register.jsp에 선언문 복사
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+---------------------------------------------------------------------
+함수를 이용
+function $(element) {
+  if (arguments.length > 1) {
+    for (var i = 0, elements = [], length = arguments.length; i < length; i++)
+      elements.push($(arguments[i]));
+    return elements;
+  }
+  if (Object.isString(element))
+ element = document.getElementById(element);
+  return Element.extend(element);
+}
+
+
+document.getElementById("id값")=>객체를 얻어온다.
+
+  $("id값")을 사용하기위해서 prototype.js 라이브러리 가 필요하기때문에
+
+Register.jsp
+
+<title>회원가입</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="script.js"></script>
+<script language="JavaScript" src="prototype.js"></script> =>$()을 사용하기위해
+<script language="JavaScript" src="searchWord.js"></script>=>Ajax요청 구문을
+                                                                                                따로 작성하기위해
+
+ <tr> 
+            <td width="16%">아이디</td>
+            <td width="57%">                         $("mem_id")
+            <input type="text" name="mem_id"  id="mem_id" size="15">
+                                                                    ========
+		      <input type="button" value="ID중복확인" 
+                                              onClick="idCheck(this.form.mem_id.value)">
+           </td>
+            <td id="ducheck" width="27%">아이디를 적어 주세요.</td>
+                  ========
+          </tr>
+------------------------------------------------
+2.script.js에서 IdCheck()사용X=>주석처리
+
+//중복ID체크 해주는 자바스크립트함수 선언
+/*
+function idCheck(id){  //var idCheck=function(){}
+   if(id==""){
+	   alert("아이디를 먼저 입력하세요")
+	   document.regForm.mem_id.focus() //document.폼객체명.입력양식.함수명()
+   }else{ //=>window.open(불러올 문서명(jsp),창제목,창의옵션(넓이,높이,,,)
+	   //url="IdCheck.jsp"  IdCheck.jsp를 불러올 뿐 매개변수 전달 X
+	   url="IdCheck.jsp?mem_id="+id
+	   window.open(url,"post","left=450,top=150,width=300,height=150")
+   }
+}
+*/
+
+3.Register.jsp에서 선언부분과 중복id 체크 id부여
+
+<script language="JavaScript" src="script.js"></script>
+<script language="JavaScript" src="prototype.js"></script>
+<script language="JavaScript" src="searchWord.js"></script>
+
+  <input type="text" name="mem_id"  id="mem_id"  size="15">
+                                                          =========
+		      <input type="button" value="ID중복확인" 
+       onClick="idCheck(this.form.mem_id.value)"></td>
+            <td id="ducheck" width="27%">아이디를 적어 주세요.</td>
+          </tr>===========
+
+4.searchWord.js
+
+/**
+ * xhr객체를 생성->요청-->jsp로 요청->응답->콜백함수 출력
+ */
+var xhrObject //xhr객체를 전역변수로 선언
+
+//1.xhr객체를 생성함수 선언
+function createXHR(){
+	 if(window.XMLHttpRequest){
+		 xhrObject=new XMLHttpRequest()//객체를 생성->반환
+		// alert(xhrObject) 
+	 }
+}
+
+//2.중복id를 입력->처리하는 함수
+function idCheck(id){
+	if(id==""){
+		//var mem_id=document.getElementById("ducheck")
+		var mem_id=$("ducheck")
+		//alert(mem_id)
+		$("ducheck").innerHTML="<font color='red'>아이디를 먼저 입력요망</font>"
+		//document.regForm.mem_id.focus()
+		$("mem_id").focus()
+		return false;
+	}
+	//입력했다면->Ajax를 이용해서 IdCheck.jsp을 요청
+	//1.xhr객체 얻어옴
+	createXHR()//->xhrObject
+	var url="http://localhost:8090/JspMember/IdCheck.jsp?"+getParameterValues()
+	//alert(url)
+	//2.콜백함수 지정
+	xhrObject.onreadystatechange=resultProcess
+	//3.open함수를 서버에 요청준비
+	xhrObject.open("Get",url,true);//비동기 방식
+	//4.send()요청
+	xhrObject.send(null);
+}
+
+//3.파라미터값을 처리해주는 함수
+function getParameterValues(){
+	var mem_id=$("mem_id").value
+	//서버캐시에 요청 메모리에 저장하지 않는 방법
+	//파라미터값을 하나 전달할때 오늘날짜를 같이 출력시켜주는 매개변수를 첨부
+	return "mem_id="+mem_id+"&timestamp="+new Date().getTime()
+}
+//4.콜백함수
+function resultProcess(){
+	//alert("resultProcess")//콜백함수 호출이 되는지 확인
+	if(xhrObject.readyState==4){//서버가 요청을 다받았다면
+		if(xhrObject.status==200){//서버의 결과를 받았다면
+		  var result=xhrObject.responseText;//태그+문자열=>문자열	
+		  $("ducheck").innerHTML=result;
+		}
+	}
+}
+=====================================
+5.IdCheck.jsp
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="hewon.*" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Id중복 체크</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="script.js"></script>
+</head>
+<body bgcolor="#FFFFCC">
+<br>
+<%
+  //searchWord.js=>IdCheck.jsp?mem_id='kkk'&timestamp=~;
+  //xhr객체가 받을 xml형태로 받을 수 있도록 text/xml형태로 전환(태그+문자열)
+  response.setContentType("text/xml;charset=utf-8");
+  String outString="";//xhr객체에게 전달할 내용을 담을 변수 선언(태그+문자열)
+  String mem_id=request.getParameter("mem_id");
+  System.out.println("IdCheck.jsp의 mem_id=>"+mem_id);
+   //DB접속->MemberDAO의 checkId(mem_id)
+   MemberDAO memMgr=new MemberDAO();
+   boolean check=memMgr.checkId(mem_id);
+   System.out.println("check="+check);
+   
+   if(check==true){//이미 사용중인 아이디가 존재한다면
+  outString="<font color='red'><b>이미 사용중인 아이디입니다.</b></font>";   
+   }else{//사용이 가능한 경우
+  outString="<font color='blue'><b>사용이 가능한 아이디입니다.</b></font>";	   
+   }
+   //xhr객체가 받을 수있도록 전송
+   out.println(outString);
+   System.out.println(outString);//콘솔에 출력
+%>
+</body>
+</html>
+------------------------------------------------------------------------------------
+  jQuery->bootstrap->jQueryMobile
+
+  jQueryTest=>
+
+Why jQuery ?
+
+ *** jQuery의 특징 ***
+
+1.일단 무료, 오픈소스->공개
+2.작은 용량 (min : 18KB, uncompressed : 114KB)
+3.수많은 사용자 커뮤니티
+4.웹 브라우저간의 차이를 자체적으로 표준화=>웹프로그래밍의 표준언어
+5.플러그인의 다양성->디자인
+6.잘 정리된 API 문서 =>예제
+7.브라우저보다 앞선 W3C 명세 수용
+사용자인터페이스 제공
+
+=>Write less, do more (적게 작성하고, 보다 많이 한다. )
+
+ www.jquery.com
+
+ jquery함수 
+
+  jQueryTest
+        |
+         -01selector-01ready.html
+
+<script type="text/javascript"  src="../jquery-3.3.1.min.js" ></script>
+<title>01ready()함수</title>
+<script>
+/* (1)
+   function test(){
+	   alert("jQuery 소개")
+   }
+    (2)불러오는 문서의 내용이 복잡(화면디자인 복잡)=>속도가 느려지는 단점
+    window.on이벤트종류명=호출할 함수명 or 익명함수
+    
+  window.onload=function(){
+    	alert("jQuery소개2")
+    }
+    (3) 속도가 빠른 jQuery ready()함수를 이용
+ */
+ $(document).ready(function(){ //문서를 읽어들여서 맨 처음 실행할 구문이 있다면 실행
+	 alert("ready()를 이용해서 함수를 호출합니다.")
+ })
+ 
+ $().ready(function(){ 
+	 alert("함수를 호출2")
+ })
+ 
+ $(function(){ 
+	 alert("함수를 호출3")
+ })
+=================================
+01ready().html save as 02cdn.html
+
+
+

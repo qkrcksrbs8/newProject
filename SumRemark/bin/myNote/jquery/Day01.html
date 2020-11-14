@@ -1,0 +1,143 @@
+3일차(jQuery의 선택자,DOM사용법-함수의 종류 및 사용법)
+
+	 //형식)$(element(태그이름),id,class선택자,,,).함수명().함수명2().
+	//형식1) $('태그명').css('속성명','속성값')
+ $('h1').css('color','red') //$('h1').css('color')
+ $('span').css('border','3px solid blue')
+ //형식2) 클래스 선택자->$(태그명.클래스명)
+ $('p.my').css('border','8px double green')
+ //형식3) id선택자->$('태그명#id선택자이름')->태그명은 생략가능
+ $("div#content").css('background','yellow')
+ //형식4) 모든 태그를 가리키는 예약어 ->*
+ $('*').css('color','cyan')//동일한 스타일을 여러번 적용->맨 마지막이 반영(우선순위)
+
+01Seletor
+      03chain.html
+
+    특정태그에 대해서 함수를 호출할때 여러개를 마치 체인처럼 함수를 나열해서 호출하는 방식
+	  ->chaining method
+	  */
+	  test.css('font-family','궁서체').css('font-size','30pt').css('color','red')
+
+     04.each.html ->each함수를 이용
+
+     $(function(){ 
+	 //형식) 속성을 추가해서 속성값을 적용->태그정보.attr(속성명,속성값) <->태그정보.attr(속성명)
+	 //같은 태그를 어떻게 구분해서 스타일을 적용->반복적으로 스타일 적용
+	 //형식)$('반복적으로 수행할 태그명').each(호출할 사용자정의함수명 | 익명함수명)
+	 //$('li').attr('class','fromjQuery0')
+	 $('li').each(forEach)
+ })
+ 
+ function forEach(){
+	 //$('li').attr('class','fromjQuery'+i)
+	 $(this).attr('class','fromjQuery'+i)
+	 //$(this)=>현재 선택해서 읽어들이는 태그객체를 구분시켜주는 예약어(이벤트)
+	 alert(i)
+	 i++
+ }
+
+ 05.each2.html (익명함수)
+
+ $(function(){ 
+	//중첩된 태그의 정보를 어떻게 얻어오고 내용을 검색->수정
+	//jquery var $변수명=값;
+	var $nodes=$('#root').children().css('color','red')
+	alert('자식들의 수=>'+$nodes.length)
+	var txt="";//자식들의 이름들을 저장하는 변수
+	//$(선택자(반복적으로 실행시킬 태그)).each(함수명 | function())
+	/*
+	  1.text()->오직 태그의 텍스트만 가져오는 함수<->text(매개변수(값))
+	  2.html()->태그와 텍스트들까지 같이 가져옴<->html(매개변수)
+	  3.val()->폼태그안에 입력양식에 해당되는 값을 가져올때(input,check~)
+	    //<->val(매개변수(값))->Setter
+	*/
+	$('#root').children().each(function(){
+		//txt+=$(this).text()
+		txt+=$(this).html()
+	})
+	alert(txt)
+})
+--------------------------------------------------------------
+06child.html ->중첩된 경우에 사용
+
+ $(function(){ 
+	 //중첩->트리구조로 형성(DOM)
+	 //형식) 부모태그 > 자식태그->부모태그 바로 밑에 자식태그를 선택->자손태그 X
+	 //형식2) 부모태그 자식태그->부모태그 바로 밑에 자식태그를 선택->자손태그 O
+	 //형식3) 부모태그+자식태그=>바로 옆의 태그를 찾을때 사용
+	// $('body > div').css('border','3px solid navy')
+	 $('body  div').css('border','3px solid navy')
+	 $('p > span').css('border','3px dotted red')
+	 $('span+a').next().css('border','3px double green')
+	 //next()->바로 다음번 항목(태그),prev()->바로 전의 항목(태그)
+	 $('span+a').prev().css('background','yellow')
+ })
+
+07attr.html->속성선택자(같은 태그가 존재->어떻게 구분)
+ ******************************************************
+               선택자 속성 설명
+	 요소[속성명]->특정 속성을 가진 태그를 찾을때 사용
+	 요소[속성명=값]->속성값이 일치하는 태그를 찾아라
+	 요소[속성명!=값]->속성값이 일치하지않는 태그를 찾아라
+	 
+	 요소[속성명^=값]->지정한값으로 시작하는 태그를 찾아라
+	 요소[속성명|=값]->지정하는값을 찾거나 지정한글자- 태그를 찾아라
+	 요소[속성명$=값]->지정한 값으로 끝나는 태그를 찾아라
+	 요소[속성명*=값]->지정한 값을 포함한 태그를 찾아라(ex sql의 like연산자 비슷)
+	 요소[속성명~=값]->지정한값을 단어로서 포함하는 태그를 찾아라
+
+ex)
+               $('button[name]').html('변경됨')//<->html()->태그 포함한 문자열 가져오기
+	 //input태그중에서 type속성값이 text인 태그를 찾아서 hello jQuery라고 값을 저장시켜주세요
+	 $('input[type=text]').val('hello jQuery')//<->val()=>입력받은 문자열 가져오기
+	 //$('input[type!=text]').val('부정') //input태그중에서 type속성인 text가 아닌 input찾기
+	 //특정태그의 속성값이 content-로 시작하는 태그를 찾아라
+	 $('div[id^=content-]').css('background','green')
+	 //찾는값이 content 이거나 content-인 것을 찾아라
+	 $('div[id|=content]').css('background','blue')
+	 //한국을 포함하는 태그를 찾기(공백을 인식)->단어중심
+	 $('input[name~=한국]').css('background','yellow')
+	 //input 태그중에서 id속성값이 한국을 포함하는 단어찾기(공백 인식X)
+	 $('input[id*=한국]').css('background','brown')
+	 //div태그중에서 id속성값이 2로 끝나는 태그를 찾아서 크기를 지정
+	 $('div[id$=2]').css('font-size','20pt')
+
+***********************************************************
+08.inputattr.html
+
+               입력양식에 관련된 속성 선택자
+	요소:button->input 태그중에서 type속성이 button인 경우
+	       비활성화(disabled) true <-->활성화(enabled)->true
+	요소:reset(초기화),요소:submit(전송)
+	요소:text->type속성이 text인 경우
+	요소:checkbox,->checked->false(체크하지 마라)->true(체크표시)
+	요소:file(파일첨부)
+	요소:image,요소:password,요소:radio
+
+       //input태그중에서 type속성이 checkbox인 것을 찾아서 글자크기 20pt 설정하라(css)
+	 $('input:checkbox').attr('checked',false) //체크해제
+	 $('input:disabled').attr('disabled',false) //비활성화 제거->활성화
+	 //$('input[text]')
+	 $('input:text').val('값을 입력하세요')//val('') ->inputbox의 값을 지울때 사용
+	 $('input:password').css('background','pink').val('값입력')
+	 $('input[type=button]').val('회원가입')==>모든 태그에 적용(일반적인)
+	 $('input:button').val('회원가입22')
+
+   입력양식에 관련된 속성필터이 따로 존재=>편리성때문에 따로 독립
+  =======================================
+ 09.select.html
+
+ //요소:selected->select태그의 option객체중에서 선택된 태그를 가리킬때사용
+	 //1.setTimeout(호출할 함수명 | 익명함수,초단위(1000))->1초->한번만 실행
+	 //2.setInterval(호출할 함수명 | 익명함수,초단위(1000))->1초->계속 반복해서 실행
+	 setInterval(function(){
+	 var value=$('select > option:selected').val()
+	 alert(value)
+	 },5000)//5초뒤에 선택한 항목을 화면에 출력시켜라
+
+==============================================
+ DOM pdf쪽에서 DOM함수(예습)
+------------------------------------
+
+

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.onlyReport.report.model.ReportVO;
+import com.onlyReport.report.model.TableTestVO;
 import com.onlyReport.report.service.ReportService;
 import com.onlyReport.report.util.PagingUtil;
 
@@ -238,6 +239,62 @@ public class ReportController {
 		
 		return resultCode;
 		
+	}
+
+	
+	/**
+	 * 메인 메뉴 
+	 * 메뉴를 고를 수 있는 페이지
+	 * @return
+	 */
+	@RequestMapping(value="/menuList")
+	public ModelAndView MenuList() {
+
+		logger.info("menuList() : start");						//menuList 시작
+		
+		
+		ModelAndView  mav = new ModelAndView("MenuList");		//Report model 선언
+		mav.setViewName("main/menuList");						//jsp 경로
+		
+		logger.info("menuList() : end");					//Report 종료
+		return mav;
+	}
+	
+	/**
+	 * 테이블테스트
+	 * 테이블을 리스트로 출력할거임
+	 * @return
+	 */
+	@RequestMapping(value="/tableTest")
+	public ModelAndView TableTest() {
+
+		logger.info("tableTest() : start");		//tableTest 시작
+		
+		List<TableTestVO> tableList = new ArrayList();//테이블 리스트
+		TableTestVO tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO	
+		int tableCnt = 0;						//테이블 총 개수
+		
+		for(int i = 0; i < 5; ++i) {
+			
+			tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO	
+			tableVO.setJob_content("업무계약 "+i);	//업무내용
+			tableVO.setMonth3(1);				//3월   체크:1/논체크:0
+			tableVO.setEntity("관리주체 "+i);		//관리주체
+			tableVO.setFile_name("파일이름 "+i);	//파일이름
+			tableList.add(i, tableVO);			//리스트 증가
+			tableCnt++;							//테이블 개수 1씩 증가
+			
+		};//for
+		
+		logger.info(tableList.toString());		//테이블 데이터 확인
+		
+		ModelAndView  mav = new ModelAndView("TableTest");	//Report model 선언
+		mav.setViewName("main/tableTest");					//jsp 경로
+		mav.addObject("tableList", tableList);	//테이블 리스트
+		mav.addObject("tableCnt", tableCnt);	//테이블 수 
+		
+		logger.info("tableTest() : end");					//tableTest 종료
+		return mav;
 	}
 	
 }
