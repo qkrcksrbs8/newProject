@@ -1,14 +1,19 @@
 package com.onlyReport.report.controller;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -276,8 +281,9 @@ public class ReportController {
 		
 		for(int i = 0; i < 5; ++i) {
 			
-			tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO	
+			tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO
 			tableVO.setJob_content("업무계약 "+i);	//업무내용
+			tableVO.setSchedule_cycle(1);		//점검주기
 			tableVO.setMonth3(1);				//3월   체크:1/논체크:0
 			tableVO.setEntity("관리주체 "+i);		//관리주체
 			tableVO.setFile_name("파일이름 "+i);	//파일이름
@@ -294,6 +300,42 @@ public class ReportController {
 		mav.addObject("tableCnt", tableCnt);	//테이블 수 
 		
 		logger.info("tableTest() : end");					//tableTest 종료
+		return mav;
+	}
+	
+	/**
+	 * 테이블테스트 저장
+	 * 테이블 리스트 저장
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/tableInsert", method = {RequestMethod.POST})
+	public ModelAndView TableInsert(HttpServletRequest request, TableTestVO model) {
+
+		logger.info("tableInsert() : start");		//tableTest 시작
+		
+		logger.info("model : "+model.toString());
+		
+		logger.info("request : "+request.toString());
+		Set<String> keySet = request.getParameterMap().keySet();
+		for(String key: keySet) {
+			System.out.println(key + ": " + request.getParameter(key));
+		}
+		
+		Enumeration names = request.getParameterNames();
+		while(names.hasMoreElements()) {
+			String key = (String) names.nextElement();
+			System.out.println(key + ": " + request.getParameter(key));
+		};
+		
+		
+		System.out.println("반복문 여기까지 입니다.");
+		
+		
+		ModelAndView  mav = new ModelAndView("MenuList");	//Report model 선언
+		mav.setViewName("main/menuList");					//jsp 경로
+
+		logger.info("tableInsert() : end");					//tableTest 종료
 		return mav;
 	}
 	
