@@ -25,8 +25,47 @@ $(function(){
    //저장버튼 
    //------
 	$("#buttonId").click(function(){
-		var cnt = "${tableCnt}";
-		alert(cnt);
+		
+		var inputListCnt = $("input[name=month1]").length;//리스트 개수
+		var jsonArr = new Array();	//JsonArray를 위한 배열생성
+        var jsonObj = new Object();	//JsonObject를 위한 객체생성
+        var totalJson = new Object();//JsonObject의 합
+        
+		jsonObj.month1 = $("#month1").val();
+		jsonObj.month2 = $("#month2").val();
+		jsonObj.month3 = $("#month3").val();
+		jsonArr.push(jsonObj)
+		totalJson.arr = jsonArr;
+		var stringJson = JSON.stringify(totalJson);
+		alert(stringJson);
+       
+
+		var url = "./tableInsert.do";//url 테이블 데이터 저장
+		
+		$.ajax({
+			 method: "POST"
+			,url : url
+			,data: {
+				totalJson:totalJson
+			}
+		}).done(function(data){//통신 성공
+			alert("저장성공!");
+		}).fail(function(data){//통신 실패
+			alert("저장실패");
+		})
+		
+/*         jobj .name = "송강호";
+        jobj .age = "25";
+        jobj .gender = "남자";
+        jobj .nickname = "남궁민수";
+        jArray .push(jobj );
+ 
+        var totalInfo = new Object();
+        totalInfo.arr1= jArray ;
+
+        var stringJson = JSON.stringify(totalInfo);
+
+		alert(stringJson); */
 	})
 	
 	//------------------------------
@@ -126,9 +165,9 @@ $(function(){
 						<li class="col-xs-1 col-md-1 tableCount">${tableNum.count}</li>
 						<li class="col-xs-2 col-md-2">${tableList.job_content}</li>
 						<li class="col-xs-2 col-md-2 scheuld_sycle${tableNum.count-1}">${tableList.schedule_cycle}회/년</li>
-						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month1" type="checkbox" value="${tableList.month1}" <c:if test="${tableList.month1 ne '0'}">checked</c:if>></li>
-						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month2" type="checkbox" value="${tableList.month2}" <c:if test="${tableList.month2 ne '0'}">checked</c:if>></li>
-						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month3" type="checkbox" value="${tableList.month3}" <c:if test="${tableList.month3 ne '0'}">checked</c:if>></li>
+						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month1" name="month1" type="checkbox" value="${tableList.month1}" <c:if test="${tableList.month1 ne '0'}">checked</c:if>></li>
+						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month2" name="month2" type="checkbox" value="${tableList.month2}" <c:if test="${tableList.month2 ne '0'}">checked</c:if>></li>
+						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month3" name="month3" type="checkbox" value="${tableList.month3}" <c:if test="${tableList.month3 ne '0'}">checked</c:if>></li>
 						<li class="col-xs-2 col-md-2">${tableList.entity}</li>
 						<li class="col-xs-2 col-md-2">${tableList.file_name}</li>
 						</ul>
