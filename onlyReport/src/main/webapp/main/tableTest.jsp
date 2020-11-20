@@ -21,6 +21,54 @@
 
 $(function(){
 	
+
+   //------
+   //저장버튼 
+   //------
+	$("#buttonId").click(function(){
+		
+		var inputListCnt = $("input[name=month1]").length;//리스트 개수
+		var jsonArr = new Array();	//JsonArray를 위한 배열생성
+        var jsonObj = new Object();	//JsonObject를 위한 객체생성
+        var totalJson = new Object();//JsonObject의 합
+        
+		jsonObj.month1 = $("#month1").val();
+		jsonObj.month2 = $("#month2").val();
+		jsonObj.month3 = $("#month3").val();
+		jsonArr.push(jsonObj)
+		totalJson.arr = jsonArr;
+		var stringJson = JSON.stringify(totalJson);
+		alert(stringJson);
+       
+
+		var url = "./tableInsert.do";//url 테이블 데이터 저장
+		
+		$.ajax({
+			 method: "POST"
+			,url : url
+			,data: {
+				totalJson:totalJson
+			}
+		}).done(function(data){//통신 성공
+			alert("저장성공!");
+		}).fail(function(data){//통신 실패
+			alert("저장실패");
+		})
+		
+/*         jobj .name = "송강호";
+        jobj .age = "25";
+        jobj .gender = "남자";
+        jobj .nickname = "남궁민수";
+        jArray .push(jobj );
+ 
+        var totalInfo = new Object();
+        totalInfo.arr1= jArray ;
+
+        var stringJson = JSON.stringify(totalInfo);
+
+		alert(stringJson); */
+	})
+	
 	//------------------------------
 	//테이블을 저장하는 로직입니다.
 	//------------------------------
