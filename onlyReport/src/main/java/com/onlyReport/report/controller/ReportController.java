@@ -283,7 +283,8 @@ public class ReportController {
 			
 			tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO
 			tableVO.setJob_content("업무계약 "+i);	//업무내용
-			tableVO.setSchedule_cycle(1);		//점검주기
+			tableVO.setSchedule_cycle(2);		//점검주기
+			tableVO.setMonth2(1);				//3월   체크:1/논체크:0
 			tableVO.setMonth3(1);				//3월   체크:1/논체크:0
 			tableVO.setEntity("관리주체 "+i);		//관리주체
 			tableVO.setFile_name("파일이름 "+i);	//파일이름
