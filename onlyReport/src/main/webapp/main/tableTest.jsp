@@ -189,6 +189,12 @@ $(function(){
 						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month2" name="checkMonth${tableNum.count-1}" type="checkbox" value="${tableList.month2}" <c:if test="${tableList.month2 ne '0'}">checked</c:if>></li>
 						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month3" name="checkMonth${tableNum.count-1}" type="checkbox" value="${tableList.month3}" <c:if test="${tableList.month3 ne '0'}">checked</c:if>></li>
 						
+						<li class="col-xs-1 col-md-1 tableCount">${tableNum.count}</li>
+						<li class="col-xs-2 col-md-2">${tableList.job_content}</li>
+						<li class="col-xs-2 col-md-2 scheuld_sycle${tableNum.count-1}">${tableList.schedule_cycle}회/년</li>
+						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month1" name="month1" type="checkbox" value="${tableList.month1}" <c:if test="${tableList.month1 ne '0'}">checked</c:if>></li>
+						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month2" name="month2" type="checkbox" value="${tableList.month2}" <c:if test="${tableList.month2 ne '0'}">checked</c:if>></li>
+						<li class="col-xs-1 col-md-1 tableCheck tableCheck${tableNum.count-1}"><input id="month3" name="month3" type="checkbox" value="${tableList.month3}" <c:if test="${tableList.month3 ne '0'}">checked</c:if>></li>
 						<li class="col-xs-2 col-md-2">${tableList.entity}</li>
 						<li class="col-xs-2 col-md-2"><label class="filePopup">${tableList.file_name}</label></li>
 						</ul>
