@@ -1,7 +1,6 @@
 package com.onlyReport.report.controller;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +9,11 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -314,20 +316,24 @@ public class ReportController {
 	public ModelAndView TableInsert(HttpServletRequest request, TableTestVO model) {
 
 		logger.info("tableInsert() : start");		//tableTest 시작
+
+		JSONObject jsonObject = new JSONObject();	//jsonObject
+		JSONArray jsonArray = new JSONArray();		//jsonArray
 		
-		logger.info("model : "+model.toString());
+		System.out.println(" model : "+model.toString());
 		
-		logger.info("request : "+request.toString());
-		Set<String> keySet = request.getParameterMap().keySet();
-		for(String key: keySet) {
-			System.out.println(key + ": " + request.getParameter(key));
-		}
+		/* 매개변수 받아서 출력
+		 * Set<String> keySet = request.getParameterMap().keySet();
+		 * 
+		 * for(String key: keySet) { request.getParameter("totalJson");
+		 * System.out.println(key + ": " + request.getParameter(key)); }
+		 */
 		
-		Enumeration names = request.getParameterNames();
-		while(names.hasMoreElements()) {
-			String key = (String) names.nextElement();
-			System.out.println(key + ": " + request.getParameter(key));
-		};
+		/*
+		 * Enumeration names = request.getParameterNames();
+		 * while(names.hasMoreElements()) { String key = (String) names.nextElement();
+		 * System.out.println(key + ": " + request.getParameter(key)); };
+		 */
 		
 		
 		System.out.println("반복문 여기까지 입니다.");

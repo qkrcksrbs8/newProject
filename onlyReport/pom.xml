@@ -170,6 +170,14 @@
   		<artifactId>slf4j-api</artifactId>
   		<version>1.7.5</version>
   	</dependency>
+  	
+  	<!-- json 데이터 -->
+  	<dependency>
+	    <groupId>org.json</groupId>
+	    <artifactId>json</artifactId>
+	    <version>20180813</version>
+	</dependency>
+
   </dependencies>
   <build>
     <finalName>onlyReport</finalName>
