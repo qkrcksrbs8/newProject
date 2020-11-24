@@ -7,21 +7,23 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onlyReport.comm.model.Annuali_ScheduleStores;
+import com.onlyReport.report.model.Annuail_ScheduleVO;
 import com.onlyReport.report.model.ReportVO;
-import com.onlyReport.report.model.TableTestVO;
 import com.onlyReport.report.service.ReportService;
 import com.onlyReport.report.util.PagingUtil;
 
@@ -277,13 +279,13 @@ public class ReportController {
 
 		logger.info("tableTest() : start");		//tableTest 시작
 		
-		List<TableTestVO> tableList = new ArrayList();//테이블 리스트
-		TableTestVO tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO	
+		List<Annuail_ScheduleVO> tableList = new ArrayList();//테이블 리스트
+		Annuail_ScheduleVO tableVO = new Annuail_ScheduleVO();//테이블을 테스트하기 위한 리스트 VO	
 		int tableCnt = 0;						//테이블 총 개수
 		
 		for(int i = 0; i < 5; ++i) {
 			
-			tableVO = new TableTestVO();//테이블을 테스트하기 위한 리스트 VO
+			tableVO = new Annuail_ScheduleVO();//테이블을 테스트하기 위한 리스트 VO
 			tableVO.setJob_content("업무계약 "+i);	//업무내용
 			tableVO.setSchedule_cycle(2);		//점검주기
 			tableVO.setMonth2(1);				//3월   체크:1/논체크:0
@@ -312,22 +314,33 @@ public class ReportController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/tableInsert", method = {RequestMethod.POST})
-	public ModelAndView TableInsert(HttpServletRequest request, TableTestVO model) {
+	@RequestMapping(value="/tableInsert", method = {RequestMethod.POST}, produces = "application/json; charset=utf-8") 
+	public ModelAndView TableInsert(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 
 		logger.info("tableInsert() : start");		//tableTest 시작
-
-		JSONObject jsonObject = new JSONObject();	//jsonObject
-		JSONArray jsonArray = new JSONArray();		//jsonArray
 		
-		System.out.println(" model : "+model.toString());
+		Annuali_ScheduleStores res = new Annuali_ScheduleStores();	//연간스케쥴 스토어
+		HttpStatus statusCode = HttpStatus.OK;						//성공 여부 코드
 		
-		/* 매개변수 받아서 출력
-		 * Set<String> keySet = request.getParameterMap().keySet();
-		 * 
-		 * for(String key: keySet) { request.getParameter("totalJson");
-		 * System.out.println(key + ": " + request.getParameter(key)); }
-		 */
+		try {
+			
+			res.getResHeader().setUser_id("swrts");				//사용자 이름
+			ObjectMapper m = new ObjectMapper();				//오브젝트
+			String json_data = m.writeValueAsString(request);	//매개변수 데이터 파싱
+			
+			
+			
+			
+		}catch(Exception e) {
+			
+		}
+		
+//		  매개변수 받아서 출력
+		  Set<String> keySet = request.getParameterMap().keySet();
+		  
+		  System.out.println("keySet : "+keySet.toString());
+	
+		 
 		
 		/*
 		 * Enumeration names = request.getParameterNames();

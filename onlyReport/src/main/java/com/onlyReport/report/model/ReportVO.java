@@ -2,20 +2,33 @@ package com.onlyReport.report.model;
 
 import com.onlyReport.report.dao.ReportDAO;
 
+
 /**
- * 게시판 VO
+ *<pre>
+ *게시판 모델
+ *</pre>
  *
+ *@ClassName : ReportVO.java 
+ *@Description : 게시판 모델에 대한 클레스입니다.
+ *@author user
+ *@since 2020. 11. 24
+ *@version 1.0
+ *@see
+ *@Modification Information
+ *<pre>
+ *2020. 11. 24   user   최초생성
+ *</pre>
  */
 public class ReportVO {
 	
-	private int report_seq;//게시판 번호
-	private String report_title;//게시판 제목
-	private String report_content;//게시판 내용
-	private String created_date;//생성일
-	private String created_by;//생성자
-	private String last_update_date;//최종수정일
-	private String last_update_by;//최종수정자
-	private int rnum;//rownum
+	private int report_seq;				//게시판 번호
+	private String report_title;		//게시판 제목
+	private String report_content;		//게시판 내용
+	private String created_date;		//생성일
+	private String created_by;			//생성자
+	private String last_update_date;	//최종수정일
+	private String last_update_by;		//최종수정자
+	private int rnum;					//rownum
 
 	
 	public int getreport_seq() {
@@ -67,7 +80,6 @@ public class ReportVO {
 		this.last_update_by = last_update_by;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "ReportVO [report_seq=" + report_seq + ", report_title=" + report_title + ", report_content="
@@ -76,10 +88,4 @@ public class ReportVO {
 				+ "]";
 	}
 	
-
-	
-	
-
-	
-
 }

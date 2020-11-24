@@ -19,22 +19,22 @@ package com.onlyReport.report.model;
 * description	: 최초생성
 *</pre>
 */
-public class TableTestVO {
+public class Annuail_ScheduleVO {
 	
-	private String job_content = new String(); //업무내용
-	private int schedule_cycle = 0; //점검주기
-	private int month1 = 0;
-	private int month2 = 0;
-	private int month3 = 0;
-	private int month4 = 0;
-	private int month5 = 0;
-	private int month6 = 0;
-	private int month7 = 0;
-	private int month8 = 0;
-	private int month9 = 0;
-	private int month10 = 0;
-	private int month11 = 0;
-	private int month12 = 0;
+	private String job_content = new String();	//업무내용
+	private int schedule_cycle = 0; 			//점검주기
+	private int month1 = 0;						//1월
+	private int month2 = 0;						//2월
+	private int month3 = 0;						//3월
+	private int month4 = 0;						//4월
+	private int month5 = 0;						//5월
+	private int month6 = 0;						//6월
+	private int month7 = 0;						//7월
+	private int month8 = 0;						//8월
+	private int month9 = 0;						//9월
+	private int month10 = 0;					//10월
+	private int month11 = 0;					//11월
+	private int month12 = 0;					//12월
 	private String entity = new String();		//관리주체
 	private String file_name = new String(); 	//파일
 	
@@ -137,7 +137,7 @@ public class TableTestVO {
 	
 	@Override
 	public String toString() {
-		return "TableTestVO [job_content=" + job_content + ", schedule_cycle=" + schedule_cycle + ", month1=" + month1
+		return "Annuail_ScheduleVO [job_content=" + job_content + ", schedule_cycle=" + schedule_cycle + ", month1=" + month1
 				+ ", month2=" + month2 + ", month3=" + month3 + ", month4=" + month4 + ", month5=" + month5
 				+ ", month6=" + month6 + ", month7=" + month7 + ", month8=" + month8 + ", month9=" + month9
 				+ ", month10=" + month10 + ", month11=" + month11 + ", month12=" + month12 + ", entity=" + entity
