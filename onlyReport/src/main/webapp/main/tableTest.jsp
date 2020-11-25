@@ -62,25 +62,23 @@ $(function(){
 			var file_name = li.eq(7).text();
 			
 			// 가져온 값을 배열에 담는다.
-			jsonObj.work_info	= work_info;		//업무내용 
-			jsonObj.check_cycle = check_cycle;		//점검주기
-			jsonObj.schedule_jan= schedule_jan;		//1월
-			jsonObj.schedule_feb= schedule_feb;		//2월
-			jsonObj.schedule_mar= schedule_mar;		//3월
-			jsonObj.entity		= entity;			//관리주체
-			jsonObj.file_name	= file_name;		//파일이름
-			
-			tdArr[i] = jsonObj;
+// 			jsonObj.work_info	= work_info;		//업무내용 
+// 			jsonObj.check_cycle = check_cycle;		//점검주기
+// 			jsonObj.schedule_jan= schedule_jan;		//1월
+// 			jsonObj.schedule_feb= schedule_feb;		//2월
+// 			jsonObj.schedule_mar= schedule_mar;		//3월
+// 			jsonObj.entity		= entity;			//관리주체
+// 			jsonObj.file_name	= file_name;		//파일이름
 			
 // 			tdArr.push(jsonObj);
 
-/* 			tdArr.push(work_info);
+			tdArr.push(work_info);
 			tdArr.push(check_cycle);
 			tdArr.push(schedule_jan);
 			tdArr.push(schedule_feb);
 			tdArr.push(schedule_mar);
 			tdArr.push(entity);
-			tdArr.push(file_name); */
+			tdArr.push(file_name);
 			
 
 		});
@@ -93,9 +91,9 @@ $(function(){
 		$.ajax({
 			 method: "POST"
 			,url : url
-			,data: stringJson
-			,datatype : 'json'
-			,contentType : "application/json; charset=UTF-8"
+			,data: {
+				totalJson:stringJson
+			}
 		}).done(function(data){//통신 성공
 			alert("저장성공!");
 		}).fail(function(data){//통신 실패

@@ -1,27 +1,26 @@
 package com.onlyReport.report.controller;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onlyReport.comm.model.Annuali_ScheduleStores;
 import com.onlyReport.report.model.Annuail_ScheduleVO;
 import com.onlyReport.report.model.ReportVO;
 import com.onlyReport.report.service.ReportService;
@@ -314,42 +313,22 @@ public class ReportController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/tableInsert", method = {RequestMethod.POST}, produces = "application/json; charset=utf-8") 
-	public ModelAndView TableInsert(HttpServletRequest request, HttpServletResponse response, ModelMap model){
+	@RequestMapping(value="/tableInsert", method = {RequestMethod.POST}) 
+	public ModelAndView TableInsert(@ModelAttribute Annuail_ScheduleVO scheduleVO, HttpServletRequest request, Model model){
 
 		logger.info("tableInsert() : start");		//tableTest 시작
+
+		HttpSession session = request.getSession();
 		
-		Annuali_ScheduleStores res = new Annuali_ScheduleStores();	//연간스케쥴 스토어
-		HttpStatus statusCode = HttpStatus.OK;						//성공 여부 코드
+		System.out.println("scheduleVO : "+scheduleVO.toString());
 		
-		try {
-			
-			res.getResHeader().setUser_id("swrts");				//사용자 이름
-			ObjectMapper m = new ObjectMapper();				//오브젝트
-			String json_data = m.writeValueAsString(request);	//매개변수 데이터 파싱
-			
-			
-			
-			
-		}catch(Exception e) {
-			
-		}
+		Set<String> keySet = request.getParameterMap().keySet();
 		
-//		  매개변수 받아서 출력
-		  Set<String> keySet = request.getParameterMap().keySet();
-		  
-		  System.out.println("keySet : "+keySet.toString());
-	
-		 
-		
-		/*
-		 * Enumeration names = request.getParameterNames();
-		 * while(names.hasMoreElements()) { String key = (String) names.nextElement();
-		 * System.out.println(key + ": " + request.getParameter(key)); };
-		 */
-		
-		
-		System.out.println("반복문 여기까지 입니다.");
+		for(String key: keySet) {
+			
+			System.out.println(key + ": " + request.getParameter(key));
+			
+		};//for
 		
 		
 		ModelAndView  mav = new ModelAndView("MenuList");	//Report model 선언
