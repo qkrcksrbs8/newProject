@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 
+import com.onlyReport.report.model.Annuail_ScheduleVO;
 import com.onlyReport.report.model.ReportVO;
 
 /**
@@ -55,5 +56,46 @@ public class ReportDAO extends SqlSessionDaoSupport {
 	public void insertReport(Map<String, Object> map) throws Exception {
 		getSqlSession().insert("insertReport", map);
 	}
+	
+	/**
+	 * 연간스케쥴 리스트 수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Annuail_ScheduleVO> selectScheduleList(Map<String, Object> map) throws Exception {
+		return getSqlSession().selectList("selectScheduleList", map);
+	}
+	
+	/**
+	 * 연간스케쥴 수정
+	 * @param scheduleVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateSchedule(Annuail_ScheduleVO scheduleVO) throws Exception {
+		return getSqlSession().update("updateSchedule", scheduleVO);
+	}
+	
+	/**
+	 * 연간스케쥴 생성
+	 * @param scheduleVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertSchedule(Annuail_ScheduleVO scheduleVO) throws Exception {
+		return getSqlSession().insert("insertSchedule", scheduleVO);
+	}
+	
+	/**
+	 * 연간스케쥴 삭제
+	 * @param scheduleVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int deleteSchedule(Annuail_ScheduleVO scheduleVO) throws Exception {
+		return getSqlSession().update("deleteSchdule", scheduleVO);
+	}
+	
 }
   

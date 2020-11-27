@@ -67,7 +67,7 @@ button {
 	<!-- 게시판 헤더 -->
 	<section id="content" class="board-list-header-wrap">
 		<div class="container">
-			<h3 class="board-list-header"><a href="menuList.do"><i class="icon-clipboard-list" style="margin-right: 10px;"></i>메뉴 목록</a></h3>
+			<h3 class="board-list-header"><a href="mainPage.do"><i class="icon-clipboard-list" style="margin-right: 10px;"></i>메뉴 목록</a></h3>
 		</div>
 	</section>
 	

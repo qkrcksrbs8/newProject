@@ -21,106 +21,142 @@ package com.onlyReport.report.model;
 */
 public class Annuail_ScheduleVO {
 	
-	private String job_content = new String();	//업무내용
-	private int schedule_cycle = 0; 			//점검주기
-	private int month1 = 0;						//1월
-	private int month2 = 0;						//2월
-	private int month3 = 0;						//3월
-	private int month4 = 0;						//4월
-	private int month5 = 0;						//5월
-	private int month6 = 0;						//6월
-	private int month7 = 0;						//7월
-	private int month8 = 0;						//8월
-	private int month9 = 0;						//9월
-	private int month10 = 0;					//10월
-	private int month11 = 0;					//11월
-	private int month12 = 0;					//12월
-	private String entity = new String();		//관리주체
-	private String file_name = new String(); 	//파일
-	
-	public String getJob_content() {
-		return job_content;
+	private int schedule_seq =			0;				//시퀀스
+	private String division = 	 		new String();;	//구분
+	private String company_code = 		new String();;	//사업장코드
+	private String company_name = 		new String();	//사업장이름
+	private String work_info = 			new String();	//업무내용
+	private String check_cycle = 		new String();	//점검주기
+	private String schedule_jan = 		new String();	//1월
+	private String schedule_feb = 		new String();	//2월
+	private String schedule_mar = 		new String();	//3월
+	private String schedule_apr = 		new String();	//4월
+	private String schedule_may = 		new String();	//5월
+	private String schedule_jun = 		new String();	//6월
+	private String schedule_jul = 		new String();	//7월
+	private String schedule_aug = 		new String();	//8월
+	private String schedule_sep = 		new String();	//9월
+	private String schedule_oct = 		new String();	//10월
+	private String schedule_nov = 		new String();	//11월
+	private String schedule_dec = 		new String();	//12월
+	private String entity = 			new String();	//관리주체
+	private String contract =			new String();	//계약서
+	private String file_name =			new String(); 	//파일이름
+	private String file_data =			new String();	//파일데이터
+	private String file_content =		new String();	//파일내용
+	private String file_date = 			new String();	//업로드일자
+	private String useflag = 			new String();	//사용구분
+	private String created_date = 		new String();	//최초생성일
+	private String created_by = 		new String();	//최초생성자
+	private String last_update_date = 	new String();	//최종수정일
+	private String last_update_by = 	new String();	//최종수정자
+	public int getSchedule_seq() {
+		return schedule_seq;
 	}
-	public void setJob_content(String job_content) {
-		this.job_content = job_content;
+	public void setSchedule_seq(int schedule_seq) {
+		this.schedule_seq = schedule_seq;
 	}
-	public int getSchedule_cycle() {
-		return schedule_cycle;
+	public String getDivision() {
+		return division;
 	}
-	public void setSchedule_cycle(int schedule_cycle) {
-		this.schedule_cycle = schedule_cycle;
+	public void setDivision(String division) {
+		this.division = division;
 	}
-	public int getMonth1() {
-		return month1;
+	public String getCompany_code() {
+		return company_code;
 	}
-	public void setMonth1(int month1) {
-		this.month1 = month1;
+	public void setCompany_code(String company_code) {
+		this.company_code = company_code;
 	}
-	public int getMonth2() {
-		return month2;
+	public String getCompany_name() {
+		return company_name;
 	}
-	public void setMonth2(int month2) {
-		this.month2 = month2;
+	public void setCompany_name(String company_name) {
+		this.company_name = company_name;
 	}
-	public int getMonth3() {
-		return month3;
+	public String getWork_info() {
+		return work_info;
 	}
-	public void setMonth3(int month3) {
-		this.month3 = month3;
+	public void setWork_info(String work_info) {
+		this.work_info = work_info;
 	}
-	public int getMonth4() {
-		return month4;
+	public String getCheck_cycle() {
+		return check_cycle;
 	}
-	public void setMonth4(int month4) {
-		this.month4 = month4;
+	public void setCheck_cycle(String check_cycle) {
+		this.check_cycle = check_cycle;
 	}
-	public int getMonth5() {
-		return month5;
+	public String getSchedule_jan() {
+		return schedule_jan;
 	}
-	public void setMonth5(int month5) {
-		this.month5 = month5;
+	public void setSchedule_jan(String schedule_jan) {
+		this.schedule_jan = schedule_jan;
 	}
-	public int getMonth6() {
-		return month6;
+	public String getSchedule_feb() {
+		return schedule_feb;
 	}
-	public void setMonth6(int month6) {
-		this.month6 = month6;
+	public void setSchedule_feb(String schedule_feb) {
+		this.schedule_feb = schedule_feb;
 	}
-	public int getMonth7() {
-		return month7;
+	public String getSchedule_mar() {
+		return schedule_mar;
 	}
-	public void setMonth7(int month7) {
-		this.month7 = month7;
+	public void setSchedule_mar(String schedule_mar) {
+		this.schedule_mar = schedule_mar;
 	}
-	public int getMonth8() {
-		return month8;
+	public String getSchedule_apr() {
+		return schedule_apr;
 	}
-	public void setMonth8(int month8) {
-		this.month8 = month8;
+	public void setSchedule_apr(String schedule_apr) {
+		this.schedule_apr = schedule_apr;
 	}
-	public int getMonth9() {
-		return month9;
+	public String getSchedule_may() {
+		return schedule_may;
 	}
-	public void setMonth9(int month9) {
-		this.month9 = month9;
+	public void setSchedule_may(String schedule_may) {
+		this.schedule_may = schedule_may;
 	}
-	public int getMonth10() {
-		return month10;
+	public String getSchedule_jun() {
+		return schedule_jun;
 	}
-	public void setMonth10(int month10) {
-		this.month10 = month10;
+	public void setSchedule_jun(String schedule_jun) {
+		this.schedule_jun = schedule_jun;
 	}
-	public int getMonth11() {
-		return month11;
+	public String getSchedule_jul() {
+		return schedule_jul;
 	}
-	public void setMonth11(int month11) {
-		this.month11 = month11;
+	public void setSchedule_jul(String schedule_jul) {
+		this.schedule_jul = schedule_jul;
 	}
-	public int getMonth12() {
-		return month12;
+	public String getSchedule_aug() {
+		return schedule_aug;
 	}
-	public void setMonth12(int month12) {
-		this.month12 = month12;
+	public void setSchedule_aug(String schedule_aug) {
+		this.schedule_aug = schedule_aug;
+	}
+	public String getSchedule_sep() {
+		return schedule_sep;
+	}
+	public void setSchedule_sep(String schedule_sep) {
+		this.schedule_sep = schedule_sep;
+	}
+	public String getSchedule_oct() {
+		return schedule_oct;
+	}
+	public void setSchedule_oct(String schedule_oct) {
+		this.schedule_oct = schedule_oct;
+	}
+	public String getSchedule_nov() {
+		return schedule_nov;
+	}
+	public void setSchedule_nov(String schedule_nov) {
+		this.schedule_nov = schedule_nov;
+	}
+	public String getSchedule_dec() {
+		return schedule_dec;
+	}
+	public void setSchedule_dec(String schedule_dec) {
+		this.schedule_dec = schedule_dec;
 	}
 	public String getEntity() {
 		return entity;
@@ -128,22 +164,79 @@ public class Annuail_ScheduleVO {
 	public void setEntity(String entity) {
 		this.entity = entity;
 	}
+	public String getContract() {
+		return contract;
+	}
+	public void setContract(String contract) {
+		this.contract = contract;
+	}
 	public String getFile_name() {
 		return file_name;
 	}
 	public void setFile_name(String file_name) {
 		this.file_name = file_name;
 	}
+	public String getFile_data() {
+		return file_data;
+	}
+	public void setFile_data(String file_data) {
+		this.file_data = file_data;
+	}
+	public String getFile_content() {
+		return file_content;
+	}
+	public void setFile_content(String file_content) {
+		this.file_content = file_content;
+	}
+	public String getFile_date() {
+		return file_date;
+	}
+	public void setFile_date(String file_date) {
+		this.file_date = file_date;
+	}
+	public String getUseflag() {
+		return useflag;
+	}
+	public void setUseflag(String useflag) {
+		this.useflag = useflag;
+	}
+	public String getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(String created_date) {
+		this.created_date = created_date;
+	}
+	public String getCreated_by() {
+		return created_by;
+	}
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
+	}
+	public String getLast_update_date() {
+		return last_update_date;
+	}
+	public void setLast_update_date(String last_update_date) {
+		this.last_update_date = last_update_date;
+	}
+	public String getLast_update_by() {
+		return last_update_by;
+	}
+	public void setLast_update_by(String last_update_by) {
+		this.last_update_by = last_update_by;
+	}
 	
 	@Override
 	public String toString() {
-		return "Annuail_ScheduleVO [job_content=" + job_content + ", schedule_cycle=" + schedule_cycle + ", month1=" + month1
-				+ ", month2=" + month2 + ", month3=" + month3 + ", month4=" + month4 + ", month5=" + month5
-				+ ", month6=" + month6 + ", month7=" + month7 + ", month8=" + month8 + ", month9=" + month9
-				+ ", month10=" + month10 + ", month11=" + month11 + ", month12=" + month12 + ", entity=" + entity
-				+ ", file_name=" + file_name + "]";
+		return "Annuail_ScheduleVO [schedule_seq=" + schedule_seq + ", division=" + division + ", company_code="
+				+ company_code + ", company_name=" + company_name + ", work_info=" + work_info + ", check_cycle="
+				+ check_cycle + ", schedule_jan=" + schedule_jan + ", schedule_feb=" + schedule_feb + ", schedule_mar="
+				+ schedule_mar + ", schedule_apr=" + schedule_apr + ", schedule_may=" + schedule_may + ", schedule_jun="
+				+ schedule_jun + ", schedule_jul=" + schedule_jul + ", schedule_aug=" + schedule_aug + ", schedule_sep="
+				+ schedule_sep + ", schedule_oct=" + schedule_oct + ", schedule_nov=" + schedule_nov + ", schedule_dec="
+				+ schedule_dec + ", entity=" + entity + ", contract=" + contract + ", file_name=" + file_name
+				+ ", file_data=" + file_data + ", file_content=" + file_content + ", file_date=" + file_date
+				+ ", useflag=" + useflag + ", created_date=" + created_date + ", created_by=" + created_by
+				+ ", last_update_date=" + last_update_date + ", last_update_by=" + last_update_by + "]";
 	}
 	
-	
-
 }

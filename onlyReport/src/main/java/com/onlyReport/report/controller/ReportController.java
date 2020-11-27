@@ -1,20 +1,19 @@
 package com.onlyReport.report.controller;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +25,22 @@ import com.onlyReport.report.model.ReportVO;
 import com.onlyReport.report.service.ReportService;
 import com.onlyReport.report.util.PagingUtil;
 
+/**
+ *<pre>
+ *관리보고서 컨트롤러
+ *</pre>
+ *
+ *@ClassName : ReportController.java 
+ *@Description : 관리보고서에 관련된 기능을 정의한 컨트롤러입니다.
+ *@author user
+ *@since 2020. 11. 26
+ *@version 1.0
+ *@see
+ *@Modification Information
+ *<pre>
+ *2020. 11. 26   user   최초생성
+ *</pre>
+ */
 @Controller
 public class ReportController {
 
@@ -258,84 +273,129 @@ public class ReportController {
 	@RequestMapping(value="/menuList")
 	public ModelAndView MenuList() {
 
-		logger.info("menuList() : start");						//menuList 시작
+		logger.info("================================ START ================================");								//menuList 시작
 		
 		
-		ModelAndView  mav = new ModelAndView("MenuList");		//Report model 선언
-		mav.setViewName("main/menuList");						//jsp 경로
+		ModelAndView  mav = new ModelAndView("MenuList");				//menuList model 선언
+		mav.setViewName("main/menuList");								//jsp 경로
 		
-		logger.info("menuList() : end");					//Report 종료
+		logger.info("================================ E N D ================================");								//menuList 종료
 		return mav;
 	}
 	
 	/**
-	 * 테이블테스트
-	 * 테이블을 리스트로 출력할거임
+	 * 메인 페이지 
+	 * 관리보고서 메인페이지입니다.
 	 * @return
 	 */
-	@RequestMapping(value="/tableTest")
-	public ModelAndView TableTest() {
+	@RequestMapping(value="/mainPage")
+	public ModelAndView MainPage() {
 
-		logger.info("tableTest() : start");		//tableTest 시작
+		logger.info("================================ START ================================");								//mainPage 시작
 		
-		List<Annuail_ScheduleVO> tableList = new ArrayList();//테이블 리스트
-		Annuail_ScheduleVO tableVO = new Annuail_ScheduleVO();//테이블을 테스트하기 위한 리스트 VO	
-		int tableCnt = 0;						//테이블 총 개수
 		
-		for(int i = 0; i < 5; ++i) {
-			
-			tableVO = new Annuail_ScheduleVO();//테이블을 테스트하기 위한 리스트 VO
-			tableVO.setJob_content("업무계약 "+i);	//업무내용
-			tableVO.setSchedule_cycle(2);		//점검주기
-			tableVO.setMonth2(1);				//3월   체크:1/논체크:0
-			tableVO.setMonth3(1);				//3월   체크:1/논체크:0
-			tableVO.setEntity("관리주체 "+i);		//관리주체
-			tableVO.setFile_name("파일이름 "+i);	//파일이름
-			tableList.add(i, tableVO);			//리스트 증가
-			tableCnt++;							//테이블 개수 1씩 증가
-			
-		};//for
+		ModelAndView  mav = new ModelAndView("MainPage");				//mainPage model 선언
+		mav.setViewName("main/mainPage");								//jsp 경로
 		
-		logger.info(tableList.toString());		//테이블 데이터 확인
-		
-		ModelAndView  mav = new ModelAndView("TableTest");	//Report model 선언
-		mav.setViewName("main/tableTest");					//jsp 경로
-		mav.addObject("tableList", tableList);	//테이블 리스트
-		mav.addObject("tableCnt", tableCnt);	//테이블 수 
-		
-		logger.info("tableTest() : end");					//tableTest 종료
+		logger.info("================================ E N D ================================");								//mainPage 종료
 		return mav;
 	}
 	
 	/**
-	 * 테이블테스트 저장
-	 * 테이블 리스트 저장
+	 * 연간스케쥴 리스트
+	 * 연간스케쥴 리스트를 출력
 	 * @return
+	 */
+	@RequestMapping(value="/scheduleList", method = {RequestMethod.POST,RequestMethod.GET}, produces = "application/json; charset=utf-8")
+	public ModelAndView TableTest(HttpServletRequest request, Model model
+								, @RequestParam(value="division", required =false,  defaultValue="AS01") String division) {
+
+		logger.info("================================ START ================================");							//scheduleList 시작
+		List<Annuail_ScheduleVO> scheduleList = new ArrayList();		//테이블 리스트
+			
+		try {
+		
+			Annuail_ScheduleVO tableVO = new Annuail_ScheduleVO();		//테이블을 테스트하기 위한 리스트 VO	
+			scheduleList =  reportService.selectScheduleList(request, division);		//연간 스케쥴 목록
+			Map resultMap = new HashMap();
+			resultMap.put("resultCode", "0000");						//응답코드	 0000:정상  / 9000:비정상
+			resultMap.put("scheduleList", scheduleList);				//테이블 리스트
+			resultMap.put("scheduleCnt", scheduleList.size());			//테이블 수 
+			resultMap.put("division", division);						//업무구분
+			
+			ModelAndView  mav = new ModelAndView("main/scheduleList",resultMap);			//Report model 선언
+			logger.info("================================ E N D ================================");						//scheduleList 종료
+			return mav;													//mav리턴
+			
+		}catch(Exception e) {
+			ModelAndView  mav = new ModelAndView("ScheduleList");			//Report model 선언
+			mav.setViewName("main/scheduleList");			
+			logger.error(e.toString());									//오류메시지
+			return mav;													//mav리턴
+			
+		}//catch
+		
+
+	}
+	
+	/**
+	 * 연간스케쥴 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
 	 */
 	@ResponseBody
-	@RequestMapping(value="/tableInsert", method = {RequestMethod.POST}) 
-	public ModelAndView TableInsert(@ModelAttribute Annuail_ScheduleVO scheduleVO, HttpServletRequest request, Model model){
+	@RequestMapping(value="/insertSchedule", method = {RequestMethod.POST}) 
+	public ModelAndView InsertSchedule(HttpServletRequest request, Model model) {
 
-		logger.info("tableInsert() : start");		//tableTest 시작
+		logger.info("================================ START ================================");						//insertSchedule 시작
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();						//세션
 		
-		System.out.println("scheduleVO : "+scheduleVO.toString());
-		
-		Set<String> keySet = request.getParameterMap().keySet();
-		
-		for(String key: keySet) {
+		try {
 			
-			System.out.println(key + ": " + request.getParameter(key));
+			reportService.insertSchedule(request);						//연간스케쥴 저장/수정
 			
-		};//for
+		}catch(Exception e) {
+			
+			logger.error(e.toString());									//오류메시지
+			
+		};
 		
-		
-		ModelAndView  mav = new ModelAndView("MenuList");	//Report model 선언
-		mav.setViewName("main/menuList");					//jsp 경로
-
-		logger.info("tableInsert() : end");					//tableTest 종료
+		ModelAndView  mav = new ModelAndView("MenuList");				//Report model 선언
+		mav.setViewName("main/menuList");								//jsp 경로
+		logger.info("================================ E N D ================================");						//insertSchedule 종료
 		return mav;
+	}
+	
+	/**
+	 * 연간스케쥴 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@ResponseBody
+	@RequestMapping(value="/deleteSchedule", method = {RequestMethod.POST}) 
+	public ModelAndView DeleteSchedule(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");						//deleteSchedule 시작
+
+		HttpSession session = request.getSession();						//세션
+		
+		try {
+			
+			reportService.deleteSchedule(request);						//연간스케쥴 삭제
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		ModelAndView  mav = new ModelAndView("MenuList");				//Report model 선언
+		mav.setViewName("main/menuList");								//jsp 경로
+		mav.addObject("resultCode", "0000");							//반환코드
+		logger.info("================================ E N D ================================");						//deleteSchedule 종료
+		return mav;
+		
 	}
 	
 }
