@@ -106,11 +106,171 @@
 
 </insert>
 
+
+
+<select id="selectScheduleList" parameterType="map" resultType="com.onlyReport.report.model.Annuail_ScheduleVO">
+/* selectScheduleList */
+	SELECT
+        SCHEDULE_SEQ
+        , DIVISION 
+	 	, COMPANY_CODE
+        , COMPANY_NAME 
+		, WORK_INFO
+		, CHECK_CYCLE 
+		, SCHEDULE_JAN
+		, SCHEDULE_FEB
+		, SCHEDULE_MAR
+		, SCHEDULE_APR 
+		, SCHEDULE_MAY
+		, SCHEDULE_JUN
+		, SCHEDULE_JUL
+		, SCHEDULE_AUG
+		, SCHEDULE_SEP
+		, SCHEDULE_OCT
+		, SCHEDULE_NOV
+		, SCHEDULE_DEC
+		, ENTITY
+        , CONTRACT
+        , FILE_NAME
+<!--         , FILE_DATA -->
+        , FILE_CONTENT
+<!--         , FILE_DATE -->
+        , USEFLAG
+        
+	FROM SCHEDULE_MST
+	WHERE USEFLAG = #{useflag}
+	<if test='division != null  and division != ""'>
+		and DIVISION	=	#{division}
+ 	</if>
+ 	ORDER BY SCHEDULE_SEQ ASC
+	
+</select>
+
+<insert id="insertSchedule" parameterType="com.onlyReport.report.model.Annuail_ScheduleVO">
+/* insertSchedule */
+	INSERT INTO SCHEDULE_MST(
+	     SCHEDULE_SEQ
+	    ,DIVISION
+	    ,COMPANY_CODE
+	    ,COMPANY_NAME
+	    ,WORK_INFO
+	    ,CHECK_CYCLE
+	    ,SCHEDULE_JAN
+	    ,SCHEDULE_FEB
+	    ,SCHEDULE_MAR
+	    ,SCHEDULE_APR
+	    ,SCHEDULE_MAY
+	    ,SCHEDULE_JUN
+	    ,SCHEDULE_JUL
+	    ,SCHEDULE_AUG
+	    ,SCHEDULE_SEP
+	    ,SCHEDULE_OCT
+	    ,SCHEDULE_NOV
+	    ,SCHEDULE_DEC
+	    ,ENTiTY
+	    ,CONTRACT
+	    ,FILE_NAME
+	    ,CREATED_BY
+	    ,LAST_UPDATE_BY
+	) values (
+	     SCHEDULE_SEQUENCE.nextval
+	    ,#{division}
+	    ,#{company_code}
+	    ,#{company_name}
+	    ,#{work_info}
+	    ,#{check_cycle}
+	    ,#{schedule_jan}
+	    ,#{schedule_feb}
+	    ,#{schedule_mar}
+	    ,#{schedule_apr}
+	    ,#{schedule_may}
+	    ,#{schedule_jun}
+	    ,#{schedule_jul}
+	    ,#{schedule_aug}
+	    ,#{schedule_sep}
+	    ,#{schedule_oct}
+	    ,#{schedule_nov}
+	    ,#{schedule_dec}
+	    ,#{entity}
+	    ,#{contract}
+	    ,#{file_name}
+	    ,#{created_by}
+	    ,#{last_update_by}
+	)
+</insert>
+
+<update id="updateSchedule" parameterType="com.onlyReport.report.model.Annuail_ScheduleVO">
+/* updateSchedule */
+	UPDATE SCHEDULE_MST SET
+	    LAST_UPDATE_BY	=	#{last_update_by}
+	    ,LAST_UPDATE_DATE = SYSDATE
+	<if test='company_code != null  and company_code != ""'>
+		,COMPANY_CODE	=	#{company_code}
+ 	</if>
+ 	<if test='company_name != null  and company_name != ""'>
+		,COMPANY_NAME	=	#{company_name}
+ 	</if>	    
+ 	<if test='work_info != null  and work_info != ""'>
+		,WORK_INFO		=	#{work_info}
+ 	</if>
+ 	<if test='check_cycle != null  and check_cycle != ""'>
+		,CHECK_CYCLE	=	#{check_cycle}
+ 	</if>
+ 	<if test='schedule_jan != null  and schedule_jan != ""'>
+		,SCHEDULE_JAN	=	#{schedule_jan}
+ 	</if>
+ 	<if test='schedule_feb != null  and schedule_feb != ""'>
+		,SCHEDULE_FEB	=	#{schedule_feb}
+ 	</if>
+	<if test='schedule_mar != null  and schedule_mar != ""'>
+		,SCHEDULE_MAR	=	#{schedule_mar}
+ 	</if>
+ 	<if test='schedule_apr != null  and schedule_apr != ""'>
+		,SCHEDULE_APR	=	#{schedule_apr}
+ 	</if>    
+ 	<if test='schedule_may != null  and schedule_may != ""'>
+		,SCHEDULE_MAY	=	#{schedule_may}
+ 	</if>
+ 	<if test='schedule_jun != null  and schedule_jun != ""'>
+		,SCHEDULE_JUN	=	#{schedule_jun}
+ 	</if>
+ 	<if test='schedule_jul != null  and schedule_jul != ""'>
+		,SCHEDULE_JUL	=	#{schedule_jul}
+ 	</if>
+ 	<if test='schedule_aug != null  and schedule_aug != ""'>
+		,SCHEDULE_AUG	=	#{schedule_aug}
+ 	</if>
+ 	<if test='schedule_sep != null  and schedule_sep != ""'>
+		,SCHEDULE_SEP	=	#{schedule_sep}
+ 	</if>
+ 	<if test='schedule_oct != null  and schedule_oct != ""'>
+		,SCHEDULE_OCT	=	#{schedule_oct}
+ 	</if>
+ 	<if test='schedule_nov != null  and schedule_nov != ""'>
+		,SCHEDULE_NOV	=	#{schedule_nov}
+ 	</if>
+ 	<if test='schedule_dec != null  and schedule_dec != ""'>
+		,SCHEDULE_DEC	=	#{schedule_dec}
+ 	</if>
+ 	<if test='entity != null  and entity != ""'>
+		,ENTITY	=	#{entity}
+ 	</if>
+ 	<if test='contract != null  and contract != ""'>
+		,CONTRACT	=	#{contract}
+ 	</if>
+	where SCHEDULE_SEQ 	=	#{schedule_seq}
+	
+</update>
+
+<update id="deleteSchdule" parameterType="com.onlyReport.report.model.Annuail_ScheduleVO"> 
+	
+	UPDATE SCHEDULE_MST SET
+		last_update_date = SYSDATE
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE SCHEDULE_SEQ = #{schedule_seq}
+	
+</update> 
+
 </mapper>
-
-
-
-
-
-
 

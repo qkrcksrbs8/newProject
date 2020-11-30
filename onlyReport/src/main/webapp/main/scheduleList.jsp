@@ -159,6 +159,7 @@ $(function(){
    		insertUl += "<li class='col-xs-2 col-md-2'><label class='filePopup'>파일이름</label></li>";
    		insertUl += "</ul>"
    		$("#formArray").append(insertUl);
+   		
    	});
    	
    	//----------------------------
