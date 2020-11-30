@@ -308,7 +308,8 @@ public class ReportController {
 	 */
 	@RequestMapping(value="/scheduleList", method = {RequestMethod.POST,RequestMethod.GET}, produces = "application/json; charset=utf-8")
 	public ModelAndView TableTest(HttpServletRequest request, Model model
-								, @RequestParam(value="division", required =false,  defaultValue="AS01") String division) {
+								, @RequestParam(value="division", required =false,  defaultValue="AS01") String division
+								, @RequestParam(value="addList", required =false,  defaultValue="") String addList) {
 
 		logger.info("================================ START ================================");							//scheduleList 시작
 		List<Annuail_ScheduleVO> scheduleList = new ArrayList();		//테이블 리스트
@@ -316,7 +317,7 @@ public class ReportController {
 		try {
 		
 			Annuail_ScheduleVO tableVO = new Annuail_ScheduleVO();		//테이블을 테스트하기 위한 리스트 VO	
-			scheduleList =  reportService.selectScheduleList(request, division);		//연간 스케쥴 목록
+			scheduleList =  reportService.selectScheduleList(request, division, addList);		//연간 스케쥴 목록
 			Map resultMap = new HashMap();
 			resultMap.put("resultCode", "0000");						//응답코드	 0000:정상  / 9000:비정상
 			resultMap.put("scheduleList", scheduleList);				//테이블 리스트

@@ -170,7 +170,7 @@ public class ReportServiceImpl implements ReportService {
 	/**
 	 *	연간스케쥴 조회 메서드입니다.
 	 */
-	public List<Annuail_ScheduleVO> selectScheduleList(HttpServletRequest request, String division) {
+	public List<Annuail_ScheduleVO> selectScheduleList(HttpServletRequest request, String division, String addList) {
 		
 		logger.info("================================ START ================================");
 		List<Annuail_ScheduleVO> scheduleList = new ArrayList<Annuail_ScheduleVO>();	//연간스케쥴VO List
@@ -182,9 +182,19 @@ public class ReportServiceImpl implements ReportService {
 			map.put("division", division);												//업무구분
 			scheduleList = reportDAO.selectScheduleList(map);							//연간스케쥴 리스트 조회
 			
+			//-----------------------------
+			//addList의 값이 add일 경우 리스트 추가
+			//-----------------------------
+			if("add".equals(addList)) {
+			
+				Annuail_ScheduleVO addScheduleVO = new Annuail_ScheduleVO();			//연간스케쥴vo 선언
+				addScheduleVO.setDivision(division);									//업무 구분 값 고정
+				scheduleList.add(addScheduleVO);										//리스트에 추가
+
+			};//if
+			
 			logger.info(scheduleList.toString());
-			logger.info("================================ E N D ================================");	
-													//리스트 로그 
+			logger.info("================================ E N D ================================");	//리스트 로그 
 			return scheduleList;
 			
 		}catch(Exception e) {

@@ -75,7 +75,7 @@ public interface ReportService {
 	 * @param map
 	 * @return
 	 */
-	public List<Annuail_ScheduleVO> selectScheduleList(HttpServletRequest request, String division);
+	public List<Annuail_ScheduleVO> selectScheduleList(HttpServletRequest request, String division, String addList);
 	
 	/**
 	 * 연간스케쥴 저장/수정

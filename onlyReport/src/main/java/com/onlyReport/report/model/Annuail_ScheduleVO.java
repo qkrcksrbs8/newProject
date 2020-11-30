@@ -22,26 +22,26 @@ package com.onlyReport.report.model;
 public class Annuail_ScheduleVO {
 	
 	private int schedule_seq =			0;				//시퀀스
-	private String division = 	 		new String();;	//구분
-	private String company_code = 		new String();;	//사업장코드
+	private String division = 	 		new String();	//구분
+	private String company_code = 		new String();	//사업장코드
 	private String company_name = 		new String();	//사업장이름
-	private String work_info = 			new String();	//업무내용
-	private String check_cycle = 		new String();	//점검주기
-	private String schedule_jan = 		new String();	//1월
-	private String schedule_feb = 		new String();	//2월
-	private String schedule_mar = 		new String();	//3월
-	private String schedule_apr = 		new String();	//4월
-	private String schedule_may = 		new String();	//5월
-	private String schedule_jun = 		new String();	//6월
-	private String schedule_jul = 		new String();	//7월
-	private String schedule_aug = 		new String();	//8월
-	private String schedule_sep = 		new String();	//9월
-	private String schedule_oct = 		new String();	//10월
-	private String schedule_nov = 		new String();	//11월
-	private String schedule_dec = 		new String();	//12월
+	private String work_info = 			"신규 업무 내용";	//업무내용
+	private String check_cycle = 		"0회/년";			//점검주기
+	private String schedule_jan = 		"0";			//1월
+	private String schedule_feb = 		"0";			//2월
+	private String schedule_mar = 		"0";			//3월
+	private String schedule_apr = 		"0";			//4월
+	private String schedule_may = 		"0";			//5월
+	private String schedule_jun = 		"0";			//6월
+	private String schedule_jul = 		"0";			//7월
+	private String schedule_aug = 		"0";			//8월
+	private String schedule_sep = 		"0";			//9월
+	private String schedule_oct = 		"0";			//10월
+	private String schedule_nov = 		"0";			//11월
+	private String schedule_dec = 		"0";			//12월
 	private String entity = 			new String();	//관리주체
 	private String contract =			new String();	//계약서
-	private String file_name =			new String(); 	//파일이름
+	private String file_name =			"파일업로드"; 		//파일이름
 	private String file_data =			new String();	//파일데이터
 	private String file_content =		new String();	//파일내용
 	private String file_date = 			new String();	//업로드일자
@@ -50,6 +50,7 @@ public class Annuail_ScheduleVO {
 	private String created_by = 		new String();	//최초생성자
 	private String last_update_date = 	new String();	//최종수정일
 	private String last_update_by = 	new String();	//최종수정자
+	
 	public int getSchedule_seq() {
 		return schedule_seq;
 	}

@@ -21,36 +21,25 @@
 
 $(function(){
 	
+	var selectDivision = "${division}";		//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	$("#selectCode").val(selectDivision);	//페이지 진입 시 selectBox 선택
+	
 	//------------------
 	//셀렉트박스 조회
 	//------------------
 	$('#selectCode').change(function() {
 		
-	    var division = $(this).val();	//셀렉트박스 값
-	    $("#division").val(division);	//업무구분
-	    
-	    var url = "scheduleList.do";	//조회
-
-// 		$("#selectForm").submit();//서브밋
+		var division = $(this).val();										//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	    $("#division").val(division);										//업무구분
+	    $("#addList").val("");												//행추가 변수 값 초기화
+		$("#selectForm").submit();											//서브밋
 		
-		$.ajax({
-			 method: "post"
-			,url : url
-			,data: division
-			,contentType: 'application/json; charset=utf-8'
-			,dataType:"json"
-			,async: true
-		}).done(function(data){//통신 성공
-			alert("저장성공!");
-		}).fail(function(data){//통신 실패
-			alert("저장실패");
-		})
 	});
 	
 	//------------------------------
 	//테이블을 저장하는 로직입니다.
 	//------------------------------
-	$("#tableBtn").click(function(){
+	$("#tableSave").click(function(){
 		
 		//-------------------------------------------
 		//List Row 만큼 반복문으로 json배열에 담는 형식입니다.
@@ -60,15 +49,14 @@ $(function(){
 		var jsonArr = new Array();						//JsonArray를 위한 배열생성
         var totalJson = new Object();					//JsonObject의 합
 		var division = $("#selectCode").val();			//업무구분
+		
 		//-------------------------
 		//체크박스 반복문입니다.
 		//-------------------------
 		checkbox.each(function(i) {
 
-			// checkbox.parent() : checkbox의 부모는 <td>이다.
-			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.
-			var ul = checkbox.parent().parent().eq(i);
-			var li = ul.children();
+  			var ul = checkbox.parent().parent().eq(i);						// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+	   		var li = ul.children();											// checkbox.parent() : checkbox의 부모는 <li>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
 			var schedule_seq = li.eq(0).children().val();					//연간스케쥴 시퀀스
@@ -137,38 +125,76 @@ $(function(){
 		alert("파일관련 팝업창 호출!"); 
 		
 	});
-	
-   	//----------------------------
-   	//행추가 기능입니다.
-   	//----------------------------
-   	$("#tableAdd").click(function(){
-   		var checkboxCnt = $("input[name=table_check]").length;	//체크박스 개수 10개 이상이면 생성 불가
-   		if(checkboxCnt >= 10){
-			alert("10개 이상 생성 불가.");   			
-   			return; 
-   		};
-   		
-   		var insertUl = "";//ul에 추가할 데이터를 담을 변수입니다.
-   		insertUl += "<ul class='row'>";
-   		insertUl += "<li class='col-xs-1 col-md-1 tableCount'><input type='checkbox' name='table_check'></li>";
-   		insertUl += "<li class='col-xs-3 col-md-3'><lable class=''>신규업무입니다람쥐</label></li>";
-   		insertUl += "<li class='col-xs-2 col-md-2'><label class=''>0회/년</label></li>";
-   		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_jan' name='' type='checkbox' value=''></li>";
-   		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_feb' name='' type='checkbox' value=''></li>";
-   		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_mar' name='' type='checkbox' value=''></li>";
-   		insertUl += "<li class='col-xs-2 col-md-2'><label class='filePopup'>파일이름</label></li>";
-   		insertUl += "</ul>"
-   		$("#formArray").append(insertUl);
-   		
-   	});
    	
    	//----------------------------
    	//수정 기능을 정의한 메서드입니다.
    	//----------------------------
    	$("#tableUp").click(function(){
    		
-   		alert("수정기능 개발 중");
+		var checkboxCnt = $("input[name=table_check]:checked").length;	//체크박스 개수 체크
    		
+   		//------------------------
+   		//수정할 데이터가 없으면 바로 종료
+   		//------------------------
+   		if(checkboxCnt < 1 ){
+   			 
+   			alert("수정할 데이터를 선택해 주세요.");
+   			return;
+   			
+   		};
+   		
+   		var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
+
+   			//-------------------------
+   			//체크박스 반복문입니다.
+   			//-------------------------
+
+   			if("수정" == $("#tableUp").text()){
+   				
+   				checkbox.each(function(i) {
+
+   	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
+   	   				var work_info_val = li.eq(1).text();				//업무내용
+   	   				
+   	   				li.eq(1).html('<input id="workInfo" type="text" value="'+work_info_val+'">');//수정 가능한 필드로 변경
+
+   	   			});
+   				
+   				$("#tableUp").text("수정 완료");			//수정 버튼의 글자를 수정 완료로 변경
+   				$("#tableSave").attr("disabled", true);	//저장 버튼 비활성화 -수정 중일 때 
+   				$("#tableDel").attr("disabled", true);	//삭제 버튼 비활성화 -수정 중일 때 
+   				$("#tableAdd").attr("disabled", true);	//행추가 버튼 비활성화 -수정 중일 때 
+   				
+   			}else{
+   				
+   				var result = confirm("수정 완료 하시겠습니까?");//수정 여부 물어보기
+   				
+   				if(result){
+   				
+	   				checkbox.each(function(i) {
+	
+	   	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+	   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다.
+	   	   				var work_info_val = li.eq(1).children().val();		//업무내용
+	   	   				
+	   	   				li.eq(1).html('<label>'+work_info_val+'</label>');	//수정 완료되면 다시 label로 변경
+	
+	   	   			});
+	   				
+	   				$("#tableUp").text("수정");					//수정 버튼의 글자를 수정 완료로 변경
+	   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화 -수정 중일 때 
+	   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 -수정 중일 때 
+	   				$("#tableAdd").attr("disabled", false);		//행추가 버튼 비활성화 -수정 중일 때 
+	   				$(".table_check").attr("disabled", false);	//행추가 버튼 비활성화 -수정 중일 때 
+	   				
+	   				alert("수정 완료되었습니다.\n저장을 해주세요.");	//수정 완료
+	   				
+   				}else{return;};//수정 완료 버튼을 누르지 않으면 리턴
+   				//else
+   				
+   			};//else
+   			
    	});
 
    	//----------------------------
@@ -239,6 +265,35 @@ $(function(){
 		
    	});
    	
+   	//----------------------------
+   	//행추가 기능입니다.
+   	//----------------------------
+   	$("#tableAdd").click(function(){
+   		var checkboxCnt = $("input[name=table_check]").length;	//체크박스 개수 10개 이상이면 생성 불가
+   		if(checkboxCnt >= 10){
+			alert("10개 이상 생성 불가.");   			
+   			return; 
+   		};
+   		
+	    var division = $(this).val();										//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	    $("#division").val(division);										//업무구분
+	    $("#addList").val("add");											//행추가 변수 값 add
+		$("#selectForm").submit();											//서브밋
+		$("#addList").val("");												//행추가 변수 공백
+//    		var insertUl = "";//ul에 추가할 데이터를 담을 변수입니다.
+//    		insertUl += "<ul class='row'>";
+//    		insertUl += "<li class='col-xs-1 col-md-1 tableCount'><input type='checkbox' name='table_check'></li>";
+//    		insertUl += "<li class='col-xs-3 col-md-3'><lable class=''>신규업무입니다람쥐</label></li>";
+//    		insertUl += "<li class='col-xs-2 col-md-2'><label class=''>0회/년</label></li>";
+//    		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_jan' name='' type='checkbox' value=''></li>";
+//    		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_feb' name='' type='checkbox' value=''></li>";
+//    		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_mar' name='' type='checkbox' value=''></li>";
+//    		insertUl += "<li class='col-xs-2 col-md-2'><label class='filePopup'>파일이름</label></li>";
+//    		insertUl += "</ul>"
+//    		$("#formArray").append(insertUl);
+   		
+   	});
+   	
 });
 
 </script>
@@ -259,9 +314,9 @@ $(function(){
 	    <option value="AS02">회계 업무</option> 
 	    <option value="AS03">조경 업무</option>
 	    <option value="AS04">시설 업무</option>
-	    <option value="ALL">전체</option>
+<!-- 	    <option value="ALL">전체</option> -->
 	</select>
-	<button id="tableBtn" class="btn btn-success" >저장</button>	
+	<button id="tableSave" class="btn btn-success" >저장</button>	
 	<button id="tableUp" class="btn btn-success" >수정</button>
 	<button id="tableDel" class="btn btn-success" >삭제</button>		
 	<button id="tableAdd" class="btn btn-success" >행추가</button>	
@@ -294,19 +349,18 @@ $(function(){
 					<li class="col-xs-2 col-md-2">파일이름</li>
 				</ul> 
 			</div>
-			<div class="board-list-wrap borard-list-con">
+			<div class="board-list-wrap borard-list-con" style="display:block">
 				<form id="formArray" name="formArray"  autocomplete="off">
 					<c:set var="number" value="${scheduleCnt}" />
 					<c:forEach var="scheduleList" items="${scheduleList}" varStatus="scheduleNum">
 						<ul class="row" >
 							<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${scheduleList.schedule_seq}"></li>
-							<li class="col-xs-3 col-md-3"><label>${scheduleList.work_info}</label></li>
+							<li class="col-xs-3 col-md-3" id="workInfo"><lable >${scheduleList.work_info}</lable></li>
 							<li class="col-xs-2 col-md-2"><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></li>
-							<li class="col-xs-1 col-md-1 tableCheck "><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></li>
-							<li class="col-xs-1 col-md-1 tableCheck "><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></li>
-							<li class="col-xs-1 col-md-1 tableCheck "><input id="schedule_mar" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_mar}" <c:if test="${scheduleList.schedule_mar ne '0'}">checked</c:if>></li>			
-							<li class="col-xs-2 col-md-2"><label class="filePopup">${scheduleList.file_name}</label></li>
-							
+							<li class="col-xs-1 col-md-1 "><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></li>
+							<li class="col-xs-1 col-md-1 "><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></li>
+							<li class="col-xs-1 col-md-1 "><input id="schedule_mar" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_mar}" <c:if test="${scheduleList.schedule_mar ne '0'}">checked</c:if>></li>			
+							<li class="col-xs-2 col-md-2"><label class="filePopup">${scheduleList.file_name}</label></li>	
 						</ul>
 					</c:forEach>
 				</form>
@@ -316,6 +370,7 @@ $(function(){
 	
 	<form id="selectForm" name="selectForm"  action="scheduleList.do" autocomplete="off">
 		<input id="division" name="division" type="hidden" value ="">
+		<input id="addList" name ="addList" type="hidden" value	="">
 	</form>
 	
 </div>
