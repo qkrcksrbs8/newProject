@@ -33,7 +33,10 @@ $(function(){
     </thead>
     <tbody>
       <tr>
-        <td><a href="scheduleList.do">테이블테스트</a></td>
+        <td><a href="scheduleList.do">연간스케쥴 현황</a></td>
+      </tr>
+      <tr>
+        <td><a href="detailedWorkList.do">세부업무 실적</a></td>
       </tr>
       <tr>
         <td><a href="reportList.do">화제예방</a></td>

@@ -1,5 +1,7 @@
 package com.onlyReport.report.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.onlyReport.report.model.Annuail_ScheduleVO;
+import com.onlyReport.report.model.Detailed_WorkVO;
 import com.onlyReport.report.model.ReportVO;
 import com.onlyReport.report.service.ReportService;
 import com.onlyReport.report.util.PagingUtil;
@@ -307,7 +309,7 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/scheduleList", method = {RequestMethod.POST,RequestMethod.GET}, produces = "application/json; charset=utf-8")
-	public ModelAndView TableTest(HttpServletRequest request, Model model
+	public ModelAndView ScheduleList(HttpServletRequest request, Model model
 								, @RequestParam(value="division", required =false,  defaultValue="AS01") String division
 								, @RequestParam(value="addList", required =false,  defaultValue="") String addList) {
 
@@ -399,4 +401,51 @@ public class ReportController {
 		
 	}
 	
+	
+	/**
+	 * 세무업무 실적
+	 * 세무업무 실적 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/detailedWorkList", method = {RequestMethod.POST,RequestMethod.GET}, produces = "application/json; charset=utf-8")
+	public ModelAndView DetailedWorkList(HttpServletRequest request, Model model
+								, @RequestParam(value="workDate", required =false, defaultValue="0000") String workDate) {
+
+		logger.info("================================ START ================================");							//scheduleList 시작
+		List<Detailed_WorkVO> detailWorkList = new ArrayList<Detailed_WorkVO>();											//테이블 리스트
+			
+		try {
+		
+			Detailed_WorkVO detailedWorkVO = new Detailed_WorkVO();														//세부업무 실적을 위한 리스트 VO	
+			detailWorkList =  reportService.selectDetailedWorkList(request, workDate);									//연간 스케쥴 목록
+			
+			//---------------------------------------
+			//기준년도의 default는 "0000"
+			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
+			//---------------------------------------
+			if("0000".equals(workDate)) {
+				LocalDate now = LocalDate.now();													//현재 날짜
+				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));					//년도 파싱
+				
+			}
+			
+			Map resultMap = new HashMap();
+			resultMap.put("detailWorkList", detailWorkList);															//테이블 리스트
+			resultMap.put("detailWorkCnt", detailWorkList.size());														//테이블 수 
+			resultMap.put("workDate", workDate);																		//기준년도
+			
+			ModelAndView  mav = new ModelAndView("main/detailedWorkList",resultMap);									//detailWork model 선언
+			logger.info("================================ E N D ================================");						//scheduleList 종료
+			return mav;													//mav리턴
+			
+		}catch(Exception e) {
+			ModelAndView  mav = new ModelAndView("DetailedWorkList");			//Report model 선언
+			mav.setViewName("main/detailedWorkList");			
+			logger.error(e.toString());									//오류메시지
+			return mav;													//mav리턴
+			
+		}//catch
+		
+
+	}
 }

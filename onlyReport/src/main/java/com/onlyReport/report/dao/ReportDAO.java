@@ -6,6 +6,7 @@ import java.util.Map;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 
 import com.onlyReport.report.model.Annuail_ScheduleVO;
+import com.onlyReport.report.model.Detailed_WorkVO;
 import com.onlyReport.report.model.ReportVO;
 
 /**
@@ -63,6 +64,16 @@ public class ReportDAO extends SqlSessionDaoSupport {
 	 * @return
 	 * @throws Exception
 	 */
+	public int selectScheduleCnt(Map<String, Object> map) throws Exception {
+		return getSqlSession().selectOne("selectScheduleCnt", map);
+	}
+	
+	/**
+	 * 연간스케쥴 리스트 수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Annuail_ScheduleVO> selectScheduleList(Map<String, Object> map) throws Exception {
 		return getSqlSession().selectList("selectScheduleList", map);
 	}
@@ -95,6 +106,26 @@ public class ReportDAO extends SqlSessionDaoSupport {
 	 */
 	public int deleteSchedule(Annuail_ScheduleVO scheduleVO) throws Exception {
 		return getSqlSession().update("deleteSchdule", scheduleVO);
+	}
+	
+	/**
+	 * 세부업무 실적 리스트 수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectDetailedWorkCnt(Map<String, Object> map) throws Exception {
+		return getSqlSession().selectOne("selectDetailedWorkCnt", map);
+	}
+	
+	/**
+	 * 세부업무 실적 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Detailed_WorkVO> selectDetailedWorkList(Map<String, Object> map) throws Exception {
+		return getSqlSession().selectList("selectDetailedWorkList", map);
 	}
 	
 }

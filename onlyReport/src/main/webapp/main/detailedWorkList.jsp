@@ -21,8 +21,8 @@
 
 $(function(){
 	
-	var selectDivision = "${division}";		//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	$("#selectCode").val(selectDivision);	//페이지 진입 시 selectBox 선택
+	var workDate = "${workDate}";			//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	$("#selectCode").val(workDate);			//페이지 진입 시 selectBox 선택
 	
 	//------------------
 	//셀렉트박스 조회
@@ -273,8 +273,8 @@ $(function(){
    			return; 
    		};
    		
-	    var division = $(this).val();										//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	    $("#division").val(division);										//업무구분
+	    var selectDate = $(this).val();										//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	    $("#selectDate").val(selectDate);									//업무구분
 	    $("#addList").val("add");											//행추가 변수 값 add
 		$("#selectForm").submit();											//서브밋
 		$("#addList").val("");												//행추가 변수 공백
@@ -308,10 +308,10 @@ $(function(){
 	</section>
 	
 	<select id="selectCode" name="selectCode">
-	    <option value="AS01">행정 업무</option>
-	    <option value="AS02">회계 업무</option> 
-	    <option value="AS03">조경 업무</option>
-	    <option value="AS04">시설 업무</option>
+	    <option value="2020">2020</option>
+	    <option value="2019">2019</option> 
+	    <option value="2018">2018</option>
+	    <option value="2017">2017</option>
 <!-- 	    <option value="ALL">전체</option> -->
 	</select>
 	<button id="tableSave" class="btn btn-success" >저장</button>	
@@ -320,7 +320,7 @@ $(function(){
 	<button id="tableAdd" class="btn btn-success" >행추가</button>	
 	
 	<!-- 게시글 없을 때. --> 
-	<c:if test="${scheduleCnt==0}"> 
+	<c:if test="${detailWorkCnt==0}"> 
 		<section id="content">
 			<div class="container">
 				<div class="board-list-wrap board-list-header">
@@ -337,28 +337,24 @@ $(function(){
 		<div class="container">
 			<div class="board-list-wrap board-list-header">
 				<ul class="row">
-					<li class="col-xs-1 col-md-1">번호</li>
+					<li class="col-xs-1 col-md-1">체크</li>
 					<!-- <li class="col-xs-1 col-md-1">번호</li>	 -->
-					<li class="col-xs-3 col-md-3">업무내용</li>
-					<li class="col-xs-2 col-md-2">점검주기</li>
-					<li class="col-xs-1 col-md-1">1월</li>
-					<li class="col-xs-1 col-md-1">2월</li>
-					<li class="col-xs-1 col-md-1">3월</li> 
-					<li class="col-xs-2 col-md-2">파일이름</li>
+					<li class="col-xs-2 col-md-2">부문</li>
+					<li class="col-xs-3 col-md-3">예정업무</li>
+					<li class="col-xs-3 col-md-3">실시업무</li>
+					<li class="col-xs-2 col-md-2">REMARK</li>
 				</ul> 
 			</div>
 			<div class="board-list-wrap borard-list-con">
 				<form id="formArray" name="formArray"  autocomplete="off">
-					<c:set var="number" value="${scheduleCnt}" />
-					<c:forEach var="scheduleList" items="${scheduleList}" varStatus="scheduleNum">
+					<c:set var="number" value="${detailWorkCnt}" />
+					<c:forEach var="detailWorkList" items="${detailWorkList}" varStatus="detailedWorkNum">
 						<ul class="row" >
-							<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${scheduleList.schedule_seq}"></li>
-							<li class="col-xs-3 col-md-3" id="workInfo"><lable >${scheduleList.work_info}</lable></li>
-							<li class="col-xs-2 col-md-2"><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></li>
-							<li class="col-xs-1 col-md-1 "><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></li>
-							<li class="col-xs-1 col-md-1 "><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></li>
-							<li class="col-xs-1 col-md-1 "><input id="schedule_mar" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_mar}" <c:if test="${scheduleList.schedule_mar ne '0'}">checked</c:if>></li>			
-							<li class="col-xs-2 col-md-2"><label class="filePopup">${scheduleList.file_name}</label></li>	
+							<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></li>
+							<li class="col-xs-2 col-md-2" id="workInfo"><lable >${detailWorkList.sector}</lable></li>
+							<li class="col-xs-2 col-md-2"><label>${detailWorkList.fr_work}</label></li>
+							<li class="col-xs-2 col-md-2"><label>${detailWorkList.to_work}</label></li>		
+							<li class="col-xs-2 col-md-2"><label>${detailWorkList.remark}</label></li>	
 						</ul>
 					</c:forEach>
 				</form>
@@ -366,8 +362,8 @@ $(function(){
 		</div>
 	</section>	
 	
-	<form id="selectForm" name="selectForm"  action="scheduleList.do" autocomplete="off">
-		<input id="division" name="division" type="hidden" value ="">
+	<form id="selectForm" name="selectForm"  action="detailedWorkList.do" autocomplete="off">
+		<input id="selectDate" name="division" type="hidden" value ="">
 		<input id="addList" name ="addList" type="hidden" value	="">
 	</form>
 	

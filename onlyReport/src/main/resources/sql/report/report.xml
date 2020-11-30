@@ -106,7 +106,18 @@
 
 </insert>
 
-
+<select id="selectScheduleCnt" parameterType="map" resultType="int">
+/* selectScheduleList */
+	SELECT
+        COUNT(1)
+	FROM SCHEDULE_MST
+	WHERE USEFLAG = #{useflag}
+	<if test='division != null  and division != ""'>
+		and DIVISION	=	#{division}
+ 	</if>
+ 	ORDER BY SCHEDULE_SEQ ASC
+	
+</select>
 
 <select id="selectScheduleList" parameterType="map" resultType="com.onlyReport.report.model.Annuail_ScheduleVO">
 /* selectScheduleList */
@@ -263,7 +274,7 @@
 </update>
 
 <update id="deleteSchdule" parameterType="com.onlyReport.report.model.Annuail_ScheduleVO"> 
-	
+	/* deleteSchdule */
 	UPDATE SCHEDULE_MST SET
 		last_update_date = SYSDATE
 		,last_update_by = '박주임' 
@@ -271,6 +282,36 @@
 	WHERE SCHEDULE_SEQ = #{schedule_seq}
 	
 </update> 
+
+<select id="selectDetailedWorkCnt" parameterType="map" resultType="int">
+/* selectDetailedWorkCnt */
+	SELECT
+		COUNT(1)
+	FROM DETAILED_WORK_MST
+	WHERE USEFLAG = #{useflag}
+	AND WORK_DATE = #{work_date}
+ 	ORDER BY WORK_SEQ ASC
+	
+</select>
+
+<select id="selectDetailedWorkList" parameterType="map" resultType="com.onlyReport.report.model.Detailed_WorkVO">
+/* selectDetailedWorkList */
+	SELECT
+		WORK_SEQ
+		, SECTOR
+		, WORK_DATE
+		, FR_WORK
+		, TO_WORK
+		, REMARK
+        , USEFLAG
+        , COMPANY_CODE
+        , COMPANY_NAME
+	WHERE USEFLAG = #{useflag}
+	AND WORK_DATE = #{work_date}
+ 	ORDER BY WORK_SEQ ASC
+	
+</select>
+
 
 </mapper>
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.onlyReport.report.model.Annuail_ScheduleVO;
+import com.onlyReport.report.model.Detailed_WorkVO;
 import com.onlyReport.report.model.ReportVO;
 
 /**
@@ -92,4 +93,10 @@ public interface ReportService {
 	 */
 	public void deleteSchedule(HttpServletRequest request);
 	
+	/**
+	 * 연간스케쥴 리스트 조회
+	 * @param map
+	 * @return
+	 */
+	public List<Detailed_WorkVO> selectDetailedWorkList(HttpServletRequest request, String workDate);
 }

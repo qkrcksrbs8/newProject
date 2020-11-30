@@ -1,6 +1,8 @@
 package com.onlyReport.report.service.impl;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.aspectj.apache.bcel.classfile.Utility;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.onlyReport.report.dao.ReportDAO;
 import com.onlyReport.report.model.Annuail_ScheduleVO;
+import com.onlyReport.report.model.Detailed_WorkVO;
 import com.onlyReport.report.model.ReportVO;
 import com.onlyReport.report.service.ReportService;
 
@@ -180,6 +182,14 @@ public class ReportServiceImpl implements ReportService {
 			Map<String, Object> map = new HashMap<String, Object>();					//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");													//1:사용 / 0:미사용
 			map.put("division", division);												//업무구분
+			
+			//---------------
+			//연간스케쥴 리스트 수
+			//---------------
+			if(reportDAO.selectScheduleCnt(map) < 1 ) {
+				return scheduleList;													// 리스트가 한 개도 없으면 바로 리턴
+			};//if
+			
 			scheduleList = reportDAO.selectScheduleList(map);							//연간스케쥴 리스트 조회
 			
 			//-----------------------------
@@ -282,6 +292,53 @@ public class ReportServiceImpl implements ReportService {
 			logger.error(e.toString());
 			
 		}
+		
+	}
+	
+	/**
+	 * 세무업무 실적 리스트 조회
+	 */
+	public List<Detailed_WorkVO> selectDetailedWorkList(HttpServletRequest request, String workDate) {
+		
+		logger.info("================================ START ================================");
+		List<Detailed_WorkVO> detailedWorkList = new ArrayList<Detailed_WorkVO>();					//연간스케쥴VO List
+		
+		try {
+			
+			//---------------------------------------
+			//기준년도의 default는 "0000"
+			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
+			//---------------------------------------
+			if("0000".equals(workDate)) {
+				LocalDate now = LocalDate.now();													//현재 날짜
+				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));					//년도 파싱
+				
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");																//1:사용 / 0:미사용
+			map.put("work_date", workDate);															//기준년도
+			
+			//-----------------
+			//세무업무 실적 리스트 수 
+			//-----------------
+			if(reportDAO.selectDetailedWorkCnt(map) < 1 ) {
+				return detailedWorkList;															// 리스트가 한 개도 없으면 바로 리턴
+			};//if
+			
+			detailedWorkList = reportDAO.selectDetailedWorkList(map);								//연간스케쥴 리스트 조회
+			
+			logger.info(detailedWorkList.toString());
+			logger.info("================================ E N D ================================");	//리스트 로그 
+			return detailedWorkList;
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.selectDetailedWorkList() : ");							//세무업무 실적 리스트 메서드
+			logger.error(e.toString());																//에러 내용
+			return detailedWorkList;
+			
+		}//try
 		
 	}
 	
