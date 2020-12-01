@@ -39,7 +39,25 @@ $(function(){
         <td><a href="detailedWorkList.do">세부업무 실적</a></td>
       </tr>
       <tr>
-        <td><a href="reportList.do">화제예방</a></td>
+        <td><a href="repairList.do">하자보수현황</a></td>
+      </tr>
+      <tr>
+        <td><a href="#">주요계약현황</a></td>
+      </tr>
+      <tr>
+        <td><a href="#">설비공구수불현황</a></td>
+      </tr>
+      <tr>
+        <td><a href="#">승강기안전점검표</a></td>
+      </tr>
+      <tr>
+        <td><a href="reportList.do">화제예방</a></td> 
+      </tr>
+      <tr>
+        <td><a href="#">교육현황</a></td>
+      </tr>
+      <tr>
+        <td><a href="#">회의록</a></td>
       </tr>
       <tr>
         <td>개발 중</td>

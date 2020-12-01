@@ -370,5 +370,15 @@
 	
 </update>
 
+<update id="deleteDetailedWork" parameterType="com.onlyReport.report.model.Detailed_WorkVO"> 
+	/* deleteDetailedWork */
+	UPDATE DETAILED_WORK_MST SET
+		last_update_date = SYSDATE
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE WORK_SEQ = #{work_seq}
+	
+</update> 
+
 </mapper>
 

@@ -13,6 +13,25 @@
 		<priority value="debug" />
 		<appender-ref ref="STDOUT" />
 	</category>
+	
+<!-- Query Loggers --> 
+    <logger name="org.springframework.core">
+        <level value="debug" />
+		<appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.springframework.beans">
+        <level value="debug" />
+		<appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.springframework.context">
+        <level value="debug" />
+		<appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.springframework.web">
+        <level value="debug" />
+		<appender-ref ref="STDOUT" />
+    </logger>
+
 	<root>
 		<priority value="debug" />
 		<appender-ref ref="STDOUT" />

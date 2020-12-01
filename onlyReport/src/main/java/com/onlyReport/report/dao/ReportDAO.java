@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import com.onlyReport.report.model.Annuail_ScheduleVO;
 import com.onlyReport.report.model.Detailed_WorkVO;
@@ -13,6 +14,7 @@ import com.onlyReport.report.model.ReportVO;
  * 게시판 DAO 정의
  *
  */
+@Repository
 public class ReportDAO extends SqlSessionDaoSupport {
 	
 	/**
@@ -146,6 +148,16 @@ public class ReportDAO extends SqlSessionDaoSupport {
 	 */
 	public int insertDetailedWork(Detailed_WorkVO detailedWorkVO) throws Exception {
 		return getSqlSession().insert("insertDetailedWork", detailedWorkVO);
+	}
+	
+	/**
+	 * 연간스케쥴 삭제
+	 * @param scheduleVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int deleteDetailedWork(Detailed_WorkVO detailedWorkVO) throws Exception {
+		return getSqlSession().update("deleteDetailedWork", detailedWorkVO);
 	}
 	
 }

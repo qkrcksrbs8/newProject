@@ -357,6 +357,9 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	
+	/**
+	 * 세부업무 실적 저장/수정
+	 */
 	public void insertDetailedWork(HttpServletRequest request) throws Exception {
 		
 		logger.info("================================ START ================================");
@@ -386,6 +389,43 @@ public class ReportServiceImpl implements ReportService {
 		}catch(Exception e) {
 			
 			logger.error("ReportServiceImpl.insertDetailedWork() : ");
+			logger.error(e.toString());
+		}
+		
+	}
+
+	/**
+	 * 세부업무 실적 삭제
+	 */
+	public void deleteDetailedWork(HttpServletRequest request) {
+
+		logger.info("================================ START ================================");
+		
+		try {
+			
+			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
+			logger.info(str); 																		//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
+			Gson gson = new Gson();																	//gson 선언
+			Type listType = new TypeToken<ArrayList<Detailed_WorkVO>>(){}.getType();				//세부업무 실적VO의 List.class 
+			List<Detailed_WorkVO> detailedWorkList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
+			Detailed_WorkVO detailed_WorkVO = new Detailed_WorkVO();								//세부업무 실적 VO
+			
+			//-----------------------------------
+			//파싱된 VOList 출력
+			//-----------------------------------
+			for(int i = 0; i < detailedWorkList.size(); ++i) {
+				
+				detailed_WorkVO = detailedWorkList.get(i);											//반복문으로 객체 가져오기
+				reportDAO.deleteDetailedWork(detailed_WorkVO);										//연간스케쥴 삭제 DAO
+				
+			};//for
+		
+			logger.info("================================ E N D ================================");
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.deleteDetailedWork() : ");
 			logger.error(e.toString());
 			
 		}

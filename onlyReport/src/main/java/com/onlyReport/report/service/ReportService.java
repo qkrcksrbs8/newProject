@@ -107,6 +107,12 @@ public interface ReportService {
 	 * @throws Exception 
 	 */
 	public void insertDetailedWork(HttpServletRequest request) throws Exception;
-	
+
+	/**
+	 * 技何诀公 角利 昏力
+	 * @param map
+	 * @return
+	 */
+	public void deleteDetailedWork(HttpServletRequest request);
 	
 }
