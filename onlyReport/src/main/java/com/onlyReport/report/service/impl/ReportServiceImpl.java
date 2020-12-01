@@ -298,7 +298,7 @@ public class ReportServiceImpl implements ReportService {
 	/**
 	 * 세무업무 실적 리스트 조회
 	 */
-	public List<Detailed_WorkVO> selectDetailedWorkList(HttpServletRequest request, String workDate) {
+	public List<Detailed_WorkVO> selectDetailedWorkList(HttpServletRequest request, String workDate, String addList) {
 		
 		logger.info("================================ START ================================");
 		List<Detailed_WorkVO> detailedWorkList = new ArrayList<Detailed_WorkVO>();					//연간스케쥴VO List
@@ -310,11 +310,14 @@ public class ReportServiceImpl implements ReportService {
 			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
 			//---------------------------------------
 			if("0000".equals(workDate)) {
-				LocalDate now = LocalDate.now();													//현재 날짜
-				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));					//년도 파싱
 				
-			}
+				LocalDate now = LocalDate.now();													//현재 날짜
+				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));					//년월일 파싱 2020.10.10 
+				workDate = workDate.substring(0,4);													//년도 파싱 2020
+				
+			};//if
 			
+			logger.info("work_date : "+workDate);													//기준년도 로그
 			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");																//1:사용 / 0:미사용
 			map.put("work_date", workDate);															//기준년도
@@ -328,6 +331,17 @@ public class ReportServiceImpl implements ReportService {
 			
 			detailedWorkList = reportDAO.selectDetailedWorkList(map);								//연간스케쥴 리스트 조회
 			
+			//-----------------------------
+			//addList의 값이 add일 경우 리스트 추가
+			//-----------------------------
+			if("add".equals(addList)) {
+			
+				Detailed_WorkVO detailed_WorkVO = new Detailed_WorkVO();							//vo 선언
+				detailed_WorkVO.setWorkd_date(workDate);											//업무 구분 값 고정
+				detailedWorkList.add(detailed_WorkVO);												//리스트에 추가
+
+			};//if
+			
 			logger.info(detailedWorkList.toString());
 			logger.info("================================ E N D ================================");	//리스트 로그 
 			return detailedWorkList;
@@ -339,6 +353,42 @@ public class ReportServiceImpl implements ReportService {
 			return detailedWorkList;
 			
 		}//try
+		
+	}
+	
+	
+	public void insertDetailedWork(HttpServletRequest request) throws Exception {
+		
+		logger.info("================================ START ================================");
+		
+		try {
+			
+			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
+			logger.info(str); 																		//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
+			Gson gson = new Gson();																	//gson 선언
+			Type listType = new TypeToken<ArrayList<Detailed_WorkVO>>(){}.getType();				//세부업무 실적VO의 List.class 
+			List<Detailed_WorkVO> detailedWorkList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
+			Detailed_WorkVO detailed_WorkVO = new Detailed_WorkVO();								//세부업무 실적 VO
+			
+			//-----------------------------------
+			//파싱된 VOList 출력
+			//-----------------------------------
+			for(int i = 0; i < detailedWorkList.size(); ++i) {
+				
+				detailed_WorkVO = detailedWorkList.get(i);																	//반복문으로 객체 가져오기
+				if(reportDAO.updateDetailedWork(detailed_WorkVO) == 0) {reportDAO.insertDetailedWork(detailed_WorkVO);};	//업데이트 할 내용이 없으면 저장
+				
+			};//for
+			
+			logger.info("================================ E N D ================================");
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.insertDetailedWork() : ");
+			logger.error(e.toString());
+			
+		}
 		
 	}
 	

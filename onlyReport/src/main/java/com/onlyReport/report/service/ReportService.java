@@ -94,9 +94,19 @@ public interface ReportService {
 	public void deleteSchedule(HttpServletRequest request);
 	
 	/**
-	 * 연간스케쥴 리스트 조회
+	 * 세부업무 실적 리스트 조회
 	 * @param map
 	 * @return
 	 */
-	public List<Detailed_WorkVO> selectDetailedWorkList(HttpServletRequest request, String workDate);
+	public List<Detailed_WorkVO> selectDetailedWorkList(HttpServletRequest request, String workDate, String addList);
+	
+	/**
+	 * 세부업무 실적 저장/수정
+	 * @param request
+	 * @return
+	 * @throws Exception 
+	 */
+	public void insertDetailedWork(HttpServletRequest request) throws Exception;
+	
+	
 }

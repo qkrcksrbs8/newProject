@@ -128,5 +128,25 @@ public class ReportDAO extends SqlSessionDaoSupport {
 		return getSqlSession().selectList("selectDetailedWorkList", map);
 	}
 	
+	/**
+	 * 技公诀公 角利 荐沥
+	 * @param detailedWorkVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateDetailedWork(Detailed_WorkVO detailedWorkVO) throws Exception {
+		return getSqlSession().update("updateDetailedWork", detailedWorkVO);
+	}
+	
+	/**
+	 * 技何诀公 角利 积己
+	 * @param detailedWorkVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertDetailedWork(Detailed_WorkVO detailedWorkVO) throws Exception {
+		return getSqlSession().insert("insertDetailedWork", detailedWorkVO);
+	}
+	
 }
   

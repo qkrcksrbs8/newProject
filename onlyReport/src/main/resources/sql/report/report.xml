@@ -306,12 +306,69 @@
         , USEFLAG
         , COMPANY_CODE
         , COMPANY_NAME
+    FROM DETAILED_WORK_MST
 	WHERE USEFLAG = #{useflag}
 	AND WORK_DATE = #{work_date}
  	ORDER BY WORK_SEQ ASC
 	
 </select>
 
+<insert id="insertDetailedWork" parameterType="com.onlyReport.report.model.Detailed_WorkVO">
+/* insertDetailedWork */
+	INSERT INTO DETAILED_WORK_MST (
+	     WORK_SEQ
+	    , SECTOR
+	    , WORK_DATE
+	    , FR_WORK
+	    , TO_WORK
+	    , REMARK
+	    , COMPANY_CODE
+	    , COMPANY_NAME
+		, CREATED_BY
+	    , LAST_UPDATE_BY
+	) values (
+	     DETAILED_WORK_SEQUENCE.NEXTVAL
+	    ,#{sector}
+	    ,#{work_date}
+	    ,#{fr_work}
+	    ,#{to_work}
+	    ,#{remark}
+	    ,#{company_code}
+	    ,#{company_name}
+	    ,#{created_by}
+	    ,#{last_update_by}
+	)
+</insert>
+
+<update id="updateDetailedWork" parameterType="com.onlyReport.report.model.Detailed_WorkVO">
+/* updateDetailedWork */
+	UPDATE DETAILED_WORK_MST SET
+	    LAST_UPDATE_BY	=	#{last_update_by}
+	    ,LAST_UPDATE_DATE = SYSDATE
+	<if test='company_code != null  and company_code != ""'>
+		,COMPANY_CODE	=	#{company_code}
+ 	</if>
+ 	<if test='company_name != null  and company_name != ""'>
+		,COMPANY_NAME	=	#{company_name}
+ 	</if>	    
+ 	<if test='sector != null  and sector != ""'>
+		,SECTOR			=	#{sector}
+ 	</if>
+ 	<if test='work_date != null  and work_date != ""'>
+		,WORK_DATE		=	#{work_date}
+ 	</if>
+ 	<if test='fr_work != null  and fr_work != ""'>
+		,FR_WORK		=	#{fr_work}
+ 	</if>
+ 	<if test='to_work != null  and to_work != ""'>
+		,TO_WORK		=	#{to_work}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>
+		,REMARK			=	#{remark}
+ 	</if>
+	where WORK_SEQ 	=	#{work_seq}
+	
+</update>
 
 </mapper>
 
