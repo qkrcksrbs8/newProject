@@ -42,10 +42,10 @@ $(function(){
         <td><a href="repairList.do">하자보수현황</a></td>
       </tr>
       <tr>
-        <td><a href="#">주요계약현황</a></td>
+        <td><a href="contractList.do">주요계약현황</a></td>
       </tr>
       <tr>
-        <td><a href="#">설비공구수불현황</a></td>
+        <td><a href="paymentStatusList.do">설비공구수불현황</a></td>
       </tr>
       <tr>
         <td><a href="#">승강기안전점검표</a></td>

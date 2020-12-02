@@ -1,5 +1,21 @@
 package com.onlyReport.report.model;
 
+/**
+ *<pre>
+ *세부업무 실적 VO
+ *</pre>
+ *
+ *@ClassName : Detailed_WorkVO.java 
+ *@Description : 세무업무 실적에 관한 VO를 정의한 클레스
+ *@author user
+ *@since 2020. 12. 2
+ *@version 1.0
+ *@see
+ *@Modification Information
+ *<pre>
+ *2020. 12. 2   user   최초생성
+ *</pre>
+ */
 public class Detailed_WorkVO {
 	
 	private int work_seq 			= 0;			//세부업무실적번호
@@ -8,6 +24,7 @@ public class Detailed_WorkVO {
 	private String fr_work 			= new String();	//예정업무
 	private String to_work 			= new String();	//실시업무
 	private String remark 			= new String();	//비고
+	private String useflag			= new String(); //사용구분
 	private String company_code 	= new String();	//매장코드
 	private String company_name 	= new String();	//매장이름
 	private String created_by 		= new String();	//최초생성자
@@ -27,6 +44,12 @@ public class Detailed_WorkVO {
 	public void setSector(String sector) {
 		this.sector = sector;
 	}
+	public String getWork_date() {
+		return work_date;
+	}
+	public void setWork_date(String work_date) {
+		this.work_date = work_date;
+	}
 	public String getFr_work() {
 		return fr_work;
 	}
@@ -44,6 +67,12 @@ public class Detailed_WorkVO {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public String getUseflag() {
+		return useflag;
+	}
+	public void setUseflag(String useflag) {
+		this.useflag = useflag;
 	}
 	public String getCompany_code() {
 		return company_code;
@@ -81,19 +110,14 @@ public class Detailed_WorkVO {
 	public void setLast_update_date(String last_update_date) {
 		this.last_update_date = last_update_date;
 	}
-	public String getWork_date () {
-		return work_date;
-	}
-	public void setWorkd_date(String work_date) {
-		this.work_date = work_date;
-	}
 	
 	@Override
 	public String toString() {
 		return "Detailed_WorkVO [work_seq=" + work_seq + ", sector=" + sector + ", work_date=" + work_date
-				+ ", fr_work=" + fr_work + ", to_work=" + to_work + ", remark=" + remark + ", company_code="
-				+ company_code + ", company_name=" + company_name + ", created_by=" + created_by + ", created_date="
-				+ created_date + ", last_update_by=" + last_update_by + ", last_update_date=" + last_update_date + "]";
+				+ ", fr_work=" + fr_work + ", to_work=" + to_work + ", remark=" + remark + ", useflag=" + useflag
+				+ ", company_code=" + company_code + ", company_name=" + company_name + ", created_by=" + created_by
+				+ ", created_date=" + created_date + ", last_update_by=" + last_update_by + ", last_update_date="
+				+ last_update_date + "]";
 	}
 	
 }

@@ -380,5 +380,115 @@
 	
 </update> 
 
+<select id="selectContractCnt" parameterType="map" resultType="int">
+/* selectContractList */
+	SELECT
+		COUNT(1)
+    FROM CONTRACT_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY TO_DAY ASC
+	
+</select>
+
+<select id="selectContractList" parameterType="map" resultType="com.onlyReport.report.model.ContractVO">
+/* selectContractList */
+	SELECT
+		CONTRACT_SEQ
+	    , CONTRACT_DETAILS
+	    , CONTRACT_COMPANY
+	    , 20||TO_DATE(FR_DAY,'YY.MM.DD') AS FR_DAY
+	    , 20||TO_DATE(TO_DAY,'YY.MM.DD') AS TO_DAY
+	    , CONTRACT_YEARS
+	    , CONTRACT_DIVISION
+	    , PAYMENT
+	    , REMARK
+    FROM CONTRACT_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY TO_DAY ASC
+	
+</select>
+
+<update id="updateContract" parameterType="com.onlyReport.report.model.ContractVO">
+/* updateContrasct */
+	UPDATE CONTRACT_MST SET
+	    LAST_UPDATE_BY	=	#{created_by}
+	    ,LAST_UPDATE_DATE = SYSDATE
+	<if test='company_code != null  and company_code != ""'>
+		,COMPANY_CODE	=	#{company_code}
+ 	</if>
+ 	<if test='company_name != null  and company_name != ""'>
+		,COMPANY_NAME	=	#{company_name}
+ 	</if>	    
+ 	<if test='contract_details != null  and contract_details != ""'>
+		,CONTRACT_DETAILS			=	#{contract_details}
+ 	</if>
+ 	<if test='contract_company != null  and contract_company != ""'>
+		,CONTRACT_COMPANY			=	#{contract_company}
+ 	</if>
+ 	<if test='fr_day != null  and fr_day != ""'>
+		,FR_DAY		=	#{fr_day}
+ 	</if>
+ 	<if test='to_day != null  and to_day != ""'>
+		,TO_DAY		=	#{to_day}
+ 	</if>
+ 	<if test='contract_years != null  and contract_years != ""'>
+		,CONTRACT_YEARS		=	#{contract_years}
+ 	</if>
+ 	<if test='contract_division != null  and contract_division != ""'>
+		,CONTRACT_DIVISION		=	#{contract_division}
+ 	</if>
+ 	<if test='payment != null  and payment != ""'>
+		,PAYMENT		=	#{payment}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>
+		,REMARK			=	#{remark}
+ 	</if>
+	WHERE CONTRACT_SEQ 	=	#{contract_seq}
+	
+</update>
+
+<insert id="insertContract" parameterType="com.onlyReport.report.model.ContractVO">
+/* insertContract */
+	INSERT INTO CONTRACT_MST (
+	     CONTRACT_SEQ
+	    , CONTRACT_DETAILS
+	    , CONTRACT_COMPANY
+	    , FR_DAY
+	    , TO_DAY
+	    , CONTRACT_YEARS
+	    , CONTRACT_DIVISION
+	    , PAYMENT
+	    , REMARK
+	    , COMPANY_CODE
+	    , COMPANY_NAME
+		, CREATED_BY
+	    , LAST_UPDATE_BY
+	) values (
+	     CONTRACT_SEQUENCE.NEXTVAL
+	    ,#{contract_details}
+	    ,#{contract_company}
+	    ,#{fr_day}
+	    ,#{to_day}
+	    ,#{contract_years}
+	    ,#{contract_division}
+	    ,#{payment}
+	    ,#{remark}
+	    ,#{company_code}
+	    ,#{company_name}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<update id="deleteContract" parameterType="com.onlyReport.report.model.ContractVO"> 
+	/* deleteContract */
+	UPDATE CONTRACT_MST SET
+		last_update_date = SYSDATE
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE CONTRACT_SEQ = #{contract_seq}
+	
+</update> 
+
 </mapper>
 

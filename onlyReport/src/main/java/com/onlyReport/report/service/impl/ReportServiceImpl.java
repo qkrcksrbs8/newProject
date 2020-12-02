@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.onlyReport.report.dao.ReportDAO;
 import com.onlyReport.report.model.Annuail_ScheduleVO;
+import com.onlyReport.report.model.ContractVO;
 import com.onlyReport.report.model.Detailed_WorkVO;
 import com.onlyReport.report.model.ReportVO;
 import com.onlyReport.report.service.ReportService;
@@ -337,7 +338,7 @@ public class ReportServiceImpl implements ReportService {
 			if("add".equals(addList)) {
 			
 				Detailed_WorkVO detailed_WorkVO = new Detailed_WorkVO();							//vo 선언
-				detailed_WorkVO.setWorkd_date(workDate);											//업무 구분 값 고정
+				detailed_WorkVO.setWork_date(workDate);												//업무 구분 값 고정
 				detailedWorkList.add(detailed_WorkVO);												//리스트에 추가
 
 			};//if
@@ -426,6 +427,175 @@ public class ReportServiceImpl implements ReportService {
 		}catch(Exception e) {
 			
 			logger.error("ReportServiceImpl.deleteDetailedWork() : ");
+			logger.error(e.toString());
+			
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * 세무업무 실적 리스트 조회
+	 */
+	public List<ContractVO> selectContractList(HttpServletRequest request, String addList) {
+		
+		logger.info("================================ START ================================");
+		List<ContractVO> contractVOList = new ArrayList<ContractVO>();								//세무업무 실적VO List
+		
+		try {
+													
+			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");																//1:사용 / 0:미사용
+			
+			//-----------------
+			//세무업무 실적 리스트 수 
+			//-----------------
+			if(reportDAO.selectContractCnt(map) < 1 ) {
+				logger.info("게시물 없음 : 0");
+				return contractVOList;																//리스트가 한 개도 없으면 바로 리턴
+			};//if
+
+			contractVOList = reportDAO.selectContractList(map);										//주요계약현황 리스트 조회
+
+			//-----------------------------
+			//addList의 값이 add일 경우 리스트 추가
+			//-----------------------------
+			if("add".equals(addList)) {
+			
+				ContractVO contractVO = new ContractVO();											//vo 선언
+				contractVOList.add(contractVO);														//리스트에 추가
+
+			};//if
+
+			
+			logger.info(contractVOList.toString());
+			logger.info("================================ E N D ================================");	//리스트 로그 
+			return contractVOList;
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.selectContractList() : ");								//주요계약현황 리스트 메서드
+			logger.error(e.toString());																//에러 내용
+			return contractVOList;
+			
+		}//try
+		
+	}
+
+	
+	
+	/**
+	 * 주요계약현황 저장/수정
+	 */
+	public void insertContract(HttpServletRequest request) throws Exception {
+		
+		logger.info("================================ START ================================");
+		
+		try {
+			
+			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
+			logger.info(str); 																		//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
+			Gson gson = new Gson();																	//gson 선언
+			Type listType = new TypeToken<ArrayList<ContractVO>>(){}.getType();						//주요계약현황 실적VO의 List.class 
+			List<ContractVO> contractList = gson.fromJson(jsonArray.toString(), listType);			//jsonArray -> VO로 파싱
+			ContractVO contractVO = new ContractVO();												//주요계약현황 VO			
+			
+			String total_date 	= "";		//전체 계약기간 변수
+			String fr_day		= "";		//전체 계약기간에서 시작일을 담을 변수
+			String to_day 		= "";		//전체 계약기간에서 종요일을 담을 변수
+			String total_years 	= "";		//계약연수+계약구분
+			String contract_years = "";		//계약연수를 담을 변수
+			String contract_division = "";	//계약구분을 담을 변수
+			String removeChar = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";						//특수문자 제거 
+			
+			//-----------------------------------
+			//파싱된 VOList 출력
+			//1. 계약기간 일자를 파싱하여 시작일, 종료일을 분리합니다.
+			//2. 계약연수와 계약구분을 분리합니다. 
+			//3. 저장 및 수정
+			//-----------------------------------
+			for(int i = 0; i < contractList.size(); ++i) {
+				
+				contractVO = contractList.get(i);													//반복문으로 객체 가져오기
+				
+				total_date = contractVO.getTotal_date();
+				total_date = total_date.replaceAll("~", "").replaceAll(" ","").replaceAll("/", "");
+				
+				//-----------------------------
+				//total_date 길이가 16이 아니면 리턴
+				//-----------------------------
+				if(16 != total_date.length()) {
+					return;
+				};//if
+				
+
+				total_years = contractVO.getTotal_years();									//계약년수 ex. 1년(자동연장)		
+				total_years = total_years.replaceAll("년", "").replaceAll(removeChar, "");	//년, 특수문자 제거
+				
+				fr_day = total_date.substring(0,8);											//시작일 ex. 1993/09/02
+				to_day = total_date.substring(8);											//종료일 ex. 2993/09/02
+				contract_years =  total_years.substring(0,1);								//첫 자리만 년수 인식. 2자리 수의 계약 기간은 없음
+				contract_division = total_years.substring(1);								//첫 자리를 제외한 나머지
+				
+				contractVO.setFr_day(fr_day);												//파싱된 시작일 ex. 19930902
+				contractVO.setTo_day(to_day);												//파싱된 종료일 ex. 29930902
+				contractVO.setContract_years(contract_years);								//파싱된 년수 ex. 1
+				contractVO.setContract_division(contract_division);							//파싱된 구분 ex. 자동연장
+				contractVO.setCreated_by("박주임");											//생성자 박주임
+				
+				logger.info(contractVO.toString());
+				
+				if(reportDAO.updateContract(contractVO) == 0) {reportDAO.insertContract(contractVO);};	//업데이트 할 내용이 없으면 저장
+				
+			};//for
+			
+			logger.info("================================ E N D ================================");
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.insertContract() : ");
+			logger.error(e.toString());
+			
+		};//try
+		
+	}
+	
+	
+	
+	/**
+	 * 세부업무 실적 삭제
+	 */
+	public void deleteContract(HttpServletRequest request) {
+
+		logger.info("================================ START ================================");
+		
+		try {
+			
+			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
+			logger.info(str); 																		//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
+			Gson gson = new Gson();																	//gson 선언
+			Type listType = new TypeToken<ArrayList<ContractVO>>(){}.getType();				//주요계약현황VO의 List.class 
+			List<ContractVO> contractList = gson.fromJson(jsonArray.toString(), listType);			//jsonArray -> VO로 파싱
+			ContractVO contractVO = new ContractVO();												//주요계약현황 VO
+			
+			//-----------------------------------
+			//파싱된 VOList 출력
+			//-----------------------------------
+			for(int i = 0; i < contractList.size(); ++i) {
+				
+				contractVO = contractList.get(i);													//반복문으로 객체 가져오기
+				reportDAO.deleteContract(contractVO);												//주요계약현황 DAO
+				
+			};//for
+		
+			logger.info("================================ E N D ================================");
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.deleteContract() : ");
 			logger.error(e.toString());
 			
 		}

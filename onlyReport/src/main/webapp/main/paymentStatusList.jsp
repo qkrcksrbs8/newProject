@@ -325,7 +325,7 @@ $(function(){
    	});
    	
 	
-   	
+   	                                           
    	//--------------
    	//행추가 기능입니다.
    	//--------------
@@ -363,7 +363,7 @@ $(function(){
 	<!-- 페이지 제목 -->
 	<section id="content" class="board-list-header-wrap">
 		<div class="container">
-			<h3 class="board-list-header">세부업무실적</h3>
+			<h3 class="board-list-header">하자보수현황</h3>
 		</div>
 	</section>
 	

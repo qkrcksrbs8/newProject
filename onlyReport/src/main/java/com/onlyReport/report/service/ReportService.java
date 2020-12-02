@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.onlyReport.report.model.Annuail_ScheduleVO;
+import com.onlyReport.report.model.ContractVO;
 import com.onlyReport.report.model.Detailed_WorkVO;
 import com.onlyReport.report.model.ReportVO;
 
@@ -114,5 +115,27 @@ public interface ReportService {
 	 * @return
 	 */
 	public void deleteDetailedWork(HttpServletRequest request);
+	
+	/**
+	 * 주요계약현황 리스트 조회
+	 * @param map
+	 * @return
+	 */
+	public List<ContractVO> selectContractList(HttpServletRequest request, String addList);
+	
+	/**
+	 * 주요계약현황 저장/수정
+	 * @param request
+	 * @return
+	 * @throws Exception 
+	 */
+	public void insertContract(HttpServletRequest request) throws Exception;
+	
+	/**
+	 * 주요계약현황 삭제
+	 * @param map
+	 * @return
+	 */
+	public void deleteContract(HttpServletRequest request);
 	
 }

@@ -360,6 +360,13 @@ $(function(){
 		</div>
 	</section>
 	
+	<!-- 페이지 제목 -->
+	<section id="content" class="board-list-header-wrap">
+		<div class="container">
+			<h3 class="board-list-header">하자보수현황</h3>
+		</div>
+	</section>
+	
 	<!-- 기준년도 셀렉트박스 -->
 	<select id="selectCode" name="selectCode">
 	    <option value="2020">2020</option>
@@ -400,10 +407,10 @@ $(function(){
 								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></li>
 								<li class="col-xs-2 col-md-2" id="sector"><lable >${detailWorkList.sector}</lable></li>
 								<li class="col-xs-3 col-md-3"><label>${detailWorkList.fr_work}</label></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.to_work}</label></li>		
+								<li class="col-xs-3 col-md-3"><label>${detailWorkList.to_work}</label></li>		 
 								<li class="col-xs-1 col-md-1"><label>${detailWorkList.remark}</label></li>		
 							</c:if>
-						</ul>
+						</ul> 
 					</c:forEach>
 				</form>
 			</div>
@@ -424,7 +431,7 @@ $(function(){
 	</c:if>
 	
 	<!-- 셀렉트박스 조회용 히든 폼 -->
-	<form id="selectForm" name="selectForm"  action="detailedWorkList.do" autocomplete="off">
+	<form id="selectForm" name="selectForm"  action="repairList.do" autocomplete="off">
 		<input id="workDate" name="workDate" type="hidden" value ="">
 		<input id="addList" name ="addList" type="hidden" value	="">
 	</form>
