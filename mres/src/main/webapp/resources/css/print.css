@@ -1,0 +1,154 @@
+/* -------------------------------------------------------------- 
+   reset.css
+   * Resets default browser CSS.
+-------------------------------------------------------------- */
+
+*{ box-sizing: border-box; user-select: none; }
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, code,
+del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+body { 
+  line-height: 1.5; 
+  -webkit-print-color-adjust: exact;
+}
+
+/* Tables still need 'cellspacing="0"' in the markup. */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { }
+table, td, th { vertical-align: middle; }
+
+/* Remove possible quote marks (") from <q>, <blockquote>. */
+blockquote:before, blockquote:after, q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* Remove annoying border on linked images. */
+a img { border: none; }
+
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+html, body, div,span,p,a,li,table,th,td,input { font-family: 'Noto Sans KR', sans-serif }
+
+h1, h2, h3, h4, h5, dl, dt, dd, ul, li, ol, th, td, p, blockquote, form, fieldset, legend, div,body { -webkit-print-color-adjust:exact; }
+
+/* common start */
+a { text-decoration:none }
+div, a { box-sizing:border-box }
+ul, li { list-style:none; margin:0; padding:0}
+img { border:0 }
+th { font-weight:500 }
+.left { float:left }
+.right { float:right }
+.clear { clear:both }
+.center { text-align:center }
+/* common end */
+
+html {scrollbar-3dLight-Color: #efefef; scrollbar-arrow-color: #dfdfdf; scrollbar-base-color: #efefef; scrollbar-Face-Color: #dfdfdf; scrollbar-Track-Color: #efefef; scrollbar-DarkShadow-Color: #efefef; scrollbar-Highlight-Color: #efefef; scrollbar-Shadow-Color: #efefef}
+
+body::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);	background-color: #d4d4d4; }
+body::-webkit-scrollbar { width: 6px; background-color: #d4d4d4; }
+body::-webkit-scrollbar-thumb { background-color: #9c9c9c; }
+
+body { padding: 10px; }
+.sub_title { position: relative;
+    -webkit-perspective: 400;
+    perspective: 400;
+    padding-left: 10px;
+    padding-bottom: 3px;
+    font-weight: bold;
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 15px; 
+    border-left: 5px solid #0882b9; }
+    
+.search_wrap { margin-top:10px; margin-bottom: 5px; border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; float: left; width: 100%; padding: 3px; border-top:3px solid #0882b9; }
+.search_con { float: left; padding: 5px 5px 4px; }
+.search_con .search_title { color: #434343; padding: 4px 10px 0 0; font-size: 13px }
+.search_con div { float: left }
+.search_bar { float: left; border-left: 1px solid #a4a4a4; height:27px; box-shadow: 0 10px 18px 0 rgba(22, 26, 30, 0.9); margin: 6px 15px 0 15px; }
+
+.default_input { font-size: 12px; padding-left: 11px; padding-right: 11px; height:28px; background-color: #ffffff; border: 1px solid #e6e6e6; border-radius: 3px; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 1px 3px rgba(0, 0, 0, 0.1); color: #555; -webkit-print-color-adjust: exact; }
+.default_input:focus { outline: 0; background-color: #fcfcfc; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset, 0 1px 0 rgba(255, 255, 255, 0.8); }
+.default_input:read-only  { outline: 0; background-color: #f4f4f4; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) inset, 0 1px 0 rgba(255, 255, 255, 0.8); }
+
+.txt_right { text-align: right }
+.txt_left { text-align: left }
+.txt_center { text-align: center }
+.txt_red { color: #ff3939 !important; -webkit-print-color-adjust: exact; }
+
+.align_l {text-align:left!important}
+.align_r {text-align:right!important}
+.align_c {text-align:center!important}
+
+.padding_l_10 { padding-left: 10px }
+.padding_r_10 { padding-right: 10px }
+
+.con_wrap { float:left }
+.con_wrap_100 { width: 100% }
+.con_wrap_25 { width:25%; }
+.con_wrap_30 { width:30%; }
+.con_wrap_33 { width:33.3%; }
+.con_wrap_35 { width:35%; }
+.con_wrap_40 { width:40%; }
+.con_wrap_45 { width:45%; }
+.con_wrap_50 { width:50% }
+.con_wrap_55 { width:55%; }
+.con_wrap_60 { width:60% }
+.con_wrap_65 { width:65% }
+.con_wrap_70 { width:70%; }
+.con_wrap_75 { width:75%; }
+
+/* table */
+.default_table { font-size: 0.8rem; text-align: center; color: #999999;  border-left: 1px solid #8C8C8C; border-collapse: collapse; width: 100%; border-top:3px solid #0882b9; margin-top: 15px }
+.default_table th, .default_table td { padding: 0.3rem 0.7rem; }
+.default_table th { font-size:12px; color: #757575; border-bottom: 1px solid #8C8C8C; border-right: 1px solid #8C8C8C; font-weight: bold; background: #f6f6f6 !important; }
+.default_table tr td { border: 1px solid #8C8C8C; font-size:11px; }
+.default_table tbody tr:hover td { cursor: pointer; }
+.default_table tfoot { border-top: 3px double #cccccc; color: #757575; font-weight: bold; background-color: #F0F8FC; }
+.default_table tfoot td { border-bottom: 1px solid #8C8C8C; }
+.default_table tfoot tr:first-child td:nth-child(2) { border-right: 1px solid #8C8C8C; }
+.default_table .footer td { background:#f9f9f9 !important; font-weight: bold; }
+
+/* 결재라인 */
+#paymentLineWrap { margin: 0 0 15px 0 }
+.payCon { width:75px; height: 90px; border: 1px solid #333; float: left; margin:0 -1px 0 0; text-align: center; font-size: 10px }
+.payCon div:first-child { width:100%; height:20px; border-bottom: 1px solid #333; line-height: 18px }
+.payCon div:last-child { width:100%; height:20px; border-top: 1px solid #333; margin: 48px 0 0 0; line-height: 18px }
+
+/* 프린트 관련 */
+@media print{
+	@page{
+		size: auto;
+    	margin: 8mm 8mm 8mm 8mm;
+    	padding: 0mm 0mm 0mm 0mm;
+    	@bottom-right-corner{
+    		content: none;
+    	}
+	}
+	
+    html, body{margin:0; padding:0; page-break-after: avoid !important; page-break-before: avoid !important;}
+    table.default_table{ page-break-after:auto }
+    table.default_table tr{ page-break-inside:auto; page-break-after:auto }
+    table.default_table td{ page-break-inside:avoid; page-break-after:auto }
+
+	/* 부가가치세신고 */
+	.red{color: #FF0000 !important;}
+	.printtxt3:nth-child(1) span{color:blue !important;}
+
+    /* 급여이체출력 */
+    .department_back {background-color: lightgray !important;}
+    .bank_back {background-color: lightblue !important;}
+}

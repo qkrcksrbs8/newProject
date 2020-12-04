@@ -1,0 +1,49 @@
+div#flowwrapwrap{width: 90%; margin: 0 auto 25px; clear: both; overflow: hidden}
+div.flowwrap{float:left; margin:0 10px; width:calc((100% - 140px)/7)}
+.flowicon{border-radius: 50%; width: 65%; height: 91.45px; margin: 0 auto 10px; text-align: center; line-height: 91.45px; font-weight: 700}
+.flowwrap_active .flowicon{background:#035587; color:#fff}
+div.flowwrap:not(.flowwrap_active) .flowicon{border: 3px solid #e6e6e6;}
+
+.flowtitle{font-size: 13px; font-weight: 700; text-align: center}
+p.flowline{float:left; margin:0 10px; width:calc((100% - 140px)/7); height:5px; background:#e6e6e6; margin-top: 41.07px}
+.flowline_active{background:#035587 !important; }
+
+.search_detail_wrap { position: relative; height: 30px; background-color: #fff; margin-top: -5px;}
+.search_detail_btn { position: absolute; left: 50%; width: 100px;  height: 20px; padding-top: 4px; margin-left: -50px; border-radius: 0 0 8px 8px;
+    background: #035587; background-image: linear-gradient(#035587, #253f4a); color: #fff; font-size: 11px; line-height: 1; text-align: center; }
+
+/* 원본세금계산서 */
+.tax_view_wrap { position: relative; border: 2px solid #035587; }
+.tax_blue { color: #2a57c7; font-size: 15px; font-weight: bold; }
+
+/* stamp */
+.tax_stamp {
+  position : absolute;
+  right: 12%;
+  bottom: -10%;
+  box-shadow: 0 0 0 3px #2a57c7, 0 0 0 2px #2a57c7 inset;  
+  border: 2px solid transparent;
+  border-radius: 2px;
+  display: inline-block;
+  padding: 5px 2px;
+  //height:100px;
+  //line-height: 42px;
+  color: #2a57c7;
+  font-size: 24px;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.4;
+  padding:10px;
+  transform: rotate(-10deg);
+}
+div.centerText{
+  border-top:2px solid #2a57c7;
+  border-bottom:2px solid #2a57c7;
+  margin:10px 0px;
+  padding:5px 0px;
+}
+span.sideText{
+  font-size:12px;
+  font-family:normal;
+  font-weight:bold;
+} 

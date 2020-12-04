@@ -1,0 +1,70 @@
+/*로그인*/
+.login_body {
+	background: url("../img/login_bg.jpg") no-repeat center center fixed;
+	background-size: cover;
+	margin: 0;
+	color: #666;
+}
+.login_con {
+	width: 388px;
+    height: 468px;
+    margin: -280px 0 0 -194px;
+    position:absolute; 
+	top:50%; 
+	left:50%; 
+	overflow: hidden; 
+	/* box-shadow: 0 5px 40px rgba(0,0,0,0.2);
+    border-radius: 5px; */
+}
+.login_con .con { padding: 30px;}
+.login_con .con .title { margin: 0; }
+.login_con .con .title img { width: 80%  }
+.login_con .con .title_des { font-size:18px; color:#555555; font-weight: bold }
+.title_con{border-bottom:solid 2px #c1a972}
+div#loginbox{ margin:0 auto; box-sizing:border-box; padding:30px 0; font-size:18px }
+#loginbox input[type="text"],
+#loginbox input[type="password"]{
+  width: 100%;
+  border: 1px solid #119dce;
+  border-radius: 4px;
+  margin: 8px 0;
+  outline: none;
+  padding: 10px 0 10px 40px;
+  box-sizing: border-box;
+  transition: 0.3s;
+  color:#555555;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  box-shadow: 0 0 8px 0 #119dce;
+}
+.input_with_icon {
+  position: relative;
+}
+.input_with_icon i {
+  position: absolute;
+  left: 0;
+  top: 11px;
+  padding: 9px 15px;
+  color: #9bc8d8;
+  transition: 0.3s;
+}
+.input_with_icon input[type="text"]:focus + i,
+.input_with_icon input[type="password"]:focus + i {
+	color: #119dce;
+}
+input::-webkit-input-placeholder {
+	color: #9bc8d8;
+}
+input:-ms-input-placeholder {
+	color: #9bc8d8;
+}
+input:placeholder {
+	color: #9bc8d8;;
+	opacity: 1;
+}
+.login_des { font-size: 14px; height: 55px; }
+.login_des_pw { margin: .6em 0; }
+.login_des_pw a { color:#515151; }
+a.loginbox_btn{margin-top:15px; display:block; height:48px; color:#fff; font-size:18px; line-height:48px; text-align:center; box-sizing:border-box; border-radius: 4px; text-decoration:none;}
+
