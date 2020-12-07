@@ -19,20 +19,12 @@ $(function() {
 	$(".tableCheck").click(function(){
 			
 		var rowIndex = $(this).parent().parent().children().index($(this).parent());//클릭한 row
+		rowIndex *= 1;																//row 숫자로 변환
+		rowIndex = rowIndex - 2;													//row - 2
 		var checkMonth = 'checkMonth'+rowIndex;										//input name+row
 		var cehckLength = $('input:checkbox[name='+checkMonth+']:checked').length;	//클릭한 row의 월 체크 개수
 		var check_sycle = 'check_sycle'+rowIndex; 									//클릭한 row의 점검주기 클래스
 		$('.'+check_sycle).text(cehckLength+'회/년');									//클릭한 row의 월 체크 개수 n회/년 적용
-		
-	});
-
-	
-   	//-----------------------------
-   	//파일이름을 누르면 호출되는 팝업창 입니다.
-   	//-----------------------------
-	$(".filePopup").click(function(){
-		
-		alert("파일관련 팝업창 호출!"); 
 		
 	});
    	
@@ -56,17 +48,28 @@ $(function() {
 		//-------------------------
 		checkbox.each(function(i) {
 
-  			var ul = checkbox.parent().parent().eq(i);						// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   		var li = ul.children();											// checkbox.parent() : checkbox의 부모는 <li>이다.
+  			var tr = checkbox.parent().parent().eq(i);						// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+	   		var td = tr.children();											// checkbox.parent() : checkbox의 부모는 <li>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
-			var schedule_seq = li.eq(0).children().val();					//연간스케쥴 시퀀스
-			var work_info = li.eq(1).text();								//업무내용
-			var check_cycle = li.eq(2).text();								//점검주기
-			var schedule_jan = li.eq(3).children().is(":checked")? 1 : 0;	//1월
-			var schedule_feb = li.eq(4).children().is(":checked")? 1 : 0;	//2월
-			var schedule_mar = li.eq(5).children().is(":checked")? 1 : 0; 	//3월
-			var file_name = li.eq(6).text();								//파일이름
+			var schedule_seq = td.eq(0).children().val();					//연간스케쥴 시퀀스
+			var work_info = td.eq(1).text();								//업무내용
+			var check_cycle = td.eq(2).text();								//점검주기
+			var schedule_jan = td.eq(3).children().is(":checked")? 1 : 0;	//1월
+			var schedule_feb = td.eq(4).children().is(":checked")? 1 : 0;	//2월
+			var schedule_mar = td.eq(5).children().is(":checked")? 1 : 0; 	//3월
+			var schedule_apr = td.eq(6).children().is(":checked")? 1 : 0;	//4월
+			var schedule_may = td.eq(7).children().is(":checked")? 1 : 0;	//5월
+			var schedule_jun = td.eq(8).children().is(":checked")? 1 : 0; 	//6월
+			var schedule_jul = td.eq(9).children().is(":checked")? 1 : 0;	//7월
+			var schedule_aug = td.eq(10).children().is(":checked")? 1 : 0;	//8월
+			var schedule_sep = td.eq(11).children().is(":checked")? 1 : 0; 	//9월
+			var schedule_oct = td.eq(12).children().is(":checked")? 1 : 0;	//10월
+			var schedule_nov = td.eq(13).children().is(":checked")? 1 : 0;	//11월
+			var schedule_dec = td.eq(14).children().is(":checked")? 1 : 0; 	//12월
+			var entity = td.eq(15).text();									//계약주체
+			var contract = td.eq(16).text();								//계약서
+			var file_name = td.eq(17).text();								//파일이름
 
 			if(schedule_seq == 'on'){schedule_seq = 0;};//연간스케쥴 시퀀스가 on일경우 0으로 변환
 			
@@ -79,6 +82,17 @@ $(function() {
 			jsonObj.schedule_jan= schedule_jan;		//1월
 			jsonObj.schedule_feb= schedule_feb;		//2월
 			jsonObj.schedule_mar= schedule_mar;		//3월
+			jsonObj.schedule_apr= schedule_apr;		//4월
+			jsonObj.schedule_may= schedule_may;		//5월
+			jsonObj.schedule_jun= schedule_jun;		//6월
+			jsonObj.schedule_jul= schedule_jul;		//7월
+			jsonObj.schedule_aug= schedule_aug;		//8월
+			jsonObj.schedule_sep= schedule_sep;		//9월
+			jsonObj.schedule_oct= schedule_oct;		//10월
+			jsonObj.schedule_nov= schedule_nov;		//11월
+			jsonObj.schedule_dec= schedule_dec;		//12월
+			jsonObj.entity		= entity;			//관리주체
+			jsonObj.contract	= contract;			//계약서이름
 			jsonObj.file_name	= file_name;		//파일이름
 
 			jsonArr[i] = jsonObj;					//Array 배열 push
@@ -134,12 +148,14 @@ $(function() {
    				
    				checkbox.each(function(i) {
 
-   	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
-   	   				var work_info_val = li.eq(1).text();				//업무내용
+   	   				var tr = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
+   	   				var work_info_val = td.eq(1).text();				//업무내용
+					var entity_val = td.eq(15).text();					//계약주체
    	   				
-   	   				li.eq(1).html('<input id="workInfo" type="text" value="'+work_info_val+'">');//수정 가능한 필드로 변경
-
+   	   				td.eq(1).html('<input id="workInfo" type="text" value="'+work_info_val+'">');//수정 가능한 필드로 변경
+					td.eq(15).html('<input id="entity" type="text" value="'+entity_val+'">');	//수정 가능한 필드로 변경
+					
    	   			});
    				
    				$("#tableUp").text("수정 완료");			//수정 버튼의 글자를 수정 완료로 변경
@@ -157,12 +173,14 @@ $(function() {
    					
 	   				checkbox.each(function(i) {
 	
-	   	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다.
-	   	   				seq = li.eq(0).children().val();					//시퀀스 - 0:신규	   	   				
-	   	   				var work_info_val = li.eq(1).children().val();		//업무내용
-	   	   				
-	   	   				li.eq(1).html('<label>'+work_info_val+'</label>');	//수정 완료되면 다시 label로 변경
+	   	   				var tr = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+	   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다.
+	   	   				seq = td.eq(0).children().val();					//시퀀스 - 0:신규	   	   				
+	   	   				var work_info_val = td.eq(1).children().val();		//업무내용	
+						var entity_val = td.eq(15).children().val();		//계약주체
+						
+	   	   				td.eq(1).html('<label>'+work_info_val+'</label>');	//수정 완료되면 다시 label로 변경
+	   	   				td.eq(15).html('<label>'+entity_val+'</label>');	//수정 완료되면 다시 label로 변경
 	
 	   	   			});
 	   				
@@ -212,10 +230,10 @@ $(function() {
 		//-------------------------
 		checkbox.each(function(i) {
 
-			// checkbox.parent() : checkbox의 부모는 <li>이다.
-			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.
-			var ul = checkbox.parent().parent().eq(i);
-			var li = ul.children();
+			// checkbox.parent() : checkbox의 부모는 <td>이다.
+			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
 			
 			// li.eq(0)은 체크박스 이므로  li.eq(1)의 값부터 가져온다.
 			//-------------------------------
@@ -223,10 +241,10 @@ $(function() {
 			//한 번 담으면 나머지는 패스
 			//-------------------------------
 			if(seq != -1){
-				seq	= li.eq(0).children().val();			//시퀀스 - 0:신규	
+				seq	= td.eq(0).children().val();			//시퀀스 - 0:신규	
 			};//if
 			
-			var schedule_seq = li.eq(0).children().val();	//연간스케쥴 시퀀스
+			var schedule_seq = td.eq(0).children().val();	//연간스케쥴 시퀀스
 			if(schedule_seq == 'on'){schedule_seq = 0;};	//연간스케쥴 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
@@ -283,20 +301,53 @@ $(function() {
 	    $("#addList").val("add");											//행추가 변수 값 add
 		$("#selectForm").submit();											//서브밋
 		$("#addList").val("");												//행추가 변수 공백
-		
-		
-//    		var insertUl = "";//ul에 추가할 데이터를 담을 변수입니다.
-//    		insertUl += "<ul class='row'>";
-//    		insertUl += "<li class='col-xs-1 col-md-1 tableCount'><input type='checkbox' name='table_check'></li>";
-//    		insertUl += "<li class='col-xs-3 col-md-3'><lable class=''>신규업무입니다람쥐</label></li>";
-//    		insertUl += "<li class='col-xs-2 col-md-2'><label class=''>0회/년</label></li>";
-//    		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_jan' name='' type='checkbox' value=''></li>";
-//    		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_feb' name='' type='checkbox' value=''></li>";
-//    		insertUl += "<li class='col-xs-1 col-md-1 tableCheck '><input id='schedule_mar' name='' type='checkbox' value=''></li>";
-//    		insertUl += "<li class='col-xs-2 col-md-2'><label class='filePopup'>파일이름</label></li>";
-//    		insertUl += "</ul>"
-//    		$("#formArray").append(insertUl);
    		
    	});
+
+
+
+	
+   	//-----------------------------
+   	//파일이름을 누르면 호출되는 팝업창 입니다.
+   	//-----------------------------
+	function wrapWindowByMask(){
+		
+		//화면의 높이와 너비를 구한다.
+        var maskHeight = $(document).height();  
+        var maskWidth = $(window).width();  
+ 
+        //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채운다.
+        $("#mask").css({"width":maskWidth,"height":maskHeight});  
+ 
+        //애니메이션 효과 - 일단 0초동안 까맣게 됐다가 60% 불투명도로 간다.
+ 
+        $("#mask").fadeIn(0);      
+        $("#mask").fadeTo("slow",0.6);    
+ 
+        //윈도우 같은 거 띄운다.
+        $(".window").show();
+		
+	};
+	
+	
+	//검은 막 띄우기
+    $(".openMask").click(function(e){
+        e.preventDefault();
+        wrapWindowByMask();
+    });
+ 
+    //닫기 버튼을 눌렀을 때
+    $(".window .close").click(function (e) {  
+        //링크 기본동작은 작동하지 않도록 한다.
+        e.preventDefault();  
+        $("#mask, .window").hide();  
+    });       
+ 
+    //검은 막을 눌렀을 때
+    $("#mask").click(function () {  
+        $(this).hide();  
+        $(".window").hide();  
+ 
+    });    
 	
 });

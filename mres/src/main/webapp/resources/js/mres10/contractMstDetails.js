@@ -1,43 +1,5 @@
 $(function() {
 
-	//------------------
-	//셀렉트박스 조회
-	//------------------
-	$('#selectCode').change(function() {
-		
-		var workDate = $(this).val();		//셀렉트박스  2020, 2019, 2018 ...
-		$("#workDate").val(workDate);		//업무구분
-	    $("#addList").val("");				//행추가 변수 값 초기화
-		$("#selectForm").submit();			//서브밋
-		
-	});
-	
-	
-	//------------------------------------------------------------
-	//1~12월 체크박스 클릭 시 체크 여부에 따라 점검주기의 n회/년 으로 텍스트가 바뀝니다.
-	//------------------------------------------------------------
-	$(".tableCheck").click(function(){
-			
-		var rowIndex = $(this).parent().parent().children().index($(this).parent());//클릭한 row
-		var checkMonth = 'checkMonth'+rowIndex;										//input name+row
-		var cehckLength = $('input:checkbox[name='+checkMonth+']:checked').length;	//클릭한 row의 월 체크 개수
-		var check_sycle = 'check_sycle'+rowIndex; 									//클릭한 row의 점검주기 클래스
-		$('.'+check_sycle).text(cehckLength+'회/년');									//클릭한 row의 월 체크 개수 n회/년 적용
-		
-	});
-
-	
-   	//-----------------------------
-   	//파일이름을 누르면 호출되는 팝업창 입니다.
-   	//-----------------------------
-	$(".filePopup").click(function(){
-		
-		alert("파일관련 팝업창 호출!"); 
-		
-	});
-   	
-   	
-  
 	//---------------------
 	//테이블을 저장하는 로직입니다.
 	//---------------------
@@ -50,7 +12,6 @@ $(function() {
 		var checkbox = $("input[name=table_check]");	//모든 체크박스	
 		var jsonArr = new Array();						//JsonArray를 위한 배열생성
         var totalJson = new Object();					//JsonObject의 합
-		var work_date = $("#selectCode").val();			//업무구분
 		
 		//-----------------
 		//체크박스 반복문입니다.
@@ -60,30 +21,36 @@ $(function() {
   			var ul = checkbox.parent().parent().eq(i);		// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
 	   		var li = ul.children();							// checkbox.parent() : checkbox의 부모는 <li>이다.
 			
+	   		contract_details
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
-			var work_seq 	= li.eq(0).children().val();	//세부업무 실적 시퀀스
-			var sector 		= li.eq(1).text();				//부문
-			var fr_work		= li.eq(2).text();				//예정업무
-			var to_work 	= li.eq(3).text();				//실시업무
-			var remark 		= li.eq(4).text();				//remark
+			var contract_seq 		= li.eq(0).children().val();	//시퀀스
+			var contract_details	= li.eq(1).text();				//계약내용
+			var contract_company	= li.eq(2).text();				//업체명
+			var total_date	 		= li.eq(3).text();				//시작일+종료일
+			var total_years 		= li.eq(4).text();				//계약연수+계약구분
+			var payment 			= li.eq(5).text();				//계약금액
+			var remark 				= li.eq(6).text();				//비고
 
-			if(work_seq == 'on'){work_seq = 0;};			//세부업무 실적 시퀀스가 on일경우 0으로 변환
+			alert(total_date);
+			if(contract_seq == 'on'){contract_seq = 0;};			//주요계약현황 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
-			var jsonObj = new Object();		//JsonObject를 위한 객체생성
-			jsonObj.work_seq = work_seq;	//고유번호
-			jsonObj.sector	= sector		//부문
-			jsonObj.fr_work	= fr_work;		//예정업무 
-			jsonObj.to_work = to_work;		//실시업무
-			jsonObj.remark= remark;			//비고
-			jsonObj.work_date = work_date	//기준년도
+			var jsonObj = new Object();								//JsonObject를 위한 객체생성
+			jsonObj.contract_seq 		= contract_seq;				//고유번호
+			jsonObj.contract_details	= contract_details			//계약내용
+			jsonObj.contract_company	= contract_company;			//업체명
+			jsonObj.total_date 			= total_date;				//시작일+종료일
+			jsonObj.total_years			= total_years;				//계약연수+계약구분
+			jsonObj.payment 			= payment.replace(',','')	//계약금액
+			jsonObj.remark 				= remark					//비고
 
-			jsonArr[i] = jsonObj;					//Array 배열 push
+			jsonArr[i] = jsonObj;									//Array 배열 push
+
 
 		});
 		
 		var stringJson = JSON.stringify(jsonArr); 	//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./insertDetailedWork";		//url 테이블 데이터 저장
+		var url = "./insertContract";			//url 테이블 데이터 저장
 		
 		$.ajax({
 			 method: "POST"
@@ -93,10 +60,8 @@ $(function() {
 			}
 		}).done(function(data){//통신 성공
 			alert("저장성공!");
-		    var workDate = $("#selectCode").val();					//셀렉트박스  2020, 2019, 2018 ...
-		    $("#workDate").val(workDate);							//업무구분
-		    $("#addList").val("normal");							//행추가 변수 값 add
-			$("#selectForm").submit();								//서브밋
+		    $("#addList").val("normal");			//행추가 변수 값 add
+			$("#selectForm").submit();				//서브밋
 			
 		}).fail(function(data){//통신 실패
 			alert("저장실패");
@@ -123,28 +88,31 @@ $(function() {
    			
    		};
    		
-   		var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
+   		var checkbox = $("input[name=table_check]:checked");			//체크된 체크박스
 
    			//-------------------------
    			//체크박스 반복문입니다.
    			//-------------------------
-
    			if("수정" == $("#tableUp").text()){
    				
    				checkbox.each(function(i) {
 
    	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
-   	   				var sector_val	= li.eq(1).text();					//부문
-   	   				var fr_work_val = li.eq(2).text();					//예정업무
-   	   				var to_work_val = li.eq(3).text();					//실시업무
-   	   				var remark_val	= li.eq(4).text();					//비고
+   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   		
+	   				var contract_details_val	= li.eq(1).text();		//계약내용
+	   				var contract_company_val	= li.eq(2).text();		//업체명
+	   				var total_date_val 			= li.eq(3).text();		//계약 기간
+	   				var total_years_val 		= li.eq(4).text();		//계약연수
+	   				var payment_val 			= li.eq(5).text();		//계약금액
+	   				var remark_val 				= li.eq(6).text();		//비고
    	   				
    	   				li.eq(0).attr("disabled", true);
-   	   				li.eq(1).html('<input id="sector_val"	type="text" value="'+sector_val+'">');	//부문	수정 가능한 필드로 변경
-   	   				li.eq(2).html('<input id="fr_work_val"	type="text" value="'+fr_work_val+'">');	//예정업무	수정 가능한 필드로 변경
-   	   				li.eq(3).html('<input id="to_work_val"	type="text" value="'+to_work_val+'">');	//실시업무	수정 가능한 필드로 변경
-   	   				li.eq(4).html('<input id="remark_val"	type="text" value="'+remark_val+'">');	//비고	수정 가능한 필드로 변경
+   	   				li.eq(1).html('<input id="contract_details_val"	type="text" value="'+contract_details_val+'">');	//부문	수정 가능한 필드로 변경
+   	   				li.eq(2).html('<input id="contract_company_val"	type="text" value="'+contract_company_val+'">');	//예정업무	수정 가능한 필드로 변경
+   	   				li.eq(3).html('<input id="total_date_val_val"	type="text" value="'+total_date_val+'">');			//실시업무	수정 가능한 필드로 변경
+   	   				li.eq(4).html('<input id="total_years_val"		type="text" value="'+total_years_val+'">');			//비고	수정 가능한 필드로 변경
+   	   				li.eq(5).html('<input id="payment_val"			type="text" value="'+payment_val+'">');				//실시업무	수정 가능한 필드로 변경
+   	   				li.eq(6).html('<input id="remark_val"			type="text" value="'+remark_val+'">');				//비고	수정 가능한 필드로 변경
 
    	   			});
 
@@ -170,15 +138,19 @@ $(function() {
 	   	   				var ul			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
 	   	   				var li			= ul.children();					// checkbox.parent() : checkbox의 부모는 <li>이다.
 	   	   				seq				= li.eq(0).children().val();		//시퀀스 - 0:신규
-	   	   				var sector_val	= li.eq(1).children().val();		//부문
-	   	   				var fr_work_val = li.eq(2).children().val();		//예정업무
-	   	   				var to_work_val = li.eq(3).children().val();		//실시업무
-	   	   				var remark_val	= li.eq(4).children().val();		//비고
+		   				var contract_details_val	= li.eq(1).children().val();		//계약내용
+		   				var contract_company_val	= li.eq(2).children().val();		//업체명
+		   				var total_date_val 			= li.eq(3).children().val();		//계약 기간
+		   				var total_years_val 		= li.eq(4).children().val();		//계약연수
+		   				var payment_val 			= li.eq(5).children().val();		//계약금액
+		   				var remark_val 				= li.eq(6).children().val();		//비고
 	   	   				
-	   	   				li.eq(1).html('<label>'+sector_val+'</label>');		//수정 완료되면 다시 label로 변경
-	   	   				li.eq(2).html('<label>'+fr_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(3).html('<label>'+to_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(4).html('<label>'+remark_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				li.eq(1).html('<label>'+contract_details_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				li.eq(2).html('<label>'+contract_company_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				li.eq(3).html('<label>'+total_date_val+'</label>');				//수정 완료되면 다시 label로 변경
+	   	   				li.eq(4).html('<label>'+total_years_val+'</label>');			//수정 완료되면 다시 label로 변경
+	   	   				li.eq(5).html('<label>'+payment_val+'</label>');				//수정 완료되면 다시 label로 변경
+	   	   				li.eq(6).html('<label>'+remark_val+'</label>');					//수정 완료되면 다시 label로 변경
 	
 	   	   			});
 	   				
@@ -245,18 +217,18 @@ $(function() {
 				seq	= li.eq(0).children().val();			//시퀀스 - 0:신규	
 			};//if
 			
-			var work_seq = li.eq(0).children().val();		//연간스케쥴 시퀀스
-			if(work_seq == 'on'){work_seq = 0;};			//연간스케쥴 시퀀스가 on일경우 0으로 변환
+			var contract_seq = li.eq(0).children().val();		//연간스케쥴 시퀀스
+			if(contract_seq == 'on'){contract_seq = 0;};			//연간스케쥴 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
 			var jsonObj = new Object();						//JsonObject를 위한 객체생성
-			jsonObj.work_seq	= work_seq;					//업무내용 
+			jsonObj.contract_seq = contract_seq;			//시퀀스 
 			jsonArr[i] = jsonObj;							//Array 배열 push
 
 		});
 
 		var stringJson = JSON.stringify(jsonArr); 			//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./deleteDetailedWork";				//url 테이블 데이터 삭제
+		var url = "./deleteContract";					//url 테이블 데이터 삭제
 		
 		$.ajax({
 			 type: "POST"
@@ -306,5 +278,4 @@ $(function() {
 		$("#addList").val("");									//행추가 변수 공백
 
    	});
-   	
 });

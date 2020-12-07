@@ -14,7 +14,7 @@ $(function() {
 
 $(function(){
 
-	var selectWorkDate = "${workDate}";			//업무코드		2020, 2019, 2018 ...
+	var selectTrainingDate = "${trainingDate}";			//업무코드		2020, 2019, 2018 ...
 	$("#selectCode").val(selectWorkDate);		//페이지 진입 시 selectBox 선택
 	
 	var addList = "${addList}";					//add:행추가 / normal:일반 출력
@@ -64,30 +64,33 @@ $(function(){
 			<div class="board-list-wrap board-list-header">
 				<ul class="row">
 					<li class="col-xs-1 col-md-1">체크</li>
-					<li class="col-xs-2 col-md-2">부문</li>
-					<li class="col-xs-3 col-md-3">예정업무</li>
-					<li class="col-xs-3 col-md-3">실시업무</li>
-					<li class="col-xs-1 col-md-1">REMARK</li>
+					<li class="col-xs-2 col-md-2">구분</li>
+					<li class="col-xs-2 col-md-2">일자</li>
+					<li class="col-xs-2 col-md-2">교육진행</li>
+					<li class="col-xs-2 col-md-2">참석인원</li>
+					<li class="col-xs-1 col-md-1">교육내용</li>
 				</ul> 
 			</div>
 			<div class="board-list-wrap borard-list-con">
 				<form id="formArray" name="formArray"  autocomplete="off">
-					<c:set var="number" value="${detailWorkCnt}" />
-					<c:forEach var="detailWorkList" items="${detailWorkList}" varStatus="detailedWorkNum">
+					<c:set var="number" value="${trainingCnt}" />
+					<c:forEach var="trainingList" items="${trainingList}" varStatus="trainingNum">
 						<ul class="row" >
-							<c:if test = "${detailWorkList.work_seq == 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" id="table_check" name="table_check" value="${detailWorkList.work_seq}" checked></li>
-								<li class="col-xs-2 col-md-2" id="sector"><input id="sector_val" type="text" value="${detailWorkList.sector}"></li>
-								<li class="col-xs-3 col-md-3" id="fr_work"><input id="fr_work_val" type="text" value="${detailWorkList.fr_work}"></li>
-								<li class="col-xs-3 col-md-3" id="to_work"><input id="to_work_val" type="text" value="${detailWorkList.to_work}"></li>
-								<li class="col-xs-1 col-md-1" id="remark"><input id="remark_val" type="text" value="${detailWorkList.remark}"></li>
+							<c:if test = "${trainingList.training_seq == 0}">
+								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" id="table_check" name="table_check" value="${trainingList.training_seq}" checked></li>
+								<li class="col-xs-2 col-md-2" id="division"><input id="division_val" type="text" value="${trainingList.division}"></li>
+								<li class="col-xs-2 col-md-2" id="training_date"><input id="training_date_val" type="text" value="${trainingList.training_date}"></li>
+								<li class="col-xs-2 col-md-2" id="training_progress"><input id="training_progress_val" type="text" value="${trainingList.training_progress}"></li>
+								<li class="col-xs-2 col-md-2" id="attend_count"><input id="attend_count_val" type="text" value="${trainingList.attend_count}"></li>
+								<li class="col-xs-1 col-md-1" id="training_content"><input id="training_content_val" type="text" value="${trainingList.training_content}"></li>
 							</c:if>
-							<c:if test = "${detailWorkList.work_seq != 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></li>
-								<li class="col-xs-2 col-md-2" id="sector"><lable >${detailWorkList.sector}</lable></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.fr_work}</label></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.to_work}</label></li>		
-								<li class="col-xs-1 col-md-1"><label>${detailWorkList.remark}</label></li>		
+							<c:if test = "${trainingList.training_seq != 0}">
+								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${trainingList.training_seq}"></li>
+								<li class="col-xs-2 col-md-2"><lable >${trainingList.division}</lable></li>
+								<li class="col-xs-2 col-md-2"><lable >${trainingList.training_date}</lable></li>
+								<li class="col-xs-2 col-md-2"><label>${trainingList.training_progress}</label></li>
+								<li class="col-xs-2 col-md-2"><label>${trainingList.attend_count}</label></li>		
+								<li class="col-xs-1 col-md-1"><label>${trainingList.training_content}</label></li>		
 							</c:if>
 						</ul>
 					</c:forEach>
@@ -97,7 +100,7 @@ $(function(){
 	</section>	
 	
 	<!-- 게시글 없을 때. -->
-	<c:if test="${detailWorkCnt==0}">
+	<c:if test="${trainingCnt==0}">
 		<section id="content">
 			<div class="container">
 				<div class="board-list-wrap board-list-header">
@@ -110,8 +113,8 @@ $(function(){
 	</c:if>
 	
 	<!-- 셀렉트박스 조회용 히든 폼 -->
-	<form id="selectForm" name="selectForm"  action="detailedWorkList" autocomplete="off">
-		<input id="workDate" name="workDate" type="hidden" value ="">
+	<form id="selectForm" name="selectForm"  action="trainingList" autocomplete="off">
+		<input id="trainingDate" name="trainingDate" type="hidden" value ="">
 		<input id="addList" name ="addList" type="hidden" value	="">
 	</form>
 	

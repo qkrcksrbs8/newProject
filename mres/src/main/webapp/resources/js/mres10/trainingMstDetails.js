@@ -5,10 +5,10 @@ $(function() {
 	//------------------
 	$('#selectCode').change(function() {
 		
-		var workDate = $(this).val();		//셀렉트박스  2020, 2019, 2018 ...
-		$("#workDate").val(workDate);		//업무구분
-	    $("#addList").val("");				//행추가 변수 값 초기화
-		$("#selectForm").submit();			//서브밋
+		var trainingDate = $(this).val();		//셀렉트박스  2020, 2019, 2018 ...
+		$("#trainingDate").val(trainingDate);	//업무구분
+	    $("#addList").val("");					//행추가 변수 값 초기화
+		$("#selectForm").submit();				//서브밋
 		
 	});
 	
@@ -61,29 +61,30 @@ $(function() {
 	   		var li = ul.children();							// checkbox.parent() : checkbox의 부모는 <li>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
-			var work_seq 	= li.eq(0).children().val();	//세부업무 실적 시퀀스
-			var sector 		= li.eq(1).text();				//부문
-			var fr_work		= li.eq(2).text();				//예정업무
-			var to_work 	= li.eq(3).text();				//실시업무
-			var remark 		= li.eq(4).text();				//remark
+			var training_seq 		= li.eq(0).children().val();	//교육현황 시퀀스
+			var division 			= li.eq(1).text();				//구분
+			var training_date 		= li.eq(2).text();				//일자
+			var training_progress	= li.eq(3).text();				//교육진행
+			var attend_count 		= li.eq(4).text();				//참석인원
+			var training_content 	= li.eq(5).text();				//교육내용
 
-			if(work_seq == 'on'){work_seq = 0;};			//세부업무 실적 시퀀스가 on일경우 0으로 변환
+			if(training_seq == 'on'){training_seq = 0;};			//교육현황 실적 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
-			var jsonObj = new Object();		//JsonObject를 위한 객체생성
-			jsonObj.work_seq = work_seq;	//고유번호
-			jsonObj.sector	= sector		//부문
-			jsonObj.fr_work	= fr_work;		//예정업무 
-			jsonObj.to_work = to_work;		//실시업무
-			jsonObj.remark= remark;			//비고
-			jsonObj.work_date = work_date	//기준년도
+			var jsonObj = new Object();							//JsonObject를 위한 객체생성
+			jsonObj.training_seq		= training_seq;			//고유번호
+			jsonObj.division			= division				//부문
+			jsonObj.training_date		= training_date;		//예정업무 
+			jsonObj.training_progress 	= training_progress;	//실시업무
+			jsonObj.attend_count		= attend_count;			//비고
+			jsonObj.training_content 	= training_content		//기준년도
 
-			jsonArr[i] = jsonObj;					//Array 배열 push
+			jsonArr[i] = jsonObj;								//Array 배열 push
 
 		});
 		
 		var stringJson = JSON.stringify(jsonArr); 	//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./insertDetailedWork";		//url 테이블 데이터 저장
+		var url = "./insertTraining";				//url 테이블 데이터 저장
 		
 		$.ajax({
 			 method: "POST"
@@ -93,8 +94,8 @@ $(function() {
 			}
 		}).done(function(data){//통신 성공
 			alert("저장성공!");
-		    var workDate = $("#selectCode").val();					//셀렉트박스  2020, 2019, 2018 ...
-		    $("#workDate").val(workDate);							//업무구분
+		    var training_date = $("#selectCode").val();				//셀렉트박스  2020, 2019, 2018 ...
+		    $("#training_date").val(training_date);					//업무구분
 		    $("#addList").val("normal");							//행추가 변수 값 add
 			$("#selectForm").submit();								//서브밋
 			
@@ -135,16 +136,20 @@ $(function() {
 
    	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
    	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
-   	   				var sector_val	= li.eq(1).text();					//부문
-   	   				var fr_work_val = li.eq(2).text();					//예정업무
-   	   				var to_work_val = li.eq(3).text();					//실시업무
-   	   				var remark_val	= li.eq(4).text();					//비고
+   	   				
+					var training_seq_val 		= li.eq(0).children().val();	//교육현황 시퀀스
+					var division_val 			= li.eq(1).text();				//구분
+					var training_date_val 		= li.eq(2).text();				//일자
+					var training_progress_val	= li.eq(3).text();				//교육진행
+					var attend_count_val 		= li.eq(4).text();				//참석인원
+					var training_content_val 	= li.eq(5).text();				//교육내용
    	   				
    	   				li.eq(0).attr("disabled", true);
-   	   				li.eq(1).html('<input id="sector_val"	type="text" value="'+sector_val+'">');	//부문	수정 가능한 필드로 변경
-   	   				li.eq(2).html('<input id="fr_work_val"	type="text" value="'+fr_work_val+'">');	//예정업무	수정 가능한 필드로 변경
-   	   				li.eq(3).html('<input id="to_work_val"	type="text" value="'+to_work_val+'">');	//실시업무	수정 가능한 필드로 변경
-   	   				li.eq(4).html('<input id="remark_val"	type="text" value="'+remark_val+'">');	//비고	수정 가능한 필드로 변경
+   	   				li.eq(1).html('<input id="division_val"	type="text" value="'+division_val+'">');					//구분	수정 가능한 필드로 변경
+   	   				li.eq(2).html('<input id="training_date_val"	type="text" value="'+training_date_val+'">');		//일자	수정 가능한 필드로 변경
+   	   				li.eq(3).html('<input id="training_progress_val"	type="text" value="'+training_progress_val+'">');//교육진행	수정 가능한 필드로 변경
+   	   				li.eq(4).html('<input id="attend_count_val"	type="text" value="'+attend_count_val+'">');			//참석인원	수정 가능한 필드로 변경
+					li.eq(5).html('<input id="training_content_val"	type="text" value="'+training_content_val+'">');	//교육내용	수정 가능한 필드로 변경
 
    	   			});
 
@@ -167,18 +172,20 @@ $(function() {
 					//----------------------
    					checkbox.each(function(i) {
 	
-	   	   				var ul			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   	   				var li			= ul.children();					// checkbox.parent() : checkbox의 부모는 <li>이다.
-	   	   				seq				= li.eq(0).children().val();		//시퀀스 - 0:신규
-	   	   				var sector_val	= li.eq(1).children().val();		//부문
-	   	   				var fr_work_val = li.eq(2).children().val();		//예정업무
-	   	   				var to_work_val = li.eq(3).children().val();		//실시업무
-	   	   				var remark_val	= li.eq(4).children().val();		//비고
+	   	   				var ul			= checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+	   	   				var li			= ul.children();							// checkbox.parent() : checkbox의 부모는 <li>이다.
+	   	   				seq				= li.eq(0).children().val();				//시퀀스 - 0:신규
+						var division_val 			= li.eq(1).text();				//구분
+						var training_date_val 		= li.eq(2).text();				//일자
+						var training_progress_val	= li.eq(3).text();				//교육진행
+						var attend_count_val 		= li.eq(4).text();				//참석인원
+						var training_content_val 	= li.eq(5).text();				//교육내용
 	   	   				
-	   	   				li.eq(1).html('<label>'+sector_val+'</label>');		//수정 완료되면 다시 label로 변경
-	   	   				li.eq(2).html('<label>'+fr_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(3).html('<label>'+to_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(4).html('<label>'+remark_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				li.eq(1).html('<label>'+division_val+'</label>');			//수정 완료되면 다시 label로 변경
+	   	   				li.eq(2).html('<label>'+training_date_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				li.eq(3).html('<label>'+training_progress_val+'</label>');	//수정 완료되면 다시 label로 변경
+	   	   				li.eq(4).html('<label>'+attend_count_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				li.eq(4).html('<label>'+training_content_val+'</label>');	//수정 완료되면 다시 label로 변경
 	
 	   	   			});
 	   				
@@ -245,18 +252,18 @@ $(function() {
 				seq	= li.eq(0).children().val();			//시퀀스 - 0:신규	
 			};//if
 			
-			var work_seq = li.eq(0).children().val();		//연간스케쥴 시퀀스
-			if(work_seq == 'on'){work_seq = 0;};			//연간스케쥴 시퀀스가 on일경우 0으로 변환
+			var training_seq = li.eq(0).children().val();	//교육현황 시퀀스
+			if(training_seq == 'on'){training_seq = 0;};	//교육현황 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
 			var jsonObj = new Object();						//JsonObject를 위한 객체생성
-			jsonObj.work_seq	= work_seq;					//업무내용 
+			jsonObj.training_seq	= training_seq;			//교육현황번호 
 			jsonArr[i] = jsonObj;							//Array 배열 push
 
 		});
 
 		var stringJson = JSON.stringify(jsonArr); 			//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./deleteDetailedWork";				//url 테이블 데이터 삭제
+		var url = "./deleteTraining";					//url 테이블 데이터 삭제
 		
 		$.ajax({
 			 type: "POST"
@@ -299,8 +306,8 @@ $(function() {
    			return; 
    		};
    		
-	    var workDate = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	    $("#workDate").val(workDate);							//업무구분
+	    var trainingDate = $("#selectCode").val();				//셀렉트박스 2020 / 2019 / 2018
+	    $("#trainingDate").val(trainingDate);					//업무구분
 	    $("#addList").val("add");								//행추가 변수 값 add
 		$("#selectForm").submit();								//서브밋
 		$("#addList").val("");									//행추가 변수 공백

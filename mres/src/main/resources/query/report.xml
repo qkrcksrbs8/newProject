@@ -175,5 +175,226 @@
 	
 </update> 
 
+<select id="selectDetailedWorkCnt" parameterType="map" resultType="int">
+/* selectDetailedWorkCnt */
+	SELECT
+		COUNT(1)
+	FROM DETAILED_WORK_MST
+	WHERE USEFLAG = #{useflag}
+	AND WORK_DATE = #{work_date}
+ 	ORDER BY WORK_SEQ ASC
+	
+</select>
+
+<select id="selectDetailedWorkList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.DetailedWorkMstVO">
+/* selectDetailedWorkList */
+	SELECT
+		WORK_SEQ
+		, SECTOR
+		, WORK_DATE
+		, FR_WORK
+		, TO_WORK
+		, REMARK
+        , USEFLAG
+        , COMPANY_CODE
+    FROM DETAILED_WORK_MST
+	WHERE USEFLAG = #{useflag}
+	AND WORK_DATE = #{work_date}
+ 	ORDER BY WORK_SEQ ASC
+	
+</select>
+
+
+<insert id="insertDetailedWork" parameterType="kr.co.swrts.contents.report.domains.DetailedWorkMstVO">
+/* insertDetailedWork */
+	INSERT INTO DETAILED_WORK_MST (
+	    SECTOR
+	    , WORK_DATE
+	    , FR_WORK
+	    , TO_WORK
+	    , REMARK
+	    , COMPANY_CODE
+		, CREATED_BY
+	    , LAST_UPDATE_BY
+	) values (
+	    #{sector}
+	    ,#{work_date}
+	    ,#{fr_work}
+	    ,#{to_work}
+	    ,#{remark}
+	    ,#{company_code}
+	    ,#{created_by}
+	    ,#{last_update_by}
+	)
+</insert>
+
+<update id="updateDetailedWork" parameterType="kr.co.swrts.contents.report.domains.DetailedWorkMstVO">
+/* updateDetailedWork */
+	UPDATE DETAILED_WORK_MST SET
+	    LAST_UPDATE_BY	=	#{last_update_by}
+	    ,LAST_UPDATE_DATE = NOW()
+	<if test='company_code != null  and company_code != ""'>
+		,COMPANY_CODE	=	#{company_code}
+ 	</if>
+ 	<if test='sector != null  and sector != ""'>
+		,SECTOR			=	#{sector}
+ 	</if>
+ 	<if test='work_date != null  and work_date != ""'>
+		,WORK_DATE		=	#{work_date}
+ 	</if>
+ 	<if test='fr_work != null  and fr_work != ""'>
+		,FR_WORK		=	#{fr_work}
+ 	</if>
+ 	<if test='to_work != null  and to_work != ""'>
+		,TO_WORK		=	#{to_work}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>
+		,REMARK			=	#{remark}
+ 	</if>
+	where WORK_SEQ 	=	#{work_seq}
+	
+</update>
+
+<update id="deleteDetailedWork" parameterType="kr.co.swrts.contents.report.domains.DetailedWorkMstVO"> 
+	/* deleteDetailedWork */
+	UPDATE DETAILED_WORK_MST SET
+		last_update_date = NOW()
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE WORK_SEQ = #{work_seq}
+	
+</update> 
+
+
+<select id="selectContractCnt" parameterType="map" resultType="int">
+/* selectContractCnt */
+	SELECT
+		COUNT(1)
+    FROM CONTRACT_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY TO_DAY ASC
+	
+</select>
+
+<select id="selectContractList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.ContractMstVO">
+/* selectContractList */
+	SELECT
+		CONTRACT_SEQ
+	    , CONTRACT_DETAILS
+	    , CONTRACT_COMPANY
+	    , DATE_FORMAT(FR_DAY,'%Y.%c.%d') AS FR_DAY
+	    , DATE_FORMAT(TO_DAY,'%Y.%c.%d') AS TO_DAY
+	    , CONTRACT_YEARS
+	    , CONTRACT_DIVISION
+	    , PAYMENT
+	    , REMARK
+    FROM CONTRACT_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY TO_DAY ASC
+	
+</select>
+
+<update id="updateContract" parameterType="kr.co.swrts.contents.report.domains.ContractMstVO">
+/* updateContrasct */
+	UPDATE CONTRACT_MST SET
+	    LAST_UPDATE_BY	=	#{created_by}
+	    ,LAST_UPDATE_DATE = NOW()
+	<if test='company_code != null  and company_code != ""'>
+		,COMPANY_CODE	=	#{company_code}
+ 	</if>
+ 	<if test='contract_details != null  and contract_details != ""'>
+		,CONTRACT_DETAILS			=	#{contract_details}
+ 	</if>
+ 	<if test='contract_company != null  and contract_company != ""'>
+		,CONTRACT_COMPANY			=	#{contract_company}
+ 	</if>
+ 	<if test='fr_day != null  and fr_day != ""'>
+		,FR_DAY		=	#{fr_day}
+ 	</if>
+ 	<if test='to_day != null  and to_day != ""'>
+		,TO_DAY		=	#{to_day}
+ 	</if>
+ 	<if test='contract_years != null  and contract_years != ""'>
+		,CONTRACT_YEARS		=	#{contract_years}
+ 	</if>
+ 	<if test='contract_division != null  and contract_division != ""'>
+		,CONTRACT_DIVISION		=	#{contract_division}
+ 	</if>
+ 	<if test='payment != null  and payment != ""'>
+		,PAYMENT		=	#{payment}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>
+		,REMARK			=	#{remark}
+ 	</if>
+	WHERE CONTRACT_SEQ 	=	#{contract_seq}
+	
+</update>
+
+<insert id="insertContract" parameterType="kr.co.swrts.contents.report.domains.ContractMstVO">
+/* insertContract */
+	INSERT INTO CONTRACT_MST (
+	    CONTRACT_DETAILS
+	    , CONTRACT_COMPANY
+	    , FR_DAY
+	    , TO_DAY
+	    , CONTRACT_YEARS
+	    , CONTRACT_DIVISION
+	    , PAYMENT
+	    , REMARK
+	    , COMPANY_CODE
+		, CREATED_BY
+	    , LAST_UPDATE_BY
+	) values (
+	    #{contract_details}
+	    ,#{contract_company}
+	    ,#{fr_day}
+	    ,#{to_day}
+	    ,#{contract_years}
+	    ,#{contract_division}
+	    ,#{payment}
+	    ,#{remark}
+	    ,#{company_code}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<update id="deleteContract" parameterType="kr.co.swrts.contents.report.domains.ContractMstVO"> 
+	/* deleteContract */
+	UPDATE CONTRACT_MST SET
+		last_update_date = NOW()
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE CONTRACT_SEQ = #{contract_seq}
+	
+</update> 
+
+
+<select id="selectTrainingCnt" parameterType="map" resultType="int">
+/* selectTrainingCnt */
+	SELECT
+		COUNT(1)
+    FROM TRAINING_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY TRAINING_SEQ ASC
+	
+</select>
+
+
+<select id="selectTrainingList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.TrainingMstVO">
+/* selectTrainingList */
+	SELECT
+		TRAINING_SEQ
+	    , DIVISION
+	    , TRAINING_DATE
+	    , TRAINING_PROGRESS
+	    , ATTEND_COUNT
+	    , TRAINING_CONTENT
+    FROM TRAINING_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY TRAINING_SEQ ASC
+	
+</select>
+
 </mapper>
 

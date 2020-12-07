@@ -1,5 +1,7 @@
 package kr.co.swrts.contents.report.controllers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.co.swrts.contents.report.domains.ContractMstVO;
+import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
+import kr.co.swrts.contents.report.domains.TrainingMstVO;
 import kr.co.swrts.contents.report.services.ReportService;
 
 /**
@@ -69,7 +74,7 @@ public class ReportController {
 	*@param session
 	*@return
 	*/
-	@RequestMapping(value = "/scheduleMst", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/scheduleList", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView scheduleMst(HttpServletRequest request, Model model
 			, @RequestParam(value="division", required =false,  defaultValue="AS01") String division
 			, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
@@ -93,9 +98,9 @@ public class ReportController {
 			return mav;
 		}catch(Exception e) {
 			
-			logger.error("java.lang.Exception : ", "ReportController.scheduleMst()");
+			logger.error("java.lang.Exception : ReportController.scheduleMst()");
 			logger.error(e.toString());
-			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles");									//연간스케쥴 model
+			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles");								//연간스케쥴 model
 			return mav;
 		}//try
 		
@@ -119,7 +124,8 @@ public class ReportController {
 			reportService.insertSchedule(request);																	//연간스케쥴 저장/수정
 			
 		}catch(Exception e) {
-			
+
+			logger.error("java.lang.Exception : ReportController.insertSchedule()");
 			logger.error(e.toString());																				//오류메시지
 			
 		};
@@ -161,44 +167,274 @@ public class ReportController {
 	}
 	
 	
-	/**
-	*연간스케쥴 조회
-	*@param locale
-	*@param model
-	*@param session
-	*@return
-	*/
-	@RequestMapping(value = "/detailedWorkMst", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView detailedWorkMst(HttpServletRequest request, Model model
-			, @RequestParam(value="division", required =false,  defaultValue="AS01") String division
-			, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
-		
-		logger.info("================================ START ================================");						//detailedWorkMst 시작
-		
-		try{
 	
-			List<ScheduleMstVO> scheduleList = new ArrayList<ScheduleMstVO>();										//세부업무실적VO List		
-			Map<String, Object> resultMap = new HashMap<String, Object>();											//리턴해주는 데이터를 담을 map
+	/**
+	 * 세무업무 실적
+	 * 세무업무 실적 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/detailedWorkList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView DetailedWorkMst(HttpServletRequest request, Model model
+								, @RequestParam(value="workDate", required =false, defaultValue="0000") String workDate
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+
+		logger.info("================================ START ================================");						//detailWork 시작
+		
+		logger.info("param workDate : "+workDate);
+		logger.info("param addList : "+addList);
+		
+		List<DetailedWorkMstVO> detailWorkList = new ArrayList<DetailedWorkMstVO>();								//테이블 리스트
 			
-			scheduleList = reportService.selectScheduleList(request, division, addList);							//세부업무실적 조회
-			resultMap.put("resultCode", "0000");																	//응답코드	 0000:정상  / 9000:비정상
-			resultMap.put("scheduleList", scheduleList);															//테이블 리스트
-			resultMap.put("scheduleCnt", scheduleList.size());														//테이블 수 
+		try {
+		
+			detailWorkList =  reportService.selectDetailedWorkList(request, workDate, addList);						//세부업무 리스트 조회
+			
+			//--------------------------------------- 
+			//기준년도의 default는 "0000"
+			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
+			//---------------------------------------
+			if("0000".equals(workDate)) {
+				
+				LocalDate now = LocalDate.now();																	//현재 날짜
+				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));									//년월일 파싱 2020.10.10 
+				workDate = workDate.substring(0,4);																	//년도 파싱 2020
+				
+			};//if
+			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("detailWorkList", detailWorkList);														//테이블 리스트
+			resultMap.put("detailWorkCnt", detailWorkList.size());													//테이블 수 
 			resultMap.put("addList", addList);																		//add:행추가 / normal:일반 출력
-			resultMap.put("division", division);																	//업무구분	
-			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles",resultMap);					//세부업무실적 model
+			resultMap.put("workDate", workDate);																	//기준년도
 			
-			logger.info("================================ E N D ================================");					//detailedWorkMst 종료
-			return mav;
+			ModelAndView  mav = new ModelAndView("contents/report/detailedWorkMst.tiles",resultMap);				//detailWork model 선언
+			logger.info("================================ E N D ================================");					//scheduleList 종료
+			return mav;																								//mav리턴
+			
 		}catch(Exception e) {
 			
-			logger.error("java.lang.Exception : ", "ReportController.scheduleMst()");
-			logger.error(e.toString());
-			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles");								//세부업무실적 model
-			return mav;
-		}//try
-		
-	};//scheduleMst
+			ModelAndView  mav = new ModelAndView("DetailedWorkList");												//detailWork model 선언
+			mav.setViewName("contents/report/detailedWorkMst.tiles");			
+			logger.error(e.toString());																				//오류메시지
+			return mav;																								//mav리턴
+			
+		}//catch
+
+	}
 	
+	
+	/**
+	 * 세부업무 실적 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@ResponseBody
+	@RequestMapping(value="/insertDetailedWork", method = {RequestMethod.POST}) 
+	public ModelAndView InsertDetailedWork(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");						//insertDetailedWork 시작
+
+		try {
+			
+			reportService.insertDetailedWork(request);																//세부업무 실적 저장/수정
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());																				//오류메시지
+			
+		};
+		
+		ModelAndView  mav = new ModelAndView("detailedWorkMst");													//detailedWorkMst model 선언
+		mav.setViewName("contents/report/detailedWorkMst.tiles");													//jsp 경로
+		logger.info("================================ E N D ================================");						//insertDetailedWork 종료
+		return mav;
+	}
+
+	
+	/**
+	 * 세부업무 실적 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@ResponseBody
+	@RequestMapping(value="/deleteDetailedWork", method = {RequestMethod.POST}) 
+	public ModelAndView DeleteDetailedWork(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");						//deleteDetailedWork 시작
+
+		try {
+			
+			reportService.deleteDetailedWork(request);																//세부업무 삭제
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());																				//오류메시지
+			
+		};
+		
+		ModelAndView  mav = new ModelAndView("detailedWorkMst");													//DetailedWork model 선언
+		mav.setViewName("contents/report/detailedWorkMst.tiles");													//jsp 경로
+		mav.addObject("resultCode", "0000");																		//반환코드
+		logger.info("================================ E N D ================================");						//deleteDetailedWork 종료
+		return mav;
+		
+	}
+	
+	
+	/**
+	 * 주요계약 현황
+	 * 주요계약 현황 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/contractList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView ContractList(HttpServletRequest request, Model model
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+
+		logger.info("================================ START ================================");						//contractList 시작
+		
+		logger.info("param addList : "+addList);
+		
+		List<ContractMstVO> contractList = new ArrayList<ContractMstVO>();											//테이블 리스트
+			
+		try {
+		
+			contractList =  reportService.selectContractList(request, addList);										//주요계약현황 목록
+	
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("contractList", contractList);															//테이블 리스트
+			resultMap.put("contractCnt", contractList.size());														//테이블 수 
+			resultMap.put("addList", addList);																		//add:행추가 / normal:일반 출력
+			
+			ModelAndView  mav = new ModelAndView("contents/report/contractMst.tiles",resultMap);					//contractList model 선언
+			logger.info("================================ E N D ================================");					//contractList 종료
+			return mav;																								//mav리턴
+			
+		}catch(Exception e) {
+			
+			ModelAndView  mav = new ModelAndView("ContractList");													//contractList model 선언
+			mav.setViewName("contents/report/contractMst.tiles");			
+			logger.error(e.toString());																				//오류메시지
+			return mav;																								//mav리턴
+			
+		}//catch
+
+	}//contractList
+	
+	
+	/**
+	 * 주요계약현황 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@ResponseBody
+	@RequestMapping(value="/insertContract", method = {RequestMethod.POST}) 
+	public ModelAndView InsertContract(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");						//insertContract 시작
+
+		try {
+			
+			reportService.insertContract(request);																	//주요계약현황 저장/수정
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());																				//오류메시지
+			
+		};
+		
+		ModelAndView  mav = new ModelAndView("ContractList");														//insertContract model 선언
+		mav.setViewName("contents/report/contractMst.tiles");																		//jsp 경로
+		logger.info("================================ E N D ================================");						//insertContract 종료
+		return mav;
+	}
+	
+	
+	/**
+	 * 주요계약현황 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@ResponseBody
+	@RequestMapping(value="/deleteContract", method = {RequestMethod.POST}) 
+	public ModelAndView DeleteContract(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");						//deleteContract 시작
+
+		try {
+			
+			reportService.deleteContract(request);																	//주요계약현황 삭제
+			
+		}catch(Exception e) {
+			
+			logger.error(e.toString());																				//오류메시지
+			
+		};
+		
+		ModelAndView  mav = new ModelAndView("MenuList");															//deleteContract model 선언
+		mav.setViewName("contents/report/contractMst.tiles");														//jsp 경로
+		mav.addObject("resultCode", "0000");																		//반환코드
+		logger.info("================================ E N D ================================");						//deleteContract 종료
+		return mav;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 교육 현황
+	 * 교육 현황 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/trainingList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView TrainingList(HttpServletRequest request, Model model
+								, @RequestParam(value="trainingDate", required =false, defaultValue="0000") String trainingDate
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+
+		logger.info("================================ START ================================");						//trainingList 시작
+		
+		logger.info("param addList : "+addList);
+		
+		List<TrainingMstVO> trainingList = new ArrayList<TrainingMstVO>();											//trainingList 리스트
+			
+		try {
+		
+			trainingList =  reportService.selectTrainingList(request, trainingDate, addList);						//교육현황 목록
+	
+			//--------------------------------------- 
+			//기준년도의 default는 "0000"
+			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
+			//---------------------------------------
+			if("0000".equals(trainingDate)) {
+				
+				LocalDate now = LocalDate.now();																	//현재 날짜
+				trainingDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));								//년월일 파싱 2020.10.10 
+				trainingDate = trainingDate.substring(0,4);															//년도 파싱 2020
+				
+			}
+			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("trainingList", trainingList);															//테이블 리스트
+			resultMap.put("trainingCnt", trainingList.size());														//테이블 수 
+			resultMap.put("trainingDate", trainingDate);															//교육일자
+			resultMap.put("addList", addList);																		//add:행추가 / normal:일반 출력
+			
+			ModelAndView  mav = new ModelAndView("contents/report/trainingMst.tiles",resultMap);					//trainingList model 선언
+			logger.info("================================ E N D ================================");					//trainingList 종료
+			return mav;																								//mav리턴
+			
+		}catch(Exception e) {
+			
+			ModelAndView  mav = new ModelAndView("TrainingList");													//trainingList model 선언
+			mav.setViewName("contents/report/trainingMst.tiles");			
+			logger.error(e.toString());																				//오류메시지
+			return mav;																								//mav리턴
+			
+		}//catch
+
+	}//contractList
 	
 }
