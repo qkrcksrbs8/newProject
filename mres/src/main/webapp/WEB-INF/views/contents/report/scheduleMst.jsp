@@ -18,10 +18,10 @@
     display: none;
     position:absolute;  
     left:50%;
-    top:50px;
-    margin-left: -500px;
-    width:1000px;
-    height:500px;
+    top:100px;
+    margin-left: -300px;
+    width:300px;
+    height:200px;
     background-color:#FFF;
     z-index:10000;   
  }
@@ -53,6 +53,7 @@ $(function(){
 		$("#tableAdd").attr("disabled", true);	//행추가 버튼 비활성화 수정 중일 때 
 		
 	};//if
+	
    	
 });
 
@@ -174,15 +175,39 @@ $(function(){
         <div id = "container">  
             <div id="mask"></div>
             <div class="window">
-                <p style="width:1000px;height:500px;text-align:center;vertical-align:middle;">팝업 내용 입력</p>
-                	
-                	<button> 저장 </button>
+            
+                	<form action="file" method="post" enctype="multipart/form-data">
+						<fieldset>
+							<table>
+								<tr>
+									<th>파일</th>
+									<td><input type="file" name="file" required="required"></td>
+								</tr>
+								<tr>
+									<th>내용</th>
+									<td><input type="text" name="file_content" required="required" placeholder="파일 내용"></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input type="submit" value="저장">
+										<input type="reset" value="취소">
+									</td>
+								</tr>
+							</table>
+							<input type="hidden" id="table_seq" name="table_seq" val="">
+							<input type="hidden" id="table_name" name="table_name" val="">
+						</fieldset>
+					</form>
                 	
                 <p style="text-align:center; background:#ffffff; padding:20px;"><a href="#" class="close">닫기X</a></p>
             </div>
             
         </div>
     </div>
+    
+    
+    
+    
 	
 <div>
 </div>

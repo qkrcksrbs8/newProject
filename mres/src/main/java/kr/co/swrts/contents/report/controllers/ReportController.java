@@ -1,5 +1,7 @@
 package kr.co.swrts.contents.report.controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
+import kr.co.swrts.contents.report.domains.FileVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 import kr.co.swrts.contents.report.services.ReportService;
@@ -436,5 +440,32 @@ public class ReportController {
 		}//catch
 
 	}//contractList
+	
+	
+//	@RequestMapping(value = "/file", method = RequestMethod.GET)
+//	public ModelAndView fileForm() {
+//		ModelAndView mv = new ModelAndView();
+//		mv.setViewName("fileForm");
+//		return mv;
+//	}
+	
+	/**
+	*파일 업로드/다운로드
+	*@param dto
+	*@param file
+	*@return
+	*/
+	@RequestMapping(value = "/file", method = {RequestMethod.POST,RequestMethod.GET})
+	public String fileSubmit(FileVO fileVO
+							, @RequestParam("file") MultipartFile file
+							, @RequestParam("table_seq") int table_seq) {
+		
+		
+		reportService.fileInsert(fileVO, file, table_seq);
+		
+		/* 데이터 베이스 처리를 현재 위치에서 처리*/
+		return "redirect:scheduleList";
+	}
+
 	
 }

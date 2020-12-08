@@ -39,12 +39,14 @@ if(color != ''){
 	<ul class="menu">
 		<li>
 			<a href="#">연간관리데이터보고서</a>
-			<ul>
-				<li><a href="<%=request.getContextPath()%>/scheduleMst">연간스케쥴</a></li>
-			</ul>
-			<ul>
-				<li><a href="<%=request.getContextPath()%>/detailedWorkMst">세부업무실적</a></li>
+			<ul> 
+				<li><a href="<%=request.getContextPath()%>/scheduleList">연간스케쥴</a></li>
+				<li><a href="<%=request.getContextPath()%>/detailedWorkList">세부업무실적</a></li>
+				<li><a href="#">하자보수현황</a></li>
+				<li><a href="<%=request.getContextPath()%>/contractList">주요계약현황</a></li>
+				<li><a href="<%=request.getContextPath()%>/trainingList">교육현황</a></li>
 			</ul>
 		</li>
+		
 	</ul>
 </nav>

@@ -329,9 +329,16 @@ $(function() {
 		
 	};
 	
-	
 	//검은 막 띄우기
     $(".openMask").click(function(e){
+		var tr = $(this).parent().parent().eq(0);	//클릭한 테이블의 tr
+		var td = tr.children();						//클릭한 테이블의 td
+		var table_seq	= td.eq(0).children().val();//시퀀스
+		var table_name = "schedule_mst";			//테이블 이름
+		
+		$("#table_seq").val(table_seq);				//테이블 시퀀스 필드에 값 셋팅
+		$("#table_name").val(table_name);			//테이블 이름 필드에 값 셋팅
+		
         e.preventDefault();
         wrapWindowByMask();
     });

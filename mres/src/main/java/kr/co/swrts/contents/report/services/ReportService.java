@@ -1,5 +1,7 @@
 package kr.co.swrts.contents.report.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;									//파싱된 VO타입을 담을 변수
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;										//Logger
 import org.slf4j.LoggerFactory;									//로그팩토리
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;									//파싱하기 위한 gson
 import com.google.gson.reflect.TypeToken;						//VO타입을 gson에 적용
@@ -22,6 +25,7 @@ import com.google.gson.reflect.TypeToken;						//VO타입을 gson에 적용
 import kr.co.swrts.contents.report.daos.ReportDao;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
+import kr.co.swrts.contents.report.domains.FileVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 
@@ -557,6 +561,60 @@ public class ReportService {
 			
 		}//try
 		
+	}//selectTrainingList
+
+	
+	public void fileInsert(FileVO fileVO, MultipartFile file, int table_seq) {
+		
+		//-------------------------
+		//파일 내용이 null이 아닐 경우 저장
+		//-------------------------
+		if (file != null) {
+			
+			String fileName = file.getOriginalFilename();		//업로드 파일 이름
+			fileVO.setFile_name(fileName);						//파일VO에 저장
+			
+			try {
+
+				String file_path = "C:"+File.separator+"images"+File.separator+fileVO.getTable_name()+File.separator+fileName;
+				File fileSave = new File(file_path);	//파일경로 지정
+//				Long file_size = fileSave;		//파일 사이즈 구하기부터
+				fileVO.setFile_path(file_path);
+//				fileVO.setFile_size(file_size);
+				fileVO.setFile_seq(table_seq);
+				logger.info(fileVO.toString());
+				//----------------------------------
+				//해당 디렉토리가 없을경우 디렉토리를 생성합니다.
+				//생성 되었을 경우 파일도 생성합니다.
+				//----------------------------------
+				if (!fileSave.exists()) {
+					
+					try{
+						
+						file.transferTo(fileSave);					//파일 업로드.
+				    
+					}catch(Exception e){
+				        	
+					    e.getStackTrace();
+					
+				    }//try - catch        
+			         
+				}else {
+
+					fileSave.mkdir();				 				//폴더 생성합니다.
+					file.transferTo(fileSave);						//파일 업로드
+					logger.info("폴더가 생성되었습니다.");				
+					
+				};//if - else
+				
+			} catch (IOException e) {//입출력 예외처리
+				
+				e.printStackTrace();
+			
+			} // try - catch
+		
+		} // if
+				
 	}
 	
 }
