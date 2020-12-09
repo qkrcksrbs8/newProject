@@ -155,7 +155,6 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	@ResponseBody
 	@RequestMapping(value="/deleteSchedule", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> DeleteSchedule(HttpServletRequest request, Model model) {
 
@@ -244,26 +243,28 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	@ResponseBody
 	@RequestMapping(value="/insertDetailedWork", method = {RequestMethod.POST}) 
-	public ModelAndView InsertDetailedWork(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertDetailedWork(HttpServletRequest request, Model model) {
 
-		logger.info("================================ START ================================");						//insertDetailedWork 시작
+		logger.info("================================ START ================================");	//insertDetailedWork 시작
 
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
 		try {
 			
-			reportService.insertDetailedWork(request);																//세부업무 실적 저장/수정
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.insertDetailedWork(request);					//세부업무 실적 저장/수정
 			
 		}catch(Exception e) {
 			
-			logger.error(e.toString());																				//오류메시지
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
 			
 		};
 		
-		ModelAndView  mav = new ModelAndView("detailedWorkMst");													//detailedWorkMst model 선언
-		mav.setViewName("contents/report/detailedWorkMst.tiles");													//jsp 경로
-		logger.info("================================ E N D ================================");						//insertDetailedWork 종료
-		return mav;
+		logger.info("================================ E N D ================================");	//insertDetailedWork 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
 	}
 
 	
@@ -272,27 +273,28 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	@ResponseBody
 	@RequestMapping(value="/deleteDetailedWork", method = {RequestMethod.POST}) 
-	public ModelAndView DeleteDetailedWork(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeleteDetailedWork(HttpServletRequest request, Model model) {
 
-		logger.info("================================ START ================================");						//deleteDetailedWork 시작
+		logger.info("================================ START ================================");	//deleteDetailedWork 시작
 
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
 		try {
 			
-			reportService.deleteDetailedWork(request);																//세부업무 삭제
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.deleteDetailedWork(request);					//세부업무 삭제
 			
 		}catch(Exception e) {
 			
-			logger.error(e.toString());																				//오류메시지
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
 			
 		};
 		
-		ModelAndView  mav = new ModelAndView("detailedWorkMst");													//DetailedWork model 선언
-		mav.setViewName("contents/report/detailedWorkMst.tiles");													//jsp 경로
-		mav.addObject("resultCode", "0000");																		//반환코드
-		logger.info("================================ E N D ================================");						//deleteDetailedWork 종료
-		return mav;
+		logger.info("================================ E N D ================================");	//deleteDetailedWork 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}
 	
@@ -342,26 +344,28 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	@ResponseBody
 	@RequestMapping(value="/insertContract", method = {RequestMethod.POST}) 
-	public ModelAndView InsertContract(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertContract(HttpServletRequest request, Model model) {
 
-		logger.info("================================ START ================================");						//insertContract 시작
+		logger.info("================================ START ================================");	//insertContract 시작
 
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
 		try {
 			
-			reportService.insertContract(request);																	//주요계약현황 저장/수정
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.insertContract(request);						//주요계약현황 저장/수정
 			
 		}catch(Exception e) {
 			
-			logger.error(e.toString());																				//오류메시지
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
 			
 		};
 		
-		ModelAndView  mav = new ModelAndView("ContractList");														//insertContract model 선언
-		mav.setViewName("contents/report/contractMst.tiles");																		//jsp 경로
-		logger.info("================================ E N D ================================");						//insertContract 종료
-		return mav;
+		logger.info("================================ E N D ================================");	//insertContract 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
 	}
 	
 	
@@ -370,34 +374,29 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	@ResponseBody
 	@RequestMapping(value="/deleteContract", method = {RequestMethod.POST}) 
-	public ModelAndView DeleteContract(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeleteContract(HttpServletRequest request, Model model) {
 
-		logger.info("================================ START ================================");						//deleteContract 시작
-
+		logger.info("================================ START ================================");	//deleteContract 시작
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
 		try {
 			
-			reportService.deleteContract(request);																	//주요계약현황 삭제
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.deleteContract(request);						//주요계약현황 삭제
 			
 		}catch(Exception e) {
 			
-			logger.error(e.toString());																				//오류메시지
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
 			
 		};
 		
-		ModelAndView  mav = new ModelAndView("MenuList");															//deleteContract model 선언
-		mav.setViewName("contents/report/contractMst.tiles");														//jsp 경로
-		mav.addObject("resultCode", "0000");																		//반환코드
-		logger.info("================================ E N D ================================");						//deleteContract 종료
-		return mav;
+		logger.info("================================ E N D ================================");	//deleteContract 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}
-	
-	
-	
-	
-	
 	
 	
 	/**

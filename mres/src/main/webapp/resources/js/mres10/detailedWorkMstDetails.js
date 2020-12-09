@@ -88,18 +88,30 @@ $(function() {
 		$.ajax({
 			 method: "POST"
 			,url : url
+			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
 			}
 		}).done(function(data){//통신 성공
-			alert("저장성공!");
-		    var workDate = $("#selectCode").val();					//셀렉트박스  2020, 2019, 2018 ...
-		    $("#workDate").val(workDate);							//업무구분
-		    $("#addList").val("normal");							//행추가 변수 값 add
-			$("#selectForm").submit();								//서브밋
+
+			if("0000" == data.resultCode){
+				
+			    var workDate = $("#selectCode").val();					//셀렉트박스  2020, 2019, 2018 ...
+			    $("#workDate").val(workDate);							//업무구분
+			    $("#addList").val("normal");							//행추가 변수 값 add
+				$("#selectForm").submit();								//서브밋
+				
+			} else if ("9000" == data.resultCode){
+				
+				alert("관리자에게 문의주세요.");
+				
+			} else{
+				
+				alert("알 수 없는 에러. 관리자에게 문의해주세요.");	
+			}
 			
 		}).fail(function(data){//통신 실패
-			alert("저장실패");
+			alert("네트워크가 원활하지 않습니다. 잠시 후 시도해주세요.");
 		})
 		
 	})
@@ -261,26 +273,37 @@ $(function() {
 		$.ajax({
 			 type: "POST"
 			,url : url
+			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
 			}
-		}).done(function(response){//통신 성공
+		}).done(function(data){//통신 성공
 			
-			//--------------------------
-			//행추가를 삭제하면 행추가 버튼 활성화
-			//--------------------------
-			if(0 == seq){
-				$("#tableAdd").attr("disabled", false);	//행추가 버튼 활성화 
-			};//if
-			
-			var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
-			checkbox.parent().parent().remove();
-			alert("삭제성공!");
+			if("0000" == data.resultCode){
+				
+				//--------------------------
+				//행추가를 삭제하면 행추가 버튼 활성화
+				//--------------------------
+				if(0 == seq){
+					$("#tableAdd").attr("disabled", false);	//행추가 버튼 활성화 
+				};//if
+				
+				var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
+				checkbox.parent().parent().remove();
+				alert("삭제성공!");
 
-			return;//테스트 중
+			} else if ("9000" == data.resultCode){
+				
+				alert("관리자에게 문의주세요.");
+				
+			} else{
+				
+				alert("알 수 없는 에러. 관리자에게 문의해주세요.");
+				
+			}
 			
 		}).fail(function(data){//통신 실패
-			alert("삭제실패");
+			alert("네트워크가 원활하지 않습니다. 잠시 후 시도해주세요.");
 			return;
 		})
 		
