@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
+import kr.co.swrts.contents.report.domains.FileMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 
@@ -194,12 +195,32 @@ public class ReportDaoImle implements ReportDao {
 	}
 	
 	/**
-	 * 주요계약현황 리스트
+	 * 교육현황 리스트
 	 * @param map
 	 * @return
 	 * @throws Exception
 	 */
 	public List<TrainingMstVO> selectTrainingList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectTrainingList", map);
+	}
+	
+	/**
+	 * 파일 정보 저장
+	 * @param contractVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertFile(FileMstVO fileMstVO) throws Exception {
+		return sql.getSqlSession().insert("insertFile", fileMstVO);
+	}
+
+	/**
+	 * 주요계약현황 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectFileSeq(FileMstVO fileMstVO) throws Exception {
+		return sql.getSqlSession().selectOne("selectFileSeq", fileMstVO);
 	}
 }

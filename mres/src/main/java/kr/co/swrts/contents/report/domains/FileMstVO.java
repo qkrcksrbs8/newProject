@@ -13,7 +13,7 @@ package kr.co.swrts.contents.report.domains;
  *@see
  *@Modification Information
  */
-public class FileVO {
+public class FileMstVO {
 
 	private int file_seq 			= 0;			//파일 번호
 	private String file_date		= new String();	//업로드 일자
@@ -103,7 +103,7 @@ public class FileVO {
 	
 	@Override
 	public String toString() {
-		return "FileVO [file_seq=" + file_seq + ", file_date=" + file_date + ", file_content=" + file_content
+		return "FileMstVO [file_seq=" + file_seq + ", file_date=" + file_date + ", file_content=" + file_content
 				+ ", file_name=" + file_name + ", file_path=" + file_path + ", file_size=" + file_size + ", table_name="
 				+ table_name + ", useflag=" + useflag + ", created_date=" + created_date + ", created_by=" + created_by
 				+ ", last_update_date=" + last_update_date + ", last_update_by=" + last_update_by + "]";

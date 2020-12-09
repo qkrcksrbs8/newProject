@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
-import kr.co.swrts.contents.report.domains.FileVO;
+import kr.co.swrts.contents.report.domains.FileMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 import kr.co.swrts.contents.report.services.ReportService;
@@ -69,7 +72,7 @@ public class ReportController {
 	public String home(Locale locale, Model model) {
 		 return "contents/main/main.tiles";
 	}
-	 
+	
 	 
 	/**
 	*연간스케쥴 조회
@@ -84,11 +87,13 @@ public class ReportController {
 			, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 		
 		logger.info("================================ START ================================");						//scheduleList 시작
+													//상태 값 선언
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();											//리턴해주는 데이터를 담을 map
 		
 		try{
-	
+
 			List<ScheduleMstVO> scheduleList = new ArrayList<ScheduleMstVO>();										//연간스케쥴VO List		
-			Map<String, Object> resultMap = new HashMap<String, Object>();											//리턴해주는 데이터를 담을 map
+			
 			
 			scheduleList = reportService.selectScheduleList(request, division, addList);							//연간스케쥴 조회
 			resultMap.put("resultCode", "0000");																	//응답코드	 0000:정상  / 9000:비정상
@@ -100,6 +105,7 @@ public class ReportController {
 			
 			logger.info("================================ E N D ================================");					//scheduleList 종료
 			return mav;
+			
 		}catch(Exception e) {
 			
 			logger.error("java.lang.Exception : ReportController.scheduleMst()");
@@ -117,27 +123,29 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	@ResponseBody
 	@RequestMapping(value="/insertSchedule", method = {RequestMethod.POST}) 
-	public ModelAndView InsertSchedule(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertSchedule(HttpServletRequest request, Model model) {
 
 		logger.info("================================ START ================================");						//insertSchedule 시작
-
+		
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
 		try {
 			
-			reportService.insertSchedule(request);																	//연간스케쥴 저장/수정
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.insertSchedule(request);						//연간스케쥴 저장/수정
 			
 		}catch(Exception e) {
 
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
 			logger.error("java.lang.Exception : ReportController.insertSchedule()");
-			logger.error(e.toString());																				//오류메시지
+			logger.error(e.toString());									//오류메시지
 			
 		};
 		
-		ModelAndView  mav = new ModelAndView("MenuList");															//Report model 선언
-		mav.setViewName("contents/report/scheduleMst.tiles");																			//jsp 경로
 		logger.info("================================ E N D ================================");						//insertSchedule 종료
-		return mav;
+		return new ResponseEntity<Map>(resultMap, statusCode);
 	}
 
 	
@@ -149,24 +157,28 @@ public class ReportController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/deleteSchedule", method = {RequestMethod.POST}) 
-	public ModelAndView DeleteSchedule(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeleteSchedule(HttpServletRequest request, Model model) {
 
 		logger.info("================================ START ================================");						//deleteSchedule 시작
-
+		
+		HttpStatus statusCode = HttpStatus.OK;							//status 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
 		try {
 			
-			reportService.deleteSchedule(request);																	//연간스케쥴 삭제
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.deleteSchedule(request);						//연간스케쥴 삭제
 			
 		}catch(Exception e) {
 			
-			logger.error(e.toString());																				//오류메시지
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
 			
 		};
 		
-		ModelAndView  mav = new ModelAndView("MenuList");															//Report model 선언
-		mav.setViewName("contents/report/scheduleMst.tiles");														//jsp 경로
 		logger.info("================================ E N D ================================");						//deleteSchedule 종료
-		return mav;
+		
+		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}
 	
@@ -456,12 +468,12 @@ public class ReportController {
 	*@return
 	*/
 	@RequestMapping(value = "/file", method = {RequestMethod.POST,RequestMethod.GET})
-	public String fileSubmit(FileVO fileVO
+	public String fileSubmit(HttpServletRequest request, FileMstVO fileMstVO
 							, @RequestParam("file") MultipartFile file
 							, @RequestParam("table_seq") int table_seq) {
 		
 		
-		reportService.fileInsert(fileVO, file, table_seq);
+		reportService.fileInsert(request, fileMstVO, file, table_seq);
 		
 		/* 데이터 베이스 처리를 현재 위치에서 처리*/
 		return "redirect:scheduleList";

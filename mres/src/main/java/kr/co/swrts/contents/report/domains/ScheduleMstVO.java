@@ -32,12 +32,10 @@ public class ScheduleMstVO {
 	private String schedule_oct = 		"0";			//10월
 	private String schedule_nov = 		"0";			//11월
 	private String schedule_dec = 		"0";			//12월
-	private String entity = 			new String();	//관리주체
-	private String contract =			new String();	//계약서
-	private String file_name =			"파일업로드"; 		//파일이름
-	private String file_data =			new String();	//파일데이터
-	private String file_content =		new String();	//파일내용
-	private String file_date = 			new String();	//업로드일자
+	private String entity 		= 		new String();	//관리주체
+	private String contract 	=		new String();	//계약서
+	private String file_name 	=		"파일업로드"; 		//파일이름
+	private int file_seq 		=		0;				//파일시퀀스자
 	private String useflag = 			new String();	//사용구분
 	private String created_date = 		new String();	//최초생성일
 	private String created_by = 		new String();	//최초생성자
@@ -164,23 +162,11 @@ public class ScheduleMstVO {
 	public void setFile_name(String file_name) {
 		this.file_name = file_name;
 	}
-	public String getFile_data() {
-		return file_data;
+	public int getFile_seq() {
+		return file_seq;
 	}
-	public void setFile_data(String file_data) {
-		this.file_data = file_data;
-	}
-	public String getFile_content() {
-		return file_content;
-	}
-	public void setFile_content(String file_content) {
-		this.file_content = file_content;
-	}
-	public String getFile_date() {
-		return file_date;
-	}
-	public void setFile_date(String file_date) {
-		this.file_date = file_date;
+	public void setFile_seq(int file_seq) {
+		this.file_seq = file_seq;
 	}
 	public String getUseflag() {
 		return useflag;
@@ -221,10 +207,9 @@ public class ScheduleMstVO {
 				+ schedule_apr + ", schedule_may=" + schedule_may + ", schedule_jun=" + schedule_jun + ", schedule_jul="
 				+ schedule_jul + ", schedule_aug=" + schedule_aug + ", schedule_sep=" + schedule_sep + ", schedule_oct="
 				+ schedule_oct + ", schedule_nov=" + schedule_nov + ", schedule_dec=" + schedule_dec + ", entity="
-				+ entity + ", contract=" + contract + ", file_name=" + file_name + ", file_data=" + file_data
-				+ ", file_content=" + file_content + ", file_date=" + file_date + ", useflag=" + useflag
-				+ ", created_date=" + created_date + ", created_by=" + created_by + ", last_update_date="
-				+ last_update_date + ", last_update_by=" + last_update_by + "]";
+				+ entity + ", contract=" + contract + ", file_name=" + file_name + ", file_seq=" + file_seq
+				+ ", useflag=" + useflag + ", created_date=" + created_date + ", created_by=" + created_by
+				+ ", last_update_date=" + last_update_date + ", last_update_by=" + last_update_by + "]";
 	}
 	
 }

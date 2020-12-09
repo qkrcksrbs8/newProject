@@ -22,32 +22,28 @@
 <select id="selectScheduleList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.ScheduleMstVO">
 /* selectScheduleList */
 	SELECT
-        SCHEDULE_SEQ
-        , DIVISION 
-	 	, COMPANY_CODE
-		, WORK_INFO
-		, CHECK_CYCLE 
-		, SCHEDULE_JAN
-		, SCHEDULE_FEB
-		, SCHEDULE_MAR
-		, SCHEDULE_APR 
-		, SCHEDULE_MAY
-		, SCHEDULE_JUN
-		, SCHEDULE_JUL
-		, SCHEDULE_AUG
-		, SCHEDULE_SEP
-		, SCHEDULE_OCT
-		, SCHEDULE_NOV
-		, SCHEDULE_DEC
-		, ENTITY
-        , CONTRACT
-        , FILE_NAME
-<!--         , FILE_DATA -->
-        , FILE_CONTENT
-<!--         , FILE_DATE -->
-        , USEFLAG
-        
-	FROM SCHEDULE_MST
+        A.SCHEDULE_SEQ 		AS SCHEDULE_SEQ
+        , A.DIVISION 		AS DIVISION 
+	 	, A.COMPANY_CODE 	AS COMPANY_CODE
+		, A.WORK_INFO 		AS WORK_INFO
+		, A.CHECK_CYCLE 	AS CHECK_CYCLE 
+		, A.SCHEDULE_JAN 	AS SCHEDULE_JAN
+		, A.SCHEDULE_FEB 	AS SCHEDULE_FEB
+		, A.SCHEDULE_MAR 	AS SCHEDULE_MAR
+		, A.SCHEDULE_APR 	AS SCHEDULE_APR 
+		, A.SCHEDULE_MAY 	AS SCHEDULE_MAY
+		, A.SCHEDULE_JUN 	AS SCHEDULE_JUN
+		, A.SCHEDULE_JUL 	AS SCHEDULE_JUL
+		, A.SCHEDULE_AUG 	AS SCHEDULE_AUG
+		, A.SCHEDULE_SEP 	AS SCHEDULE_SEP
+		, A.SCHEDULE_OCT 	AS SCHEDULE_OCT
+		, A.SCHEDULE_NOV 	AS SCHEDULE_NOV
+		, A.SCHEDULE_DEC 	AS SCHEDULE_DEC
+		, A.ENTITY 			AS ENTITY
+        , A.CONTRACT 		AS CONTRACT
+        , A.FILE_SEQ 		AS FILE_SEQ
+        , A.USEFLAG 		AS USEFLAG
+	FROM SCHEDULE_MST A
 	WHERE USEFLAG = #{useflag}
 	<if test='division != null  and division != ""'>
 		and DIVISION	=	#{division}
@@ -77,7 +73,6 @@
 	    ,SCHEDULE_DEC
 	    ,ENTiTY
 	    ,CONTRACT
-	    ,FILE_NAME
 	    ,CREATED_BY
 	    ,LAST_UPDATE_BY
 	) values (
@@ -99,7 +94,6 @@
 	    ,#{schedule_dec}
 	    ,#{entity}
 	    ,#{contract}
-	    ,#{file_name}
 	    ,#{created_by}
 	    ,#{last_update_by}
 	)
@@ -156,10 +150,13 @@
 		,SCHEDULE_DEC	=	#{schedule_dec}
  	</if>
  	<if test='entity != null  and entity != ""'>
-		,ENTITY	=	#{entity}
+		,ENTITY			=	#{entity}
  	</if>
  	<if test='contract != null  and contract != ""'>
-		,CONTRACT	=	#{contract}
+		,CONTRACT		=	#{contract}
+ 	</if>
+ 	<if test='file_seq != null  and file_seq != 0'>
+		,FILE_SEQ		=	#{file_seq}
  	</if>
 	where SCHEDULE_SEQ 	=	#{schedule_seq}
 	
@@ -393,6 +390,56 @@
     FROM TRAINING_MST
 	WHERE USEFLAG = #{useflag}
  	ORDER BY TRAINING_SEQ ASC
+	
+</select>
+
+
+<select id="selectFileList" parameterType="kr.co.swrts.contents.report.domains.FileMstVO" resultType="kr.co.swrts.contents.report.domains.FileMstVO">
+/* "selectFileList" */
+	SELECT
+		FILE_SEQ
+		, FILE_DATE
+	    , FILE_CONTENT
+	    , FILE_NAME
+	    , FILE_PATH
+	    , FILE_SIZE
+    FROM FILE_MST
+	WHERE TABLE_SEQ = #{table_seq}
+	<if test='table_name != null  and table_name != ""'>
+		and TABLE_NAME			=	#{table_name}
+ 	</if>
+	
+</select>
+
+<insert id="insertFile" parameterType="kr.co.swrts.contents.report.domains.FileMstVO">
+/* insertFile */
+	INSERT INTO FILE_MST (
+	    FILE_DATE
+	    , FILE_CONTENT
+	    , FILE_NAME
+	    , FILE_PATH
+	    , FILE_SIZE
+	    , TABLE_NAME
+		, CREATED_BY
+	    , LAST_UPDATE_BY
+	) values (
+	    NOW()
+	    ,#{file_content}
+	    ,#{file_name}
+	    ,#{file_path}
+	    ,#{file_size}
+	    ,#{table_name}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<select id="selectFileSeq" parameterType="kr.co.swrts.contents.report.domains.FileMstVO" resultType="int">
+/* "selectFileSeq" */
+	SELECT
+		FILE_SEQ
+    FROM FILE_MST
+	WHERE FILE_PATH = #{file_path}
 	
 </select>
 

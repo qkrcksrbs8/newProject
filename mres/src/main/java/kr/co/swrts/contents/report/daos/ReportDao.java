@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
+import kr.co.swrts.contents.report.domains.FileMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 
@@ -153,5 +154,19 @@ public interface ReportDao {
 	*/
 	public List<TrainingMstVO> selectTrainingList(Map<String, Object> map) throws Exception;
 	
+	/**
+	 * 파일 정보 저장
+	 * @param contractVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertFile(FileMstVO fileMstVO) throws Exception;
 	
+	/**
+	 * 파일 시퀀스 조회
+	 * @param contractVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectFileSeq(FileMstVO fileMstVO) throws Exception;
 }

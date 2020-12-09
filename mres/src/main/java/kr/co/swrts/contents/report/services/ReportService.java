@@ -25,7 +25,7 @@ import com.google.gson.reflect.TypeToken;						//VO타입을 gson에 적용
 import kr.co.swrts.contents.report.daos.ReportDao;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
-import kr.co.swrts.contents.report.domains.FileVO;
+import kr.co.swrts.contents.report.domains.FileMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 
@@ -57,6 +57,13 @@ public class ReportService {
 	@Autowired
 	private ReportDao reportDao;
 
+	/**
+	*연간데이터 보고서 리스트 조회
+	*@param request
+	*@param division
+	*@param addList
+	*@return
+	*/
 	public List<ScheduleMstVO> selectScheduleList(HttpServletRequest request, String division, String addList){
 		
 		logger.info("================================ START ================================");
@@ -112,10 +119,10 @@ public class ReportService {
 	};//selectScheduleList
 	
 	
-	
 	/**
-	 * 연간스케쥴 저장 메서드입니다. 
-	 */
+	*연간스케쥴 저장 메서드입니다.
+	*@param request
+	*/
 	public void insertSchedule(HttpServletRequest request) {
 		
 		logger.info("================================ START ================================");
@@ -153,8 +160,9 @@ public class ReportService {
 	
 	
 	/**
-	 * 연간스케쥴 삭제 메서드입니다.
-	 */
+	*연간스케쥴 삭제 메서드입니다.
+	*@param request
+	*/
 	public void deleteSchedule(HttpServletRequest request) {
 		
 		logger.info("================================ START ================================");
@@ -191,8 +199,12 @@ public class ReportService {
 	}
 	
 	/**
-	 * 세무업무 실적 리스트 조회
-	 */
+	*세무업무 실적 리스트 조회
+	*@param request
+	*@param workDate
+	*@param addList
+	*@return
+	*/
 	public List<DetailedWorkMstVO> selectDetailedWorkList(HttpServletRequest request, String workDate, String addList) {
 		
 		logger.info("================================ START ================================");
@@ -254,8 +266,10 @@ public class ReportService {
 	}
 	
 	/**
-	 * 세부업무 실적 저장/수정
-	 */
+	*세부업무 실적 저장/수정
+	*@param request
+	*@throws Exception
+	*/
 	public void insertDetailedWork(HttpServletRequest request) throws Exception {
 		
 		logger.info("================================ START ================================");
@@ -291,8 +305,9 @@ public class ReportService {
 	}
 	
 	/**
-	 * 세부업무 실적 삭제
-	 */
+	*세부업무 실적 삭제
+	*@param request
+	*/
 	public void deleteDetailedWork(HttpServletRequest request) {
 
 		logger.info("================================ START ================================");
@@ -328,10 +343,12 @@ public class ReportService {
 		
 	}
 	
-	
 	/**
-	 * 주요현황 리스트 조회
-	 */
+	*주요현황 리스트 조회
+	*@param request
+	*@param addList
+	*@return
+	*/
 	public List<ContractMstVO> selectContractList(HttpServletRequest request, String addList) {
 		
 		logger.info("================================ START ================================");
@@ -378,10 +395,11 @@ public class ReportService {
 		
 	}//contractList
 	
-	
 	/**
-	 * 주요계약현황 저장/수정
-	 */
+	*주요계약현황 저장/수정
+	*@param request
+	*@throws Exception
+	*/
 	public void insertContract(HttpServletRequest request) throws Exception {
 		
 		logger.info("================================ START ================================");
@@ -457,11 +475,10 @@ public class ReportService {
 		
 	}
 	
-	
-	
 	/**
-	 * 주요계약현황 삭제
-	 */
+	*주요계약현황 삭제
+	*@param request
+	*/
 	public void deleteContract(HttpServletRequest request) {
 
 		logger.info("================================ START ================================");
@@ -497,12 +514,13 @@ public class ReportService {
 		
 	}
 	
-	
-	
-	
 	/**
-	 * 세무업무 실적 리스트 조회
-	 */
+	*세무업무 실적 리스트 조회
+	*@param request
+	*@param trainingDate
+	*@param addList
+	*@return
+	*/
 	public List<TrainingMstVO> selectTrainingList(HttpServletRequest request, String trainingDate, String addList) {
 		
 		logger.info("================================ START ================================");
@@ -564,52 +582,76 @@ public class ReportService {
 	}//selectTrainingList
 
 	
-	public void fileInsert(FileVO fileVO, MultipartFile file, int table_seq) {
+	/**
+	*파일 저장
+	*@param request
+	*@param fileMstVO
+	*@param file
+	*@param table_seq
+	*/
+	public void fileInsert(HttpServletRequest request, FileMstVO fileMstVO, MultipartFile file, int table_seq) {
 		
 		//-------------------------
 		//파일 내용이 null이 아닐 경우 저장
 		//-------------------------
 		if (file != null) {
 			
-			String fileName = file.getOriginalFilename();		//업로드 파일 이름
-			fileVO.setFile_name(fileName);						//파일VO에 저장
+			String fileName = file.getOriginalFilename();	//업로드 파일 이름
+			fileMstVO.setFile_name(fileName);				//파일VO에 저장
 			
 			try {
-
-				String file_path = "C:"+File.separator+"images"+File.separator+fileVO.getTable_name()+File.separator+fileName;
+				
+				String path = "";
+				path =request.getSession().getServletContext().getRealPath("/");//경로
+				
+				
+				String file_path = path+"images"+File.separator+fileMstVO.getTable_name()+File.separator+fileMstVO.getFile_name();	//파일경로
 				File fileSave = new File(file_path);	//파일경로 지정
-//				Long file_size = fileSave;		//파일 사이즈 구하기부터
-				fileVO.setFile_path(file_path);
-//				fileVO.setFile_size(file_size);
-				fileVO.setFile_seq(table_seq);
-				logger.info(fileVO.toString());
+				Long file_size = fileSave.length();		//파일 사이즈 구하기부터
+				fileMstVO.setFile_path(file_path);		//파일 경로
+				fileMstVO.setFile_size(file_size);		//파일 용량
+				logger.info(" path : "+path);
+				logger.info("file_path : "+file_path);
+				logger.info("file_size : "+file_size);
+				logger.info(fileMstVO.toString());
+				
 				//----------------------------------
 				//해당 디렉토리가 없을경우 디렉토리를 생성합니다.
 				//생성 되었을 경우 파일도 생성합니다.
 				//----------------------------------
 				if (!fileSave.exists()) {
 					
-					try{
+					try{//해당 경로에 파일이 없을 경우
 						
-						file.transferTo(fileSave);					//파일 업로드.
-				    
+						fileSave.mkdirs();				 						//폴더 생성합니다.
+						file.transferTo(fileSave);								//파일 업로드.
+						reportDao.insertFile(fileMstVO);						//파일 정보 저장  
+						int file_Seq = reportDao.selectFileSeq(fileMstVO);		//파일 시퀀스
+						
+						//----------------------
+						//스케쥴 데이터에 파일 시퀀스 저장
+						//----------------------
+						if("schedule_mst".equals(fileMstVO.getTable_name())){
+
+							ScheduleMstVO scheduleMstVO = new ScheduleMstVO();	//연간데이터VO
+							scheduleMstVO.setSchedule_seq(table_seq);			//연간데이터seq
+							scheduleMstVO.setFile_seq(file_Seq);				//연간데이터 파일번호
+							reportDao.updateSchedule(scheduleMstVO);			//연간데이터 업데이트
+							
+						};//if
+						
+						
 					}catch(Exception e){
-				        	
-					    e.getStackTrace();
+
+						logger.error("!fileSave.exists() : "+e.toString());
 					
 				    }//try - catch        
 			         
-				}else {
-
-					fileSave.mkdir();				 				//폴더 생성합니다.
-					file.transferTo(fileSave);						//파일 업로드
-					logger.info("폴더가 생성되었습니다.");				
-					
-				};//if - else
+				};//if
 				
-			} catch (IOException e) {//입출력 예외처리
+			} catch (Exception e) {//입출력 예외처리
 				
-				e.printStackTrace();
+				logger.error("file != null : "+e.toString());
 			
 			} // try - catch
 		

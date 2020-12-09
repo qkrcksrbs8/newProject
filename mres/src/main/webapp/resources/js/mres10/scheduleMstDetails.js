@@ -105,18 +105,36 @@ $(function() {
 		$.ajax({
 			 method: "POST"
 			,url : url
+			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
 			}
-		}).done(function(){//통신 성공
-			alert("저장성공!");
-		    var division = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-		    $("#division").val(division);							//업무구분
-		    $("#addList").val("normal");							//행추가 변수 값 add
-			$("#selectForm").submit();								//서브밋
+		}).done(function(data){//통신 성공
 			
-		}).fail(function(){//통신 실패
-			alert("저장실패");
+			//---------
+			//0000:정상 / 
+			//---------
+			if("0000" == data.resultCode){
+				
+				var division = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+			    $("#division").val(division);							//업무구분
+			    $("#addList").val("normal");							//행추가 변수 값 add
+				$("#selectForm").submit();								//서브밋
+					
+			} else if ("9000" == data.resultCode){
+				
+				alert("관리자에게 문의주세요.");
+				
+			} else{
+				
+				alerT("알 수 없는 에러. 관리자에게 문의해주세요.");
+				
+			}
+		    
+			
+			
+		}).fail(function(data){//통신 실패
+			alert("네트워크가 원활하지 않습니다. 잠시 후 다시 시도해주세요.");
 		});//ajax		
 		
 	})
@@ -255,11 +273,12 @@ $(function() {
 		});
 
 		var stringJson = JSON.stringify(jsonArr); 			//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./deleteSchedule";					//url 테이블 데이터 삭제
+		var url = "./deleteSchedule";						//url 테이블 데이터 삭제
 		
 		$.ajax({
 			 type: "POST"
 			,url : url
+			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
 			}
@@ -272,14 +291,18 @@ $(function() {
 				$("#tableAdd").attr("disabled", false);	//행추가 버튼 활성화 
 			};//if
 			
-			var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
-			checkbox.parent().parent().remove();
-			alert("삭제성공!");
-
-			return;//삭제 성공
+			if("0000" == data.resultCode){
+				
+				alert("삭제되었습니다.");
+				var division = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+			    $("#division").val(division);							//업무구분
+			    $("#addList").val("normal");							//행추가 변수 값 add
+				$("#selectForm").submit();								//서브밋
+					
+			};//if
 			
 		}).fail(function(data){//통신 실패
-			alert("삭제실패");
+			alert("네트워크가 원활하지 않습니다. 잠시 후 다시 시도해주세요.");
 			return;
 		});//fail
 		
