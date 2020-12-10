@@ -1,7 +1,5 @@
 package kr.co.swrts.contents.report.controllers;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,19 +17,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
+import javax.servlet.http.HttpServletResponse;
 import kr.co.swrts.contents.report.services.ReportService;
 
 /**
@@ -123,6 +121,7 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertSchedule", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> InsertSchedule(HttpServletRequest request, Model model) {
 
@@ -155,6 +154,7 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteSchedule", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> DeleteSchedule(HttpServletRequest request, Model model) {
 
@@ -243,6 +243,7 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertDetailedWork", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> InsertDetailedWork(HttpServletRequest request, Model model) {
 
@@ -273,6 +274,7 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteDetailedWork", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> DeleteDetailedWork(HttpServletRequest request, Model model) {
 
@@ -297,6 +299,46 @@ public class ReportController {
 		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}
+	
+	
+	/**
+	 * 하자보수현황
+	 * 하자보수현황 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/repairList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView RepairList(HttpServletRequest request, Model model
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+
+		logger.info("================================ START ================================");		//repairList 시작
+		
+		logger.info("param addList : "+addList);
+		
+		List<RepairMstVO> repairList = new ArrayList<RepairMstVO>();		//테이블 리스트
+			
+		try {
+		
+			repairList =  reportService.selectRepairList(request, addList);	//하자보수 리스트 조회
+			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("selectRepairList", repairList);					//테이블 리스트
+			resultMap.put("selectRepairList", repairList.size());			//테이블 수 
+			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
+			
+			ModelAndView  mav = new ModelAndView("contents/report/repairMst.tiles",resultMap);		//repairList model 선언
+			logger.info("================================ E N D ================================");	//repairList 종료
+			return mav;														//mav리턴
+			
+		}catch(Exception e) {
+			
+			ModelAndView  mav = new ModelAndView("RepairList");				//repairList model 선언
+			mav.setViewName("contents/report/repairMst.tiles");			
+			logger.error(e.toString());										//오류메시지
+			return mav;														//mav리턴
+			
+		}//catch
+
+	}//repairList()
 	
 	
 	/**
@@ -344,6 +386,7 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertContract", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> InsertContract(HttpServletRequest request, Model model) {
 
@@ -374,6 +417,7 @@ public class ReportController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteContract", method = {RequestMethod.POST}) 
 	public ResponseEntity<Map> DeleteContract(HttpServletRequest request, Model model) {
 
@@ -452,31 +496,51 @@ public class ReportController {
 
 	}//contractList
 	
-	
-//	@RequestMapping(value = "/file", method = RequestMethod.GET)
-//	public ModelAndView fileForm() {
-//		ModelAndView mv = new ModelAndView();
-//		mv.setViewName("fileForm");
-//		return mv;
-//	}
-	
 	/**
-	*파일 업로드/다운로드
+	*파일 업로드
 	*@param dto
 	*@param file
 	*@return
 	*/
-	@RequestMapping(value = "/file", method = {RequestMethod.POST,RequestMethod.GET})
-	public String fileSubmit(HttpServletRequest request, FileMstVO fileMstVO
+	@RequestMapping(value = "/fileUpload", method = {RequestMethod.POST,RequestMethod.GET})
+	public ResponseEntity<Map> fileSubmit(HttpServletRequest request, FileMstVO fileMstVO
 							, @RequestParam("file") MultipartFile file
 							, @RequestParam("table_seq") int table_seq) {
+
+		logger.info("================================ START ================================");	
 		
-		
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		resultMap.put("resultCode", "0000");
 		reportService.fileInsert(request, fileMstVO, file, table_seq);
 		
 		/* 데이터 베이스 처리를 현재 위치에서 처리*/
-		return "redirect:scheduleList";
-	}
+//		return "redirect:scheduleList";
+		
+		return new ResponseEntity<Map>(resultMap, statusCode);
+	}//
 
+	
+	/**
+	*파일 다운로드
+	*@param response
+	*@param request
+	*@param paramMap
+	*/
+	@RequestMapping(value="/fileDownload")
+	public void fileDownload( HttpServletResponse response, HttpServletRequest request) {
+
+		logger.info("================================ START ================================");	
+		
+		
+		try {
+			
+			reportService.fileDownload(response, request);//파일 다운로드
+			
+		}catch(Exception e) {
+			
+		}//try - catch
+		
+	}//fileDownLoad()
 	
 }

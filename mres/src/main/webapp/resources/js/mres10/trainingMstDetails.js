@@ -45,7 +45,14 @@ $(function() {
 		//List Row 만큼 반복문으로 json배열에 담는 형식입니다.
 		//-----------------------------------------
 // 		var checkbox = $("input[name=table_check]:checked");//체크된 체크박스	
-		var checkbox = $("input[name=table_check]");	//모든 체크박스	
+		var checkbox = $("input[name=table_check]");	//모든 체크박스		
+		
+		//저장할 데이터가 없으면 리턴
+		if(checkbox.length == 0){
+			alert("저장할 데이터가 없습니다.");
+			return;
+		}//if
+		
 		var jsonArr = new Array();						//JsonArray를 위한 배열생성
         var totalJson = new Object();					//JsonObject의 합
 		var work_date = $("#selectCode").val();			//업무구분

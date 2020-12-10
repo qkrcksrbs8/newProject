@@ -1,8 +1,10 @@
 package kr.co.swrts.contents.report.services;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;									//파싱된 VO타입을 담을 변수
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,7 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;										//json Array
 import org.slf4j.Logger;										//Logger
@@ -26,6 +30,7 @@ import kr.co.swrts.contents.report.daos.ReportDao;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 
@@ -343,6 +348,59 @@ public class ReportService {
 		
 	}
 	
+	
+	/**
+	*하자보수 리스트 조회
+	*@param request
+	*@param workDate
+	*@param addList
+	*@return
+	*/
+	public List<RepairMstVO> selectRepairList(HttpServletRequest request, String addList) {
+		
+		logger.info("================================ START ================================");
+		List<RepairMstVO> selectRepairList = new ArrayList<RepairMstVO>();				//세부업무실적VO Listㅋ
+		
+		try {
+													//기준년도 로그
+			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");																//1:사용 / 0:미사용
+			
+			int selectRepairCnt = 0;																//하자보수리스트 cnt 변수 선언
+			selectRepairCnt = reportDao.selectRepairCnt(map);										//하자보수리스트 cnt 조회
+			logger.info("cnt : "+selectRepairCnt);
+			
+			//------------------
+			//세무업무 실적 리스트 개수 
+			//------------------
+			if(selectRepairCnt > 0 ) {
+				selectRepairList = reportDao.selectRepairList(map);							//세부업무실적 리스트 조회
+			};//if
+			
+			//-----------------------------
+			//addList의 값이 add일 경우 리스트 추가
+			//-----------------------------
+			if("add".equals(addList)) {
+			
+				RepairMstVO repairMstVO = new RepairMstVO();						//vo 선언
+				selectRepairList.add(repairMstVO);											//리스트에 추가
+
+			};//if
+			
+			logger.info(selectRepairList.toString());
+			logger.info("================================ E N D ================================");	//리스트 로그 
+			return selectRepairList;
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.selectRepairList() : ");								//세무업무 실적 리스트 메서드
+			logger.error(e.toString());																//에러 내용
+			return selectRepairList;
+			
+		}//try
+		
+	}
+	
 	/**
 	*주요현황 리스트 조회
 	*@param request
@@ -590,6 +648,8 @@ public class ReportService {
 	*@param table_seq
 	*/
 	public void fileInsert(HttpServletRequest request, FileMstVO fileMstVO, MultipartFile file, int table_seq) {
+
+		logger.info("================================ START ================================");	
 		
 		//-------------------------
 		//파일 내용이 null이 아닐 경우 저장
@@ -601,17 +661,18 @@ public class ReportService {
 			
 			try {
 				
-				String path = "";
-				path =request.getSession().getServletContext().getRealPath("/");//경로
+				String mainPath = "";	//초기 경로 ex - C:/
+				String subPath = "";//상세 경로
+				mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
+				subPath = "images"+File.separator+fileMstVO.getTable_name()+File.separator+fileMstVO.getFile_name();//상세 경로
 				
-				
-				String file_path = path+"images"+File.separator+fileMstVO.getTable_name()+File.separator+fileMstVO.getFile_name();	//파일경로
+				String file_path = mainPath+subPath;	//파일경로
 				File fileSave = new File(file_path);	//파일경로 지정
 				Long file_size = fileSave.length();		//파일 사이즈 구하기부터
-				fileMstVO.setFile_path(file_path);		//파일 경로
+				fileMstVO.setFile_path(subPath);		//파일 경로
 				fileMstVO.setFile_size(file_size);		//파일 용량
-				logger.info(" path : "+path);
-				logger.info("file_path : "+file_path);
+				logger.info(" path : "+mainPath);
+				logger.info("file_path : "+subPath);
 				logger.info("file_size : "+file_size);
 				logger.info(fileMstVO.toString());
 				
@@ -621,6 +682,8 @@ public class ReportService {
 				//----------------------------------
 				if (!fileSave.exists()) {
 					
+					logger.info("파일 있음");
+					
 					try{//해당 경로에 파일이 없을 경우
 						
 						fileSave.mkdirs();				 						//폴더 생성합니다.
@@ -628,6 +691,8 @@ public class ReportService {
 						reportDao.insertFile(fileMstVO);						//파일 정보 저장  
 						int file_Seq = reportDao.selectFileSeq(fileMstVO);		//파일 시퀀스
 						
+
+						logger.info("table_name : "+fileMstVO.getTable_name());
 						//----------------------
 						//스케쥴 데이터에 파일 시퀀스 저장
 						//----------------------
@@ -647,16 +712,137 @@ public class ReportService {
 					
 				    }//try - catch        
 			         
-				};//if
+				}//if
 				
 			} catch (Exception e) {//입출력 예외처리
 				
 				logger.error("file != null : "+e.toString());
 			
-			} // try - catch
+			}// try - catch
 		
-		} // if
+		}// if
 				
-	}
+	}//fileInsert()
+	
+	/**
+	*파일 다운로드
+	*@param request
+	*@param fileMstVO
+	*@param file
+	*@param table_seq
+	*/
+	public void fileDownload(HttpServletResponse response, HttpServletRequest request) {
+		
+
+		logger.info("================================ START ================================");	
+		
+	    FileInputStream fileInputStream = null;
+	    ServletOutputStream servletOutputStream = null;
+	 
+	    try{
+	    	
+	    	FileMstVO fileMstVO = new FileMstVO();		//파일 VO	
+			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
+			
+//			int file_seq = Integer.parseInt(request.getParameter("file_seq"));
+			int file_seq = 3;
+			
+			logger.info("file_seq : "+file_seq);
+			
+			map.put("file_seq", file_seq);				//파일 시퀀스
+			fileMstVO = reportDao.selectFile(map);		//파일 단건 조회
+			
+	    	String mainPath = "";						//초기 경로 ex - C:/
+			String subPath = "";						//상세 경로
+			mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
+			subPath = fileMstVO.getFile_path();			//상세 경로
+	    	
+
+			logger.info("mainPath : "+mainPath);	
+			logger.info("subPath : "+subPath);	
+			
+			String path = mainPath+subPath; 			//파일 전체 경로 
+		    String fileName = fileMstVO.getFile_name();	//파일명
+
+			logger.info("path : "+path);	
+			logger.info("fileName : "+fileName);	
+			
+		    File file = new File(path);					//파일 생성
+		    
+	    	
+	        String downName = null;								//다운로드 파일 명
+	        String browser = request.getHeader("User-Agent");	//사용자 에이전트
+	        //파일 인코딩
+	        if(browser.contains("MSIE") || browser.contains("Trident") || browser.contains("Chrome")){//브라우저 확인 파일명 encode  
+
+				logger.info("브라우저 명 확인 ");	
+	            downName = URLEncoder.encode(fileName,"UTF-8").replaceAll("\\+", "%20");	//다운로드 파일 명
+	            
+	        }else{
+
+	        	logger.info("브라우저 명 확인안됨");
+	            downName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");			//다운로드 파일 명
+	            
+	        }//if - else
+	        
+	        response.setHeader("Content-Disposition","attachment;filename=\"" + downName+"\"");  //헤더           
+	        response.setContentType("application/octer-stream");								//type
+	        response.setHeader("Content-Transfer-Encoding", "binary;");							//헤더	
+	 
+	        fileInputStream = new FileInputStream(file);		//파일 읽어오기
+	        servletOutputStream = response.getOutputStream();	//파일 출력 데이터
+	 
+	        byte b [] = new byte[1024];
+	        int data = 0;
+	 
+	        //읽어온 파일을 출력객체에 담기
+	        while((data=(fileInputStream.read(b, 0, b.length))) != -1){
+	            
+	            servletOutputStream.write(b, 0, data);
+	            
+	        }//while
+	 
+	        servletOutputStream.flush();		//출력
+	        
+	    }catch (Exception e) {
+	    	
+	        e.printStackTrace();				//오류로그
+	        
+	    }finally{
+	    	
+	        if(servletOutputStream!=null){		//출력할 데이터가 없을 경우
+	        	
+	            try{
+	            	
+	                servletOutputStream.close();//출력기능 종료
+	                
+	            }catch (IOException e){
+	            	
+	                e.printStackTrace();		//오류 로그
+	                
+	            }//try - catch
+	            
+	        }//if
+	        
+	        if(fileInputStream!=null){			//읽어올 파일이 없는경우
+	        	
+	            try{
+	            	
+	                fileInputStream.close();	//파일 읽어오는 기능 닫기
+	                
+	            }catch (IOException e){
+	            	
+	                e.printStackTrace();		//오류 로그
+	                
+	            }//try - catch
+	            
+	        }//if
+	        
+	    }//try - catch - finaily
+	    
+	}//fileDownLoad()
+	
+	
+	
 	
 }

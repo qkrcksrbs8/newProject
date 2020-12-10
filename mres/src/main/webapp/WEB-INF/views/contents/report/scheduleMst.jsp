@@ -54,6 +54,8 @@ $(function(){
 		
 	};//if
 	
+	
+	
    	
 });
 
@@ -176,12 +178,12 @@ $(function(){
             <div id="mask"></div>
             <div class="window">
             
-                	<form action="file" method="post" enctype="multipart/form-data">
+                	<form id="fileForm" action="fileUpload" method="post" enctype="multipart/form-data">
 						<fieldset>
 							<table>
 								<tr>
 									<th>파일</th>
-									<td><input type="file" name="file" required="required"></td>
+									<td><input type="file" id ="fileUpId" name="file" required="required"></td>
 								</tr>
 								<tr>
 									<th>내용</th>
@@ -189,7 +191,8 @@ $(function(){
 								</tr>
 								<tr>
 									<td colspan="2">
-										<input type="submit" value="저장">
+										<input type="button" id ="imgDown" value="다운로드">
+										<input type="button" id ="imgUp" value="저장">
 										<input type="reset" value="취소">
 									</td>
 								</tr>

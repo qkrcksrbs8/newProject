@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 
@@ -57,6 +58,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int updateSchedule(ScheduleMstVO scheduleVO) throws Exception {
 		return sql.getSqlSession().update("updateSchedule", scheduleVO);
 	}
@@ -67,6 +69,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int insertSchedule(ScheduleMstVO scheduleVO) throws Exception {
 		return sql.getSqlSession().insert("insertSchedule", scheduleVO);
 	}
@@ -77,6 +80,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int deleteSchedule(ScheduleMstVO scheduleVO) throws Exception {
 		return sql.getSqlSession().update("deleteSchdule", scheduleVO);
 	}
@@ -87,6 +91,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int selectDetailedWorkCnt(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectOne("selectDetailedWorkCnt", map);
 	}
@@ -97,6 +102,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public List<DetailedWorkMstVO> selectDetailedWorkList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectDetailedWorkList", map);
 	}
@@ -107,6 +113,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int updateDetailedWork(DetailedWorkMstVO detailedWorkVO) throws Exception {
 		return sql.getSqlSession().update("updateDetailedWork", detailedWorkVO);
 	}
@@ -117,6 +124,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int insertDetailedWork(DetailedWorkMstVO detailedWorkVO) throws Exception {
 		return sql.getSqlSession().insert("insertDetailedWork", detailedWorkVO);
 	}
@@ -128,8 +136,31 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int deleteDetailedWork(DetailedWorkMstVO detailedWorkVO) throws Exception {
 		return sql.getSqlSession().update("deleteDetailedWork", detailedWorkVO);
+	}
+	
+	/**
+	 * 하자보수 리스트 개수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectRepairCnt(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectRepairCnt", map);
+	}
+	
+	/**
+	 * 하자보수 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<RepairMstVO> selectRepairList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectRepairList", map);
 	}
 	
 	/**
@@ -138,6 +169,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int selectContractCnt(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectOne("selectContractCnt", map);
 	}
@@ -148,6 +180,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public List<ContractMstVO> selectContractList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectContractList", map);
 	}
@@ -158,6 +191,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int updateContract(ContractMstVO contractVO) throws Exception {
 		return sql.getSqlSession().update("updateContract", contractVO);
 	}
@@ -168,6 +202,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int insertContract(ContractMstVO contractVO) throws Exception {
 		return sql.getSqlSession().insert("insertContract", contractVO);
 	}
@@ -178,11 +213,14 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int deleteContract(ContractMstVO contractVO) throws Exception {
 		return sql.getSqlSession().update("deleteContract", contractVO);
 	}
 	
 	
+	
+	//--------------------------------중간부터 개발 중
 	
 	/**
 	 * 교육현황 리스트 수
@@ -190,6 +228,7 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int selectTrainingCnt(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectOne("selectTrainingCnt", map);
 	}
@@ -200,8 +239,21 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public List<TrainingMstVO> selectTrainingList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectTrainingList", map);
+	}
+
+
+	/**
+	 * 주요계약현황 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectFileSeq(FileMstVO fileMstVO) throws Exception {
+		return sql.getSqlSession().selectOne("selectFileSeq", fileMstVO);
 	}
 	
 	/**
@@ -210,17 +262,16 @@ public class ReportDaoImle implements ReportDao {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public int insertFile(FileMstVO fileMstVO) throws Exception {
 		return sql.getSqlSession().insert("insertFile", fileMstVO);
 	}
-
+	
 	/**
-	 * 주요계약현황 리스트
-	 * @param map
-	 * @return
-	 * @throws Exception
+	 *파일 단건 조회
 	 */
-	public int selectFileSeq(FileMstVO fileMstVO) throws Exception {
-		return sql.getSqlSession().selectOne("selectFileSeq", fileMstVO);
+	@Override
+	public FileMstVO selectFile(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectFile", map);
 	}
 }

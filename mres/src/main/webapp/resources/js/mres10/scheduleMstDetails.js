@@ -39,6 +39,13 @@ $(function() {
 		//-------------------------------------------
 // 		var checkbox = $("input[name=table_check]:checked");//체크된 체크박스	
 		var checkbox = $("input[name=table_check]");	//모든 체크박스	
+		
+		//저장할 데이터가 없으면 리턴
+		if(checkbox.length == 0){
+			alert("저장할 데이터가 없습니다.");
+			return;
+		}//if
+		
 		var jsonArr = new Array();						//JsonArray를 위한 배열생성
         var totalJson = new Object();					//JsonObject의 합
 		var division = $("#selectCode").val();			//업무구분
@@ -116,6 +123,7 @@ $(function() {
 			//---------
 			if("0000" == data.resultCode){
 				
+				alert("저장이 완료되었습니다.");
 				var division = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
 			    $("#division").val(division);							//업무구분
 			    $("#addList").val("normal");							//행추가 변수 값 add
@@ -282,7 +290,7 @@ $(function() {
 			,data: {
 				totalJson:stringJson
 			}
-		}).done(function(response){//통신 성공
+		}).done(function(data){//통신 성공
 		
 			//---------------------------
 			//행추가를 삭제했으면 행추가 버튼 활성화
@@ -379,5 +387,40 @@ $(function() {
         $(".window").hide();  
  
     });    
+
+	//파일 업로드
+	$("#imgUp").click(function(){
+		
+		var form = jQuery("#fileForm")[0];
+        var formData = new FormData(form);
+        formData.append("message", "ajax로 파일 전송하기");
+        formData.append("file", jQuery("#fileUpId")[0].files[0]);
+		
+		$.ajax({
+              url : "./fileUpload"
+            , type : "POST"
+            , processData : false
+            , contentType : false
+            , data : formData
+			, dataType : 'json'
+            , success:function(data) {
+				
+				if("0000" == data.resultCode){
+					alert("업로드 되었습니다.");
+				}//if
+				
+            }//success
+
+        });//$ajax
+		
+	})//imgUp click
+	
+	//파일 다운로드
+	$("#imgDown").click(function(){
+		
+		$("#fileForm").attr("action", "fileDownload");//다운로드 경로
+		$("#fileForm").submit();//서브밋
+		
+	})//imgDown click
 	
 });
