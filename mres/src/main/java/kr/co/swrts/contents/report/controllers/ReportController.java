@@ -59,6 +59,30 @@ public class ReportController {
 	@Autowired
 	private ReportService reportService;
 	
+	//--------------------------------------------------------------------------------------------
+	@RequestMapping(value = "/mres0103", method = { RequestMethod.GET, RequestMethod.POST })
+	public String mres0103(Locale locale, Model model) {
+		 return "contents/report/mres0103.tiles";
+	}
+	@RequestMapping(value = "/mres0201", method = { RequestMethod.GET, RequestMethod.POST })
+	public String mres0201(Locale locale, Model model) {
+		 return "contents/report/mres0201.tiles";
+	}
+	@RequestMapping(value = "/mres0206", method = { RequestMethod.GET, RequestMethod.POST })
+	public String mres0206(Locale locale, Model model) {
+		 return "contents/report/mres0206.tiles";
+	}
+	@RequestMapping(value = "/mres0602", method = { RequestMethod.GET, RequestMethod.POST })
+	public String mres0602(Locale locale, Model model) {
+		 return "contents/report/mres0602.tiles";
+	}
+	@RequestMapping(value = "/mres0707", method = { RequestMethod.GET, RequestMethod.POST })
+	public String mres0707(Locale locale, Model model) {
+		 return "contents/report/mres0707.tiles";
+	}
+	
+
+	//--------------------------------------------------------------------------------------------
 	
 	/**
 	*메인페이지
@@ -502,6 +526,7 @@ public class ReportController {
 	*@param file
 	*@return
 	*/
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/fileUpload", method = {RequestMethod.POST,RequestMethod.GET})
 	public ResponseEntity<Map> fileSubmit(HttpServletRequest request, FileMstVO fileMstVO
 							, @RequestParam("file") MultipartFile file
@@ -511,8 +536,19 @@ public class ReportController {
 		
 		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
 		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
-		resultMap.put("resultCode", "0000");
-		reportService.fileInsert(request, fileMstVO, file, table_seq);
+		List<FileMstVO> fileList = new ArrayList<FileMstVO>();				//파일VO List
+		try {
+
+			resultMap.put("resultCode", "0000");
+			fileList = reportService.fileInsert(request, fileMstVO, file, table_seq);
+			resultMap.put("fileCnt", fileList.size());						//파일 리스트 개수
+			resultMap.put("fileList", fileList);							//파일 리스트
+				
+		}catch(Exception e) {
+			
+			logger.error("fileUpload() : "+e.toString());
+			
+		}//try - catch 
 		
 		/* 데이터 베이스 처리를 현재 위치에서 처리*/
 //		return "redirect:scheduleList";
@@ -528,14 +564,17 @@ public class ReportController {
 	*@param paramMap
 	*/
 	@RequestMapping(value="/fileDownload")
-	public void fileDownload( HttpServletResponse response, HttpServletRequest request) {
+	public void fileDownload( HttpServletResponse response, HttpServletRequest request
+							, @RequestParam("table_seq") int table_seq
+							, @RequestParam("table_name") String table_name
+							, @RequestParam("file_seq") int file_seq) {
 
 		logger.info("================================ START ================================");	
 		
 		
 		try {
 			
-			reportService.fileDownload(response, request);//파일 다운로드
+			reportService.fileDownload(response, request, file_seq);//파일 다운로드
 			
 		}catch(Exception e) {
 			
@@ -543,4 +582,37 @@ public class ReportController {
 		
 	}//fileDownLoad()
 	
+	/**
+	*파일 리스트
+	*@param response
+	*@param request
+	*@param paramMap
+	*/
+	@RequestMapping(value="/selectFileList")
+	public ResponseEntity<Map> selectFileList( HttpServletResponse response, HttpServletRequest request
+							, @RequestParam("table_name") String table_name
+							, @RequestParam("table_seq") int table_seq) {
+
+		logger.info("================================ START ================================");	
+		HttpStatus statusCode = HttpStatus.OK;								//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();		//리턴해주는 데이터를 담을 map
+		List<FileMstVO> fileList = new ArrayList<FileMstVO>();				//파일VO List
+		
+		try {
+
+			fileList = reportService.selectFileList(table_name, table_seq);	//파일 리스트
+			resultMap.put("resultCode", "0000");							//0000:정상  9000:비정상
+			resultMap.put("fileCnt", fileList.size());						//파일 리스트 개수
+			resultMap.put("fileList", fileList);							//파일 리스트
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");							//0000:정상  9000:비정상
+			logger.error("selectFileList() : "+e.toString());
+			
+		}//try - catch
+		
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}//selectFileList()
 }

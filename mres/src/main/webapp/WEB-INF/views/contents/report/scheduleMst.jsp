@@ -54,53 +54,34 @@ $(function(){
 		
 	};//if
 	
-	
-	
-   	
 });
 
 </script>
 
 <body>
 	
-	<!-- 페이지 제목 -->
-	<section id="content" class="">
-		<div class="container">
-			<h3 class="">연간스케쥴</h3>
-		</div>
-	</section>
-	
-	<select id="selectCode" name="selectCode">
+	<!-- 조회용 콤보박스입니다. -->
+	<select class="default_select w70" id="selectCode" name="selectCode">
 	    <option value="AS01">행정 업무</option>
 	    <option value="AS02">회계 업무</option> 
 	    <option value="AS03">조경 업무</option>
 	    <option value="AS04">시설 업무</option>
-<!-- 	    <option value="ALL">전체</option> -->
 	</select>
-	<button id="tableSave" class="btn btn-success" >저장</button>	
-	<button id="tableUp" class="btn btn-success" >수정</button>
-	<button id="tableDel" class="btn btn-success" >삭제</button>		
-	<button id="tableAdd" class="btn btn-success" >행추가</button>	
 	
-	<!-- 게시글 없을 때. --> 
-	<c:if test="${scheduleCnt==0}"> 
-		<section id="content">
-			<div class="container">
-				<div class="">
-					<ul class="row">	
-						<li>게시판에 저장된 글이 없습니다.</li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</c:if>
+	<!-- 버튼 모음입니다. -->
+	<button id="tablePrint"	class="basin_btn"	style="float: right;" >인쇄</button>
+	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
+	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
+	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
+	<button id="tableSave"	class="basin_btn"	style="float: right;" >저장</button>	
+
 	
 	<form id="selectForm" name="selectForm"  action="<%=request.getContextPath()%>/scheduleList" autocomplete="off">
 		<input id="division" name="division" type="hidden" value ="">
 		<input id="addList" name ="addList" type="hidden" value	="">
 	</form>
 	
-	<table class="table">
+	<table class="view_top_center_table">
 		<tr> 
 			<td rowspan="2">체크</td>
 			<td rowspan="2">업무내용</td>
@@ -130,7 +111,7 @@ $(function(){
 			<tr>
 				<c:if test = "${scheduleList.schedule_seq == 0}">
 					<td class="tableCount">		<input name="table_check"	type="checkbox"	value="${scheduleList.schedule_seq}" disabled="true" checked></td>
-					<td class="" id="workInfo">	<input id="workInfo" 		type="text"		value="${scheduleList.work_info}"></td>
+					<td class="" id="workInfo">	<input class="default_input w120" id="workInfo" 		type="text"		value="${scheduleList.work_info}"></td>
 					<td class=""><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></td>
 					<td class="tableCheck"><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></td>
@@ -144,13 +125,13 @@ $(function(){
 					<td class="tableCheck"><input id="schedule_oct" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_oct}" <c:if test="${scheduleList.schedule_oct ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_nov" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_nov}" <c:if test="${scheduleList.schedule_nov ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_dec" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_dec}" <c:if test="${scheduleList.schedule_dec ne '0'}">checked</c:if>></td>
-					<td class=""><label class=""><input id="entity" type="text" value="${scheduleList.entity}"></label></td>
+					<td class=""><label class=""><input class="default_input w120" id="entity" type="text" value="${scheduleList.entity}"></label></td>
 					<td class=""><label class="">${scheduleList.contract}</label></td>
 					<td class=""><label class="filePopup">${scheduleList.file_name}</label></td>
 				</c:if>	
 				<c:if test = "${scheduleList.schedule_seq != 0}">
 					<td class="tableCount"><input type="checkbox" name="table_check" value="${scheduleList.schedule_seq}"></td>
-					<td class=""id="workInfo"><lable >${scheduleList.work_info}</lable></td>
+					<td class=""id="workInfo"><label >${scheduleList.work_info}</label></td>
 					<td class=""><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></td>
 					<td class="tableCheck"><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></td>
@@ -166,50 +147,73 @@ $(function(){
 					<td class="tableCheck"><input id="schedule_dec" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_dec}" <c:if test="${scheduleList.schedule_dec ne '0'}">checked</c:if>></td>
 					<td class=""><label class="">${scheduleList.entity}</label></td>
 					<td class=""><label class="">${scheduleList.contract}</label></td>
-					<td class=""><label class="openMask">${scheduleList.file_name}</label></td>			
+					<td class=""><label class="" id="uploadPopup">${scheduleList.file_name}</label></td>			
 				</c:if>
 			</tr>
 		</c:forEach>
 	</table>
 	
-	<!-- 팝업 --> 
-	<div id ="wrap"> 
-        <div id = "container">  
-            <div id="mask"></div>
-            <div class="window">
-            
-                	<form id="fileForm" action="fileUpload" method="post" enctype="multipart/form-data">
-						<fieldset>
-							<table>
-								<tr>
-									<th>파일</th>
-									<td><input type="file" id ="fileUpId" name="file" required="required"></td>
-								</tr>
-								<tr>
-									<th>내용</th>
-									<td><input type="text" name="file_content" required="required" placeholder="파일 내용"></td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<input type="button" id ="imgDown" value="다운로드">
-										<input type="button" id ="imgUp" value="저장">
-										<input type="reset" value="취소">
-									</td>
-								</tr>
-							</table>
-							<input type="hidden" id="table_seq" name="table_seq" val="">
-							<input type="hidden" id="table_name" name="table_name" val="">
-						</fieldset>
-					</form>
-                	
-                <p style="text-align:center; background:#ffffff; padding:20px;"><a href="#" class="close">닫기X</a></p>
-            </div>
-            
-        </div>
-    </div>
+	
+		
+	<!-- 게시글 없을 때. --> 
+	<c:if test="${scheduleCnt==0}"> 
+		<section id="content">
+			<div class="container">
+				<div class="">
+					<ul class="row">	
+						<li>게시판에 저장된 글이 없습니다.</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+	</c:if>
+	
+<!-- 	<input type="button" id ="imgDown" value="다운로드"> -->
+
+
     
-    
-    
+<!-- 공지사항 등록 팝업 -->
+<div id="schedule_reg_popup" class="mres_popup">
+	<div class="pop" style="width: 545px">
+		<div class="pop_top">
+			<p class="popup_title">공지사항 등록</p>
+			<a class="right schedule_reg_popup_close" href="#;"><img src="<%=request.getContextPath()%>/resources/img/close.png" alt="닫기" width="35px" /></a>
+		</div>
+		<form id="fileForm" name="fileForm" action="/fileUpload" method="post" autocomplete="off" enctype="multipart/form-data">
+		<input type="hidden" id="table_seq" name="table_seq" value=0>
+		<input type="hidden" id="table_name" name="table_name" value="">
+ 		<input type="hidden" id="file_seq" name="file_seq" value=0>
+ 
+		<div class="pop_con">
+			<table class="view_top_table">
+				<tr>
+					<th>첨부파일</th>
+					<td>
+					<input type="file" placeholder="" class="default_input" id="fileUpId" name="fileUpId">
+					<input type="text" class="default_input" id="filename" name="filename" readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td><input type="text" class="default_input con_wrap_100" name="file_content" required="required" placeholder="파일 내용"></td>
+				</tr>
+			</table> 
+			<table id="fileTable" class="view_top_table">
+				<tr>
+					<th>업로드일자</th>
+					<th>내용</th>
+					<th>파일이름</th>		
+				</tr>
+			</table>
+		</div>
+		</form>
+		<div class="pop_bottom">
+			<a href="#;" class="basin_btn" id="imgUp">저장</a>
+			<a href="#;" class="basin_btn schedule_reg_popup_close">취소</a>
+		</div>
+	</div>
+</div>
+<!-- 공지사항 등록 팝업 END-->
     
 	
 <div>

@@ -641,13 +641,13 @@ public class ReportService {
 
 	
 	/**
-	*파일 저장
+	*파일 업로드
 	*@param request
 	*@param fileMstVO
 	*@param file
 	*@param table_seq
 	*/
-	public void fileInsert(HttpServletRequest request, FileMstVO fileMstVO, MultipartFile file, int table_seq) {
+	public List<FileMstVO> fileInsert(HttpServletRequest request, FileMstVO fileMstVO, MultipartFile file, int table_seq) {
 
 		logger.info("================================ START ================================");	
 		
@@ -671,6 +671,7 @@ public class ReportService {
 				Long file_size = fileSave.length();		//파일 사이즈 구하기부터
 				fileMstVO.setFile_path(subPath);		//파일 경로
 				fileMstVO.setFile_size(file_size);		//파일 용량
+				fileMstVO.setTable_seq(table_seq);		//각 테이블의 시퀀스 번호 ex. schedule_seq 정보 등...
 				logger.info(" path : "+mainPath);
 				logger.info("file_path : "+subPath);
 				logger.info("file_size : "+file_size);
@@ -721,6 +722,8 @@ public class ReportService {
 			}// try - catch
 		
 		}// if
+		
+		return selectFileList(fileMstVO.getTable_name(), table_seq);
 				
 	}//fileInsert()
 	
@@ -731,9 +734,8 @@ public class ReportService {
 	*@param file
 	*@param table_seq
 	*/
-	public void fileDownload(HttpServletResponse response, HttpServletRequest request) {
+	public void fileDownload(HttpServletResponse response, HttpServletRequest request, int file_seq) {
 		
-
 		logger.info("================================ START ================================");	
 		
 	    FileInputStream fileInputStream = null;
@@ -743,9 +745,6 @@ public class ReportService {
 	    	
 	    	FileMstVO fileMstVO = new FileMstVO();		//파일 VO	
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
-			
-//			int file_seq = Integer.parseInt(request.getParameter("file_seq"));
-			int file_seq = 3;
 			
 			logger.info("file_seq : "+file_seq);
 			
@@ -843,6 +842,50 @@ public class ReportService {
 	}//fileDownLoad()
 	
 	
+	
+	/**
+	*파일 리스트 조회
+	*@param table_name
+	*@param table_seq
+	*@return
+	*/
+	public List<FileMstVO> selectFileList(String table_name, int table_seq) {
+		
+		logger.info("================================ START ================================");
+		List<FileMstVO> fileList = new ArrayList<FileMstVO>();							//파일VO List
+		
+		try {
+			
+			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
+			map.put("table_name", table_name);														//테이블 이름 ex. schedule_mst
+			map.put("table_seq", table_seq);														//테이블 시퀀스 ex. schdeule_seq
+			map.put("useflag", 1);																	//사용구분
+			
+			int fileCnt = 0;																		//테이블 cnt 변수 선언
+			fileCnt = reportDao.selectFileCnt(map);													//테이블 cnt 조회
+			logger.info("cnt : "+fileCnt);
+			
+			//------------------
+			//세무업무 실적 리스트 개수 
+			//------------------
+			if(fileCnt > 0 ) {
+				fileList = reportDao.selectFileList(map);											//파일 리스트 조회
+			};//if
+			
+			
+			logger.info(fileList.toString());
+			logger.info("================================ E N D ================================");	//리스트 로그 
+			return fileList;
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.selectFileList() : ");								//파일 실적 리스트 메서드
+			logger.error(e.toString());																//에러 내용
+			return fileList;
+			
+		}//try
+		
+	}//selectFileList
 	
 	
 }

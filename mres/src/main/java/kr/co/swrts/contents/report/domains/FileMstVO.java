@@ -22,6 +22,7 @@ public class FileMstVO {
 	private String file_path 		= new String();	//파일 경로
 	private long file_size			= 0;			//파일 용량
 	private String table_name		= new String(); //파일을 저장한 테이블 이름 ex.(schedule_mst)
+	private int table_seq			= 0;			 //각 테이블의 시퀀스 ex. schedule_seq 정보
 	private String useflag 			= new String();	//사용구분
 	private String created_date		= new String();	//최초생성일
 	private String created_by 		= new String();	//최초생성자
@@ -70,6 +71,12 @@ public class FileMstVO {
 	public void setTable_name(String table_name) {
 		this.table_name = table_name;
 	}
+	public int getTable_seq() {
+		return table_seq;
+	}
+	public void setTable_seq(int table_seq) {
+		this.table_seq = table_seq;
+	}
 	public String getUseflag() {
 		return useflag;
 	}
@@ -105,8 +112,9 @@ public class FileMstVO {
 	public String toString() {
 		return "FileMstVO [file_seq=" + file_seq + ", file_date=" + file_date + ", file_content=" + file_content
 				+ ", file_name=" + file_name + ", file_path=" + file_path + ", file_size=" + file_size + ", table_name="
-				+ table_name + ", useflag=" + useflag + ", created_date=" + created_date + ", created_by=" + created_by
-				+ ", last_update_date=" + last_update_date + ", last_update_by=" + last_update_by + "]";
+				+ table_name + ", table_seq=" + table_seq + ", useflag=" + useflag + ", created_date=" + created_date
+				+ ", created_by=" + created_by + ", last_update_date=" + last_update_date + ", last_update_by="
+				+ last_update_by + "]";
 	}
 	
 }

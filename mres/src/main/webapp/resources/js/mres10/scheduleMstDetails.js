@@ -77,8 +77,9 @@ $(function() {
 			var entity = td.eq(15).text();									//계약주체
 			var contract = td.eq(16).text();								//계약서
 			var file_name = td.eq(17).text();								//파일이름
-
-			if(schedule_seq == 'on'){schedule_seq = 0;};//연간스케쥴 시퀀스가 on일경우 0으로 변환
+			
+			//연간스케쥴 시퀀스가 on일경우 0으로 변환
+			if(schedule_seq == 'on'){schedule_seq = 0;};
 			
 			// 가져온 값을 배열에 담는다.
 			var jsonObj = new Object();				//JsonObject를 위한 객체생성
@@ -137,10 +138,8 @@ $(function() {
 				
 				alert("알 수 없는 에러. 관리자에게 문의해주세요.");
 				
-			}
+			}//if - else if - else
 		    
-			
-			
 		}).fail(function(data){//통신 실패
 			alert("네트워크가 원활하지 않습니다. 잠시 후 다시 시도해주세요.");
 		});//ajax		
@@ -162,7 +161,7 @@ $(function() {
    			 
    			alert("수정할 데이터를 선택해 주세요.");
    			return;
-   			
+   			 
    		};//if
    		
    		var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
@@ -179,8 +178,8 @@ $(function() {
    	   				var work_info_val = td.eq(1).text();				//업무내용
 					var entity_val = td.eq(15).text();					//계약주체
    	   				
-   	   				td.eq(1).html('<input id="workInfo" type="text" value="'+work_info_val+'">');//수정 가능한 필드로 변경
-					td.eq(15).html('<input id="entity" type="text" value="'+entity_val+'">');	//수정 가능한 필드로 변경
+   	   				td.eq(1).html('<input type="text" class="default_input w120" id="workInfo" value="'+work_info_val+'">');//수정 가능한 필드로 변경
+					td.eq(15).html('<input type="text" class="default_input w120" id="entity" value="'+entity_val+'">');	//수정 가능한 필드로 변경
 					
    	   			});
    				
@@ -192,7 +191,7 @@ $(function() {
    			}else{
    				
    				var result = confirm("수정 완료 하시겠습니까?");//수정 여부 물어보기
-   				
+   				 
    				if(result){
    				
    					var seq = 0;//시퀀스 - 0:신규
@@ -322,8 +321,8 @@ $(function() {
    	//----------------------------
    	$("#tableAdd").click(function(){
    		var checkboxCnt = $("input[name=table_check]").length;	//체크박스 개수 10개 이상이면 생성 불가
-   		if(checkboxCnt >= 10){
-			alert("10개 이상 생성 불가.");   			
+   		if(checkboxCnt >= 20){
+			alert("20개 이상 생성 불가.");   			
    			return; 
    		};
    		
@@ -337,64 +336,79 @@ $(function() {
 
 
 
+	popup();
 	
-   	//-----------------------------
-   	//파일이름을 누르면 호출되는 팝업창 입니다.
-   	//-----------------------------
-	function wrapWindowByMask(){
+	//----------------
+	//파일첨부 팝업입니다.
+	//----------------
+	$("#uploadPopup").click(function(){
+
+		$("#fileTable").empty();//현재 파일 리스트 제거
 		
-		//화면의 높이와 너비를 구한다.
-        var maskHeight = $(document).height();  
-        var maskWidth = $(window).width();  
- 
-        //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채운다.
-        $("#mask").css({"width":maskWidth,"height":maskHeight});  
- 
-        //애니메이션 효과 - 일단 0초동안 까맣게 됐다가 60% 불투명도로 간다.
- 
-        $("#mask").fadeIn(0);      
-        $("#mask").fadeTo("slow",0.6);    
- 
-        //윈도우 같은 거 띄운다.
-        $(".window").show();
-		
-	};
-	
-	//검은 막 띄우기
-    $(".openMask").click(function(e){
 		var tr = $(this).parent().parent().eq(0);	//클릭한 테이블의 tr
 		var td = tr.children();						//클릭한 테이블의 td
 		var table_seq	= td.eq(0).children().val();//시퀀스
 		var table_name = "schedule_mst";			//테이블 이름
 		
+		var url = "./selectFileList";						//url 테이블 데이터 삭제
+		
+		$.ajax({
+			 type: "POST"
+			,url : url
+			,dataType : 'json'
+			,data: {
+				table_seq:table_seq
+				,table_name:table_name
+			}
+		}).done(function(data){//통신 성공
+			
+			if("0000" == data.resultCode){
+				
+				if(data.fileCnt > 0){
+					
+					for(var i = 0; i < data.fileCnt; ++i){
+						
+						$("#fileTable").append('<tr><td><label>'+data.fileList[i].file_date+'</label></td><td><label>'+data.fileList[i].file_content+'</label></td><td id="fileDown" class='+data.fileList[i].file_seq+' onclick="fileDown()"><label>'+data.fileList[i].file_name+'</label></td></tr>')
+						
+					}//for
+					$(".fileDown").addClass('fileDownoald');
+				}//if
+
+			}//if 
+			
+		}).fail(function(data){//통신 실패
+			alert("네트워크가 원활하지 않습니다. 잠시 후 다시 시도해주세요.");
+			return;
+		});//fail
+		
+		
 		$("#table_seq").val(table_seq);				//테이블 시퀀스 필드에 값 셋팅
 		$("#table_name").val(table_name);			//테이블 이름 필드에 값 셋팅
 		
-        e.preventDefault();
-        wrapWindowByMask();
-    });
- 
-    //닫기 버튼을 눌렀을 때
-    $(".window .close").click(function (e) {  
-        //링크 기본동작은 작동하지 않도록 한다.
-        e.preventDefault();  
-        $("#mask, .window").hide();  
-    });       
- 
-    //검은 막을 눌렀을 때
-    $("#mask").click(function () {  
-        $(this).hide();  
-        $(".window").hide();  
- 
-    });    
+		$("#schedule_reg_popup .popup_title").html("파일 업로드/다운로드");
+		$("#fileForm")[0].reset();
+		$("#filename").hide();
+		$("#schedule_reg_popup").popup('show');
+		
+	});
+	
+	//----------------
+	//팝업 닫기 기능 입니다.
+	//----------------
+	$(".schedule_reg_popup_close").click(function(){
+		
+		$("#fileTable").empty();//현재 파일 리스트 제거
+		$("#schedule_reg_popup").popup('hide');//팝업 종료
+		
+	});//
 
 	//파일 업로드
 	$("#imgUp").click(function(){
 		
-		var form = jQuery("#fileForm")[0];
+		var form = $("#fileForm")[0];
         var formData = new FormData(form);
         formData.append("message", "ajax로 파일 전송하기");
-        formData.append("file", jQuery("#fileUpId")[0].files[0]);
+        formData.append("file", $("#fileUpId")[0].files[0]);
 		
 		$.ajax({
               url : "./fileUpload"
@@ -403,10 +417,24 @@ $(function() {
             , contentType : false
             , data : formData
 			, dataType : 'json'
-            , success:function(data) {
+            , success:function(data) { 
 				
 				if("0000" == data.resultCode){
 					alert("업로드 되었습니다.");
+					
+					if(data.fileCnt > 0){
+						
+						$("#fileTable").empty();//현재 파일 리스트 제거
+						
+						for(var i = 0; i < data.fileCnt; ++i){
+							
+							$("#fileTable").append('<tr><td><label>'+data.fileList[i].file_date+'</label></td><td><label>'+data.fileList[i].file_content+'</label></td><td id="fileDown" class='+data.fileList[i].file_seq+' onclick="fileDown()"><label>'+data.fileList[i].file_name+'</label></td></tr>')
+							
+						}//for
+						$(".fileDown").addClass('fileDownoald');
+					}//if
+				
+					$('#fileForm')[0].reset();
 				}//if
 				
             }//success
@@ -415,12 +443,15 @@ $(function() {
 		
 	})//imgUp click
 	
-	//파일 다운로드
-	$("#imgDown").click(function(){
-		
+	//append로 생성된 태그에 동적 이벤트 추가
+	$(document).on("click","#fileDown",function(){ 
+	   	
+		var file_seq = $(this).attr('class');
+		$("#file_seq").val(file_seq);
 		$("#fileForm").attr("action", "fileDownload");//다운로드 경로
-		$("#fileForm").submit();//서브밋
-		
-	})//imgDown click
+		$("#fileForm").submit();//서브밋 
+		$("#fileForm").attr("action", "fileUpload");//다운로드 경로
+			
+	 });
 	
 });

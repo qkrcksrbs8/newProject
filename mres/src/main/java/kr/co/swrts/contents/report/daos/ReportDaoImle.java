@@ -258,7 +258,7 @@ public class ReportDaoImle implements ReportDao {
 	
 	/**
 	 * 파일 정보 저장
-	 * @param contractVO
+	 * @param fileMstVO
 	 * @return
 	 * @throws Exception
 	 */
@@ -268,10 +268,35 @@ public class ReportDaoImle implements ReportDao {
 	}
 	
 	/**
-	 *파일 단건 조회
+	 * 파일 단건 저장
+	 * @param map
+	 * @return
+	 * @throws Exception
 	 */
 	@Override
 	public FileMstVO selectFile(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectOne("selectFile", map);
+	}
+	
+	/**
+	 * 파일 개수 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectFileCnt(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectFileCnt", map);
+	}
+	
+	/**
+	 * 파일 리스트 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<FileMstVO> selectFileList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectFileList", map);
 	}
 }

@@ -47,6 +47,15 @@ if(color != ''){
 				<li><a href="<%=request.getContextPath()%>/trainingList">교육현황</a></li>
 			</ul>
 		</li>
-		
+		<li>  
+			<a href="#">참조퍼블</a>
+			<ul> 
+				<li><a href="<%=request.getContextPath()%>/mres0103">mres0103</a></li>
+				<li><a href="<%=request.getContextPath()%>/mres0201">mres0201</a></li>
+				<li><a href="<%=request.getContextPath()%>/mres0206">mres0206</a></li>
+				<li><a href="<%=request.getContextPath()%>/mres0602">mres0602</a></li>
+				<li><a href="<%=request.getContextPath()%>/mres0707">mres0707</a></li>
+			</ul>
+		</li>
 	</ul>
 </nav>

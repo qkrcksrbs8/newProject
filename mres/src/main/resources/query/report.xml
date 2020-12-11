@@ -430,6 +430,7 @@
 	    , FILE_PATH
 	    , FILE_SIZE
 	    , TABLE_NAME
+	    , TABLE_SEQ
 		, CREATED_BY
 	    , LAST_UPDATE_BY
 	) values (
@@ -439,6 +440,7 @@
 	    ,#{file_path}
 	    ,#{file_size}
 	    ,#{table_name}
+	    ,#{table_seq}
 	    ,#{created_by}
 	    ,#{created_by}
 	)
@@ -446,15 +448,16 @@
 
 <select id="selectFileSeq" parameterType="kr.co.swrts.contents.report.domains.FileMstVO" resultType="int">
 /* "selectFileSeq" */
-	SELECT
-		FILE_SEQ
-    FROM FILE_MST
+	SELECT  
+	    TABLE_SEQ
+	FROM FILE_MST
 	WHERE FILE_PATH = #{file_path}
+	ORDER BY FILE_SEQ DESC LIMIT 1
 	
 </select>
 
 <select id="selectFile" parameterType="map" resultType="kr.co.swrts.contents.report.domains.FileMstVO">
-/* "selectFileSeq" */
+/* "selectFile" */
 	SELECT
 		FILE_SEQ
 		, FILE_DATE
@@ -466,6 +469,37 @@
 	WHERE FILE_SEQ = #{file_seq}
 	
 </select>
+
+<select id="selectFileCnt" parameterType="map" resultType="int">
+/* "selectFileCnt" */
+	SELECT 
+	      COUNT(FILE_SEQ)
+	FROM FILE_MST
+	WHERE TABLE_NAME = #{table_name}
+	AND TABLE_SEQ = #{table_seq}
+	AND USEFLAG = #{useflag}
+	
+</select>
+
+<select id="selectFileList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.FileMstVO">
+/* "selectFileList" */
+	SELECT 
+	        FILE_SEQ
+	        ,FILE_DATE
+	        ,FILE_CONTENT
+	        ,FILE_PATH
+	        ,FILE_SIZE
+	        ,FILE_NAME
+	        ,TABLE_SEQ
+	        ,TABLE_NAME
+	        ,COMPANY_CODE
+	FROM FILE_MST
+	WHERE TABLE_NAME = #{table_name}
+	AND TABLE_SEQ = #{table_seq}
+	AND USEFLAG = #{useflag}
+	
+</select>
+
 
 </mapper>
 

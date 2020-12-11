@@ -194,4 +194,20 @@ public interface ReportDao {
 	*@throws Exception
 	*/
 	public FileMstVO selectFile(Map<String, Object> map) throws Exception;
+	
+	/**
+	*파일 개수 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public int selectFileCnt(Map<String, Object> map) throws Exception;
+	
+	/**
+	*주요계약현황 리스트 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<FileMstVO> selectFileList(Map<String, Object> map) throws Exception;
 }
