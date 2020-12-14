@@ -69,7 +69,7 @@ $(function(){
 	</select>
 	
 	<!-- 버튼 모음입니다. -->
-	<button id="tablePrint"	class="basin_btn"	style="float: right;" >인쇄</button>
+	<button id="tablePrint"	class="basin_btn"	style="float: right;" onclick="window.print()">인쇄</button>
 	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
 	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
 	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
@@ -111,7 +111,7 @@ $(function(){
 			<tr>
 				<c:if test = "${scheduleList.schedule_seq == 0}">
 					<td class="tableCount">		<input name="table_check"	type="checkbox"	value="${scheduleList.schedule_seq}" disabled="true" checked></td>
-					<td class="" id="workInfo">	<input class="default_input w120" id="workInfo" 		type="text"		value="${scheduleList.work_info}"></td>
+					<td class="" id="">	<input class="default_input w120" id="workInfo" 		type="text"		value="${scheduleList.work_info}"></td>
 					<td class=""><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></td>
 					<td class="tableCheck"><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></td>
@@ -152,7 +152,7 @@ $(function(){
 			</tr>
 		</c:forEach>
 	</table>
-	
+	`
 	
 		
 	<!-- 게시글 없을 때. --> 

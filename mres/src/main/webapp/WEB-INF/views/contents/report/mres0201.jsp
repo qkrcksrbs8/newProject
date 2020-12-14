@@ -127,11 +127,11 @@ $(function() {
 			<!-- <a href="#;" class="basin_btn" onclick="excelPop()">엑셀업로드</a> -->
 <!-- 			<a href="#;" class="basin_btn" onclick="excelDownloadBtn()">엑셀다운로드</a> -->
 			
-			<form:form commandName="frmExcelUpload" id = "frmExcelUpload" enctype="multipart/form-data" method="post" action="excelUploadAjax">
-				<form:input id = "excelFile" type="file" name="excelFile" path="file" class="none" onchange="changeExcelValue('excelFile','frmExcelUpload')"/>				
-				<input id = "companyIdVal" name="companyIdVal" class="none" />
-				<input id = "flag" name="flag" class="none" value="3"/>
-			</form:form>
+<%-- 			<form:form commandName="frmExcelUpload" id = "frmExcelUpload" enctype="multipart/form-data" method="post" action="excelUploadAjax"> --%>
+<%-- 				<form:input id = "excelFile" type="file" name="excelFile" path="file" class="none" onchange="changeExcelValue('excelFile','frmExcelUpload')"/>				 --%>
+<!-- 				<input id = "companyIdVal" name="companyIdVal" class="none" /> -->
+<!-- 				<input id = "flag" name="flag" class="none" value="3"/> -->
+<%-- 			</form:form> --%>
 			
 			<form id ="frmExcel" name ="frmExcel" action="excelDownload" method="post">
 				<input type="hidden" name="companyId" value="" />

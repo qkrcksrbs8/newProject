@@ -332,22 +332,31 @@ public class ReportController {
 	 */
 	@RequestMapping(value="/repairList", method = {RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView RepairList(HttpServletRequest request, Model model
-								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList
+								, @RequestParam(value="fr_cal", required =false,  defaultValue="") String fr_cal
+								, @RequestParam(value="to_cal", required =false,  defaultValue="") String to_cal) {
 
 		logger.info("================================ START ================================");		//repairList 시작
 		
 		logger.info("param addList : "+addList);
+		logger.info("param fr_cal : "+fr_cal);
+		logger.info("param to_cal : "+to_cal);
 		
 		List<RepairMstVO> repairList = new ArrayList<RepairMstVO>();		//테이블 리스트
 			
 		try {
 		
-			repairList =  reportService.selectRepairList(request, addList);	//하자보수 리스트 조회
+			repairList =  reportService.selectRepairList(request, addList, fr_cal, to_cal);	//하자보수 리스트 조회
+			
+			String mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
 			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("selectRepairList", repairList);					//테이블 리스트
-			resultMap.put("selectRepairList", repairList.size());			//테이블 수 
+			resultMap.put("selectRepairCnt", repairList.size());			//테이블 수 
 			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
+			resultMap.put("mainPath", mainPath);							//파일경로 앞 부분 ex. C:/
+			resultMap.put("fr_cal", stringToDate(fr_cal));						//검색 시작일
+			resultMap.put("to_cal", stringToDate(to_cal));						//검색 종료일
 			
 			ModelAndView  mav = new ModelAndView("contents/report/repairMst.tiles",resultMap);		//repairList model 선언
 			logger.info("================================ E N D ================================");	//repairList 종료
@@ -363,6 +372,38 @@ public class ReportController {
 		}//catch
 
 	}//repairList()
+	
+	
+	/**
+	 * 하자보수 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/insertRepair", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> InsertRepair(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");	//insertRepair 시작
+
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
+		try {
+			
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.insertRepair(request);						//하자보수 저장/수정
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//insertRepair 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+	}
+	
 	
 	
 	/**
@@ -615,4 +656,32 @@ public class ReportController {
 		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}//selectFileList()
+	
+	/**
+	*숫자를 날짜로 변환
+	*@param cal
+	*@return
+	*/
+	public String stringToDate(String cal) {
+		
+		if(cal.length() == 8) {
+
+			StringBuffer sb = new StringBuffer();//스트링 버퍼
+			String yyyy = cal.substring(0,4);//년 2020
+			String mm	= cal.substring(4,6);//월 09
+			String dd	= cal.substring(6,8);//일 02
+			sb.append(yyyy);	//2020
+			sb.append("-");		//2020-
+			sb.append(mm);		//2020-09
+			sb.append("-");		//2020-09-
+			sb.append(dd);		//2020-09-02
+	
+			return sb.toString();
+
+		}else {
+			return cal;
+		}//if - else
+		
+	}//intToDate
+	
 }

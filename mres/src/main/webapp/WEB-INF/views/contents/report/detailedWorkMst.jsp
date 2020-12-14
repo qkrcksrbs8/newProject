@@ -39,62 +39,52 @@ $(function(){
 
 <div class="container">
 
-	<!-- 페이지 제목 -->
-	<section id="content" class="board-list-header-wrap">
-		<div class="container">
-			<h1 class="board-list-header">세부업무실적</h1>
-		</div>
-	</section> 
-	
 	<!-- 기준년도 셀렉트박스 -->
-	<select id="selectCode" name="selectCode">
+	<select class="default_select w70" id="selectCode" name="selectCode">
 	    <option value="2020">2020</option>
 	    <option value="2019">2019</option> 
 	    <option value="2018">2018</option>
 	    <option value="2017">2017</option>
 	</select>
-	<button id="tableSave" class="btn btn-success" >저장</button>	
-	<button id="tableUp" class="btn btn-success" >수정</button>
-	<button id="tableDel" class="btn btn-success" >삭제</button>		
-	<button id="tableAdd" class="btn btn-success" >행추가</button>	
 	
-	<!-- 게시글 있을 때. --> 
-	<section id="content">
-		<div class="container">
-			<div class="board-list-wrap board-list-header">
-				<ul class="row">
-					<li class="col-xs-1 col-md-1">체크</li>
-					<li class="col-xs-2 col-md-2">부문</li>
-					<li class="col-xs-3 col-md-3">예정업무</li>
-					<li class="col-xs-3 col-md-3">실시업무</li>
-					<li class="col-xs-1 col-md-1">REMARK</li>
-				</ul> 
-			</div>
-			<div class="board-list-wrap borard-list-con">
-				<form id="formArray" name="formArray"  autocomplete="off">
-					<c:set var="number" value="${detailWorkCnt}" />
-					<c:forEach var="detailWorkList" items="${detailWorkList}" varStatus="detailedWorkNum">
-						<ul class="row" >
-							<c:if test = "${detailWorkList.work_seq == 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" id="table_check" name="table_check" value="${detailWorkList.work_seq}" checked></li>
-								<li class="col-xs-2 col-md-2" id="sector"><input id="sector_val" type="text" value="${detailWorkList.sector}"></li>
-								<li class="col-xs-3 col-md-3" id="fr_work"><input id="fr_work_val" type="text" value="${detailWorkList.fr_work}"></li>
-								<li class="col-xs-3 col-md-3" id="to_work"><input id="to_work_val" type="text" value="${detailWorkList.to_work}"></li>
-								<li class="col-xs-1 col-md-1" id="remark"><input id="remark_val" type="text" value="${detailWorkList.remark}"></li>
-							</c:if>
-							<c:if test = "${detailWorkList.work_seq != 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></li>
-								<li class="col-xs-2 col-md-2" id="sector"><lable >${detailWorkList.sector}</lable></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.fr_work}</label></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.to_work}</label></li>		
-								<li class="col-xs-1 col-md-1"><label>${detailWorkList.remark}</label></li>		
-							</c:if>
-						</ul>
-					</c:forEach>
-				</form>
-			</div>
-		</div> 
-	</section>	
+	<!-- 버튼 모음입니다. -->
+	<button id="tablePrint"	class="basin_btn"	style="float: right;" onclick="window.print()">인쇄</button>
+	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
+	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
+	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
+	<button id="tableSave"	class="basin_btn"	style="float: right;" >저장</button>	
+	
+<!-- 게시글 있을 때. --> 
+	<table class="view_top_center_table">
+		<tr> 
+			<td >체크</td>
+			<td >부문</td>
+			<td >예정업무</td>
+			<td >실시업무</td>
+			<td >REMARK</td>
+		</tr>
+		<form id="formArray" name="formArray"  autocomplete="off">
+			<c:set var="number" value="${detailWorkCnt}" />
+			<c:forEach var="detailWorkList" items="${detailWorkList}" varStatus="detailedWorkNum">
+				<tr>
+					<c:if test = "${detailWorkList.work_seq == 0}">
+						<td class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${detailWorkList.work_seq}" checked></td>
+						<td class="" id="sector"><input id="sector_val" type="text" value="${detailWorkList.sector}"></td>
+						<td class=""><textarea class="default_textarea" style="resize:none;">${detailWorkList.fr_work}</textarea></td>
+						<td class=""><textarea class="default_textarea" style="resize:none;">${detailWorkList.to_work}</textarea></td>		
+						<td class=""><textarea class="default_textarea" style="resize:none;">${detailWorkList.remark}</textarea></td>	
+					</c:if>
+					<c:if test = "${detailWorkList.work_seq != 0}">
+						<td class="tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></td>
+						<td class="" id="sector"><label >${detailWorkList.sector}</label></td>
+						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${detailWorkList.fr_work}</textarea></td>
+						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${detailWorkList.to_work}</textarea></td>		
+						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${detailWorkList.remark}</textarea></td>		
+					</c:if>
+				</tr>
+			</c:forEach>
+		</form>
+	</table>
 	
 	<!-- 게시글 없을 때. -->
 	<c:if test="${detailWorkCnt==0}">

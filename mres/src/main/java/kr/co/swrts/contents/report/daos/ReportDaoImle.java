@@ -164,6 +164,27 @@ public class ReportDaoImle implements ReportDao {
 	}
 	
 	/**
+	 * 하자보수 생성
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int insertRepair(RepairMstVO repairVO) throws Exception {
+		return sql.getSqlSession().insert("insertRepair", repairVO);
+	}
+	
+	/**
+	 * 하자보수 수정
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int updateRepair(RepairMstVO repairVO) throws Exception {
+		return sql.getSqlSession().update("updateRepair", repairVO);
+	}
+	/**
 	 * 주요계약현황 리스트 수
 	 * @param map
 	 * @return
@@ -299,4 +320,8 @@ public class ReportDaoImle implements ReportDao {
 	public List<FileMstVO> selectFileList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectFileList", map);
 	}
+	
+	
+	
+	
 }

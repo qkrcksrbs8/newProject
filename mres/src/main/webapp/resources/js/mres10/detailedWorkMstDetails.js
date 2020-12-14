@@ -64,15 +64,15 @@ $(function() {
 		//-----------------
 		checkbox.each(function(i) {
 
-  			var ul = checkbox.parent().parent().eq(i);		// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   		var li = ul.children();							// checkbox.parent() : checkbox의 부모는 <li>이다.
+  			var tr = checkbox.parent().parent().eq(i);		// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
+	   		var td = tr.children();							// checkbox.parent() : checkbox의 부모는 <td>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
-			var work_seq 	= li.eq(0).children().val();	//세부업무 실적 시퀀스
-			var sector 		= li.eq(1).text();				//부문
-			var fr_work		= li.eq(2).text();				//예정업무
-			var to_work 	= li.eq(3).text();				//실시업무
-			var remark 		= li.eq(4).text();				//remark
+			var work_seq 	= td.eq(0).children().val();	//세부업무 실적 시퀀스
+			var sector 		= td.eq(1).text();				//부문
+			var fr_work		= td.eq(2).text();				//예정업무
+			var to_work 	= td.eq(3).text();				//실시업무
+			var remark 		= td.eq(4).text();				//remark
 
 			if(work_seq == 'on'){work_seq = 0;};			//세부업무 실적 시퀀스가 on일경우 0으로 변환
 			
@@ -85,12 +85,12 @@ $(function() {
 			jsonObj.remark= remark;			//비고
 			jsonObj.work_date = work_date	//기준년도
 
-			jsonArr[i] = jsonObj;					//Array 배열 push
+			jsonArr[i] = jsonObj;			//Array 배열 push
 
 		});
 		
 		var stringJson = JSON.stringify(jsonArr); 	//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./insertDetailedWork";		//url 테이블 데이터 저장
+		var url = "./insertDetailedWork";			//url 테이블 데이터 저장
 		
 		$.ajax({
 			 method: "POST"
@@ -101,24 +101,24 @@ $(function() {
 			}
 		}).done(function(data){//통신 성공
 
-			if("0000" == data.resultCode){
+			if("0000" == data.resultCode){				//0000:정상 | 9000:오류
 				
 				alert("저장이 완료되었습니다.");
-			    var workDate = $("#selectCode").val();					//셀렉트박스  2020, 2019, 2018 ...
-			    $("#workDate").val(workDate);							//업무구분
-			    $("#addList").val("normal");							//행추가 변수 값 add
-				$("#selectForm").submit();								//서브밋
+			    var workDate = $("#selectCode").val();	//셀렉트박스  2020, 2019, 2018 ...
+			    $("#workDate").val(workDate);			//업무구분
+			    $("#addList").val("normal");			//행추가 변수 값 add
+				$("#selectForm").submit();				//서브밋
 				
-			} else if ("9000" == data.resultCode){
+			} else if ("9000" == data.resultCode){		//0000:정상 | 9000:오류
 				
 				alert("관리자에게 문의주세요.");
 				
-			} else{
+			} else{										//설정된 코드를 받지 못할 시 "알 수 없는 에러"
 				
 				alert("알 수 없는 에러. 관리자에게 문의해주세요.");	
 			}
 			
-		}).fail(function(data){//통신 실패
+		}).fail(function(data){							//통신 실패(서버 통신 전에 오류 발생)
 			alert("네트워크가 원활하지 않습니다. 잠시 후 시도해주세요.");
 		})
 		
@@ -133,40 +133,32 @@ $(function() {
    		
 		var checkboxCnt = $("input[name=table_check]:checked").length;	//체크박스 개수 체크
    		
-   		//------------------------
-   		//수정할 데이터가 없으면 바로 종료
-   		//------------------------
-   		if(checkboxCnt < 1 ){
-   			 
-   			alert("수정할 데이터를 선택해 주세요.");
-   			return;
-   			
-   		};
+   		
+   		if(checkboxCnt < 1 ){alert("수정할 데이터를 선택해 주세요.");return;	};	//수정할 데이터가 없으면 바로 종료					
    		
    		var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
 
    			//-------------------------
    			//체크박스 반복문입니다.
    			//-------------------------
-
    			if("수정" == $("#tableUp").text()){
    				
    				checkbox.each(function(i) {
 
-   	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
-   	   				var sector_val	= li.eq(1).text();					//부문
-   	   				var fr_work_val = li.eq(2).text();					//예정업무
-   	   				var to_work_val = li.eq(3).text();					//실시업무
-   	   				var remark_val	= li.eq(4).text();					//비고
+   	   				var tr = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
+   	   				var sector_val	= td.eq(1).text();					//부문
+   	   				var fr_work_val = td.eq(2).text();					//예정업무
+   	   				var to_work_val = td.eq(3).text();					//실시업무
+   	   				var remark_val	= td.eq(4).text();					//비고
    	   				
-   	   				li.eq(0).attr("disabled", true);
-   	   				li.eq(1).html('<input id="sector_val"	type="text" value="'+sector_val+'">');	//부문	수정 가능한 필드로 변경
-   	   				li.eq(2).html('<input id="fr_work_val"	type="text" value="'+fr_work_val+'">');	//예정업무	수정 가능한 필드로 변경
-   	   				li.eq(3).html('<input id="to_work_val"	type="text" value="'+to_work_val+'">');	//실시업무	수정 가능한 필드로 변경
-   	   				li.eq(4).html('<input id="remark_val"	type="text" value="'+remark_val+'">');	//비고	수정 가능한 필드로 변경
+   	   				td.eq(0).attr("disabled", true);
+   	   				td.eq(1).html('<input id="sector_val"	type="text" value="'+sector_val+'">');	//부문	수정 가능한 필드로 변경
+   	   				td.eq(2).html('<textarea class="default_textarea" style="resize:none;">'+fr_work_val+'</textarea>');	//예정업무	수정 가능한 필드로 변경
+   	   				td.eq(3).html('<textarea class="default_textarea" style="resize:none;">'+to_work_val+'</textarea>');	//실시업무	수정 가능한 필드로 변경
+   	   				td.eq(4).html('<textarea class="default_textarea" style="resize:none;">'+remark_val+'</textarea>');		//비고	수정 가능한 필드로 변경
 
-   	   			});
+   	   			});//checkbox.each
 
 				
    				$("#tableUp").text("수정 완료");			//수정 버튼의 글자를	 수정 완료로 변경
@@ -174,33 +166,33 @@ $(function() {
    				$("#tableDel").attr("disabled", true);	//삭제 버튼 비활성화	 수정 중일 때 
    				$("#tableAdd").attr("disabled", true);	//행추가 버튼 비활성화 수정 중일 때 
    				
-   			}else{
+   			} else {
    				
    				var result = confirm("수정 완료 하시겠습니까?");//수정 여부 물어보기
    							
-   				if(result){
+   				if(result){//수정 완료
    				
    					var seq = 0;//시퀀스 - 0:신규
    					
 					//----------------------
-					//li.eq(0)은 체크박스입니다.
+					//td.eq(0)은 체크박스입니다.
 					//----------------------
    					checkbox.each(function(i) {
 	
-	   	   				var ul			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   	   				var li			= ul.children();					// checkbox.parent() : checkbox의 부모는 <li>이다.
-	   	   				seq				= li.eq(0).children().val();		//시퀀스 - 0:신규
-	   	   				var sector_val	= li.eq(1).children().val();		//부문
-	   	   				var fr_work_val = li.eq(2).children().val();		//예정업무
-	   	   				var to_work_val = li.eq(3).children().val();		//실시업무
-	   	   				var remark_val	= li.eq(4).children().val();		//비고
+	   	   				var tr			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
+	   	   				var td			= tr.children();					// checkbox.parent() : checkbox의 부모는 <li>이다.
+	   	   				seq				= td.eq(0).children().val();		//시퀀스 - 0:신규
+	   	   				var sector_val	= td.eq(1).children().val();		//부문
+	   	   				var fr_work_val = td.eq(2).children().val();		//예정업무
+	   	   				var to_work_val = td.eq(3).children().val();		//실시업무
+	   	   				var remark_val	= td.eq(4).children().val();		//비고
 	   	   				
-	   	   				li.eq(1).html('<label>'+sector_val+'</label>');		//수정 완료되면 다시 label로 변경
-	   	   				li.eq(2).html('<label>'+fr_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(3).html('<label>'+to_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(4).html('<label>'+remark_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				td.eq(1).html('<label>'+sector_val+'</label>');		//수정 완료되면 다시 label로 변경
+	   	   				td.eq(2).html('<textarea class="default_textarea" style="resize:none;" readonly="readonly">'+fr_work_val+'</textarea>');	//수정 완료되면 다시 label로 변경
+	   	   				td.eq(3).html('<textarea class="default_textarea" style="resize:none;" readonly="readonly">'+to_work_val+'</textarea>');	//수정 완료되면 다시 label로 변경
+	   	   				td.eq(4).html('<textarea class="default_textarea" style="resize:none;" readonly="readonly">'+remark_val+'</textarea>');		//수정 완료되면 다시 label로 변경
 	
-	   	   			});
+	   	   			});//checkbox.each
 	   				
    					//------------------------
    					//행추가 중이면 행추가 버튼 비활성화
@@ -215,8 +207,7 @@ $(function() {
 	   				
 	   				alert("저장 버튼을 눌러주세요.");					//수정 완료
 	   				
-   				}else{return;};									//수정 완료 버튼을 누르지 않으면 리턴
-   				//else
+   				} else {return;};								//수정 완료 버튼을 누르지 않으면 리턴
    				
    			};//else
    			
@@ -252,21 +243,21 @@ $(function() {
 
 			// checkbox.parent() : checkbox의 부모는 <li>이다.
 			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.
-			var ul = checkbox.parent().parent().eq(i);
-			var li = ul.children();
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
 			
-			// li.eq(0)은 체크박스 이므로  li.eq(1)의 값부터 가져온다.
+			// td.eq(0)은 체크박스 이므로  li.eq(1)의 값부터 가져온다.
 			
 			//-------------------------------
 			//삭제 시 신규로 추가된 행을 삭제하면 담는다.
 			//한 번 담으면 나머지는 패스
 			//-------------------------------
 			if(seq != -1){
-				seq	= li.eq(0).children().val();			//시퀀스 - 0:신규	
+				seq	= td.eq(0).children().val();			//시퀀스 - 0:신규	
 			};//if
 			
-			var work_seq = li.eq(0).children().val();		//연간스케쥴 시퀀스
-			if(work_seq == 'on'){work_seq = 0;};			//연간스케쥴 시퀀스가 on일경우 0으로 변환
+			var work_seq = td.eq(0).children().val();		//세부업무실적 시퀀스
+			if(work_seq == 'on'){work_seq = 0;};			//세부업무실적 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
 			var jsonObj = new Object();						//JsonObject를 위한 객체생성
@@ -276,7 +267,7 @@ $(function() {
 		});
 
 		var stringJson = JSON.stringify(jsonArr); 			//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./deleteDetailedWork";				//url 테이블 데이터 삭제
+		var url = "./deleteDetailedWork";					//url 테이블 데이터 삭제
 		
 		$.ajax({
 			 type: "POST"
@@ -325,8 +316,8 @@ $(function() {
    	$("#tableAdd").click(function(){
    		
    		var checkboxCnt = $("input[name=table_check]").length;	//체크박스 개수 10개 이상이면 생성 불가
-   		if(checkboxCnt >= 10){
-			alert("10개 이상 생성 불가.");   			
+   		if(checkboxCnt >= 15){
+			alert("15개 이상 생성 불가.");   			
    			return; 
    		};
    		

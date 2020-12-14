@@ -343,7 +343,8 @@ $(function() {
 	//----------------
 	$("#uploadPopup").click(function(){
 
-		$("#fileTable").empty();//현재 파일 리스트 제거
+//		$("#fileTable").empty();//현재 파일 리스트 제거
+		$(".removeTr").remove();
 		
 		var tr = $(this).parent().parent().eq(0);	//클릭한 테이블의 tr
 		var td = tr.children();						//클릭한 테이블의 td
@@ -368,7 +369,7 @@ $(function() {
 					
 					for(var i = 0; i < data.fileCnt; ++i){
 						
-						$("#fileTable").append('<tr><td><label>'+data.fileList[i].file_date+'</label></td><td><label>'+data.fileList[i].file_content+'</label></td><td id="fileDown" class='+data.fileList[i].file_seq+' onclick="fileDown()"><label>'+data.fileList[i].file_name+'</label></td></tr>')
+						$("#fileTable").append('<tr class="removeTr"><td><label>'+data.fileList[i].file_date+'</label></td><td><label>'+data.fileList[i].file_content+'</label></td><td id="fileDown" class='+data.fileList[i].file_seq+' onclick="fileDown()"><label>'+data.fileList[i].file_name+'</label></td></tr>')
 						
 					}//for
 					$(".fileDown").addClass('fileDownoald');
@@ -397,7 +398,8 @@ $(function() {
 	//----------------
 	$(".schedule_reg_popup_close").click(function(){
 		
-		$("#fileTable").empty();//현재 파일 리스트 제거
+//		$("#fileTable").empty();//현재 파일 리스트 제거
+		$(".removeTr").remove();//현재 파일 리스트 제거
 		$("#schedule_reg_popup").popup('hide');//팝업 종료
 		
 	});//
@@ -410,7 +412,7 @@ $(function() {
         formData.append("message", "ajax로 파일 전송하기");
         formData.append("file", $("#fileUpId")[0].files[0]);
 		
-		$.ajax({
+		$.ajax({ 
               url : "./fileUpload"
             , type : "POST"
             , processData : false
@@ -424,11 +426,12 @@ $(function() {
 					
 					if(data.fileCnt > 0){
 						
-						$("#fileTable").empty();//현재 파일 리스트 제거
+//						$("#fileTable").empty();//현재 파일 리스트 제거
+						$(".removeTr").remove();
 						
 						for(var i = 0; i < data.fileCnt; ++i){
 							
-							$("#fileTable").append('<tr><td><label>'+data.fileList[i].file_date+'</label></td><td><label>'+data.fileList[i].file_content+'</label></td><td id="fileDown" class='+data.fileList[i].file_seq+' onclick="fileDown()"><label>'+data.fileList[i].file_name+'</label></td></tr>')
+							$("#fileTable").append('<tr class="removeTr"><td><label>'+data.fileList[i].file_date+'</label></td><td><label>'+data.fileList[i].file_content+'</label></td><td id="fileDown" class='+data.fileList[i].file_seq+' onclick="fileDown()"><label>'+data.fileList[i].file_name+'</label></td></tr>')
 							
 						}//for
 						$(".fileDown").addClass('fileDownoald');

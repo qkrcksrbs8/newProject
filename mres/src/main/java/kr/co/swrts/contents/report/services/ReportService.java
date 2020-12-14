@@ -356,25 +356,27 @@ public class ReportService {
 	*@param addList
 	*@return
 	*/
-	public List<RepairMstVO> selectRepairList(HttpServletRequest request, String addList) {
+	public List<RepairMstVO> selectRepairList(HttpServletRequest request, String addList, String fr_cal, String to_cal) {
 		
 		logger.info("================================ START ================================");
-		List<RepairMstVO> selectRepairList = new ArrayList<RepairMstVO>();				//세부업무실적VO Listㅋ
+		List<RepairMstVO> selectRepairList = new ArrayList<RepairMstVO>();	//하자보수VO Listㅋ
 		
 		try {
-													//기준년도 로그
-			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");																//1:사용 / 0:미사용
+													
+			Map<String, Object> map = new HashMap<String, Object>();	//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");									//1:사용 / 0:미사용
+			map.put("fr_cal", fr_cal);									//날짜 검색 시작일
+			map.put("to_cal", to_cal);									//날짝 검색 종료일
 			
-			int selectRepairCnt = 0;																//하자보수리스트 cnt 변수 선언
-			selectRepairCnt = reportDao.selectRepairCnt(map);										//하자보수리스트 cnt 조회
+			int selectRepairCnt = 0;									//하자보수리스트 cnt 변수 선언
+			selectRepairCnt = reportDao.selectRepairCnt(map);			//하자보수리스트 cnt 조회
 			logger.info("cnt : "+selectRepairCnt);
 			
 			//------------------
 			//세무업무 실적 리스트 개수 
 			//------------------
 			if(selectRepairCnt > 0 ) {
-				selectRepairList = reportDao.selectRepairList(map);							//세부업무실적 리스트 조회
+				selectRepairList = reportDao.selectRepairList(map);		//하자보수 리스트 조회
 			};//if
 			
 			//-----------------------------
@@ -382,8 +384,8 @@ public class ReportService {
 			//-----------------------------
 			if("add".equals(addList)) {
 			
-				RepairMstVO repairMstVO = new RepairMstVO();						//vo 선언
-				selectRepairList.add(repairMstVO);											//리스트에 추가
+				RepairMstVO repairMstVO = new RepairMstVO();			//vo 선언
+				selectRepairList.add(repairMstVO);						//리스트에 추가
 
 			};//if
 			
@@ -399,7 +401,48 @@ public class ReportService {
 			
 		}//try
 		
-	}
+	}//selectRepairList
+	
+	
+	/**
+	*하자보수 저장/수정
+	*@param request
+	*@throws Exception
+	*/
+	public void insertRepair(HttpServletRequest request) throws Exception {
+		
+		logger.info("================================ START ================================");
+		
+		try {
+			
+			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
+			logger.info(str); 																		//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
+			Gson gson = new Gson();																	//gson 선언
+			Type listType = new TypeToken<ArrayList<RepairMstVO>>(){}.getType();					//하자보수VO의 List.class 
+			List<RepairMstVO> repairList = gson.fromJson(jsonArray.toString(), listType);			//jsonArray -> VO로 파싱
+			RepairMstVO repairVO = new RepairMstVO();												//하자보수 VO
+			
+			//-----------------------------------
+			//파싱된 VOList 출력
+			//-----------------------------------
+			for(int i = 0; i < repairList.size(); ++i) {
+				
+				repairVO = repairList.get(i);														//반복문으로 객체 가져오기
+				if(reportDao.updateRepair(repairVO) == 0) {reportDao.insertRepair(repairVO);};		//업데이트 할 내용이 없으면 저장
+				
+			};//for
+			
+			logger.info("================================ E N D ================================");
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.insertRepair() : ");
+			logger.error(e.toString());
+			
+		}//try - catch
+		
+	}//insertRepair
 	
 	/**
 	*주요현황 리스트 조회
@@ -664,7 +707,7 @@ public class ReportService {
 				String mainPath = "";	//초기 경로 ex - C:/
 				String subPath = "";//상세 경로
 				mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
-				subPath = "images"+File.separator+fileMstVO.getTable_name()+File.separator+fileMstVO.getFile_name();//상세 경로
+				subPath = "images"+File.separator+fileMstVO.getTable_name()+File.separator+table_seq+File.separator+fileMstVO.getFile_name();//상세 경로
 				
 				String file_path = mainPath+subPath;	//파일경로
 				File fileSave = new File(file_path);	//파일경로 지정
@@ -755,8 +798,7 @@ public class ReportService {
 			String subPath = "";						//상세 경로
 			mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
 			subPath = fileMstVO.getFile_path();			//상세 경로
-	    	
-
+	    	 
 			logger.info("mainPath : "+mainPath);	
 			logger.info("subPath : "+subPath);	
 			

@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
       
 <mapper namespace="kr.co.swrts.contents.report.daosImle">  
-  
+ 
 <select id="selectScheduleCnt" parameterType="map" resultType="int">
 /* selectScheduleList */
 	SELECT
@@ -274,21 +274,68 @@
 
 <select id="selectRepairList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.RepairMstVO">
 /* selectRepairList */
-	SELECT
-		REPAIR_SEQ
-		, FR_WORK
-		, TO_WORK
-		, FR_IMG_ID
-		, TO_IMG_ID
-		, REMARK
-        , USEFLAG
-        , COMPANY_CODE
-        , CREATED_DATE
-    FROM REPAIR_MST
+	SELECT 
+	    A.REPAIR_SEQ AS REPAIR_SEQ
+	    , A.FR_WORK AS FR_WORK
+	    , A.TO_WORK AS TO_WORK
+	    , A.FR_IMG_ID AS FR_IMG_ID
+	    , A.TO_IMG_ID AS TO_IMG_ID
+	    , (SELECT FILE_PATH FROM FILE_MST WHERE FILE_SEQ = A.FR_IMG_ID) AS FR_IMG_PATH
+	    , (SELECT FILE_PATH FROM FILE_MST WHERE FILE_SEQ = A.TO_IMG_ID) AS FR_IMG_PATH
+	    , A.REMARK AS REMARK
+	    , A.COMPANY_CODE AS COMPANY_CODE
+	    , A.CREATED_DATE AS CREATED_DATE
+	FROM REPAIR_MST A
 	WHERE USEFLAG = #{useflag}
+	<if test='fr_cal != null  and fr_cal != "" and to_cal != null  and to_cal != ""'>
+		AND CREATED_DATE BETWEEN #{fr_cal} AND #{to_cal}
+ 	</if>
  	ORDER BY REPAIR_SEQ ASC
 	
 </select>
+
+<insert id="insertRepair" parameterType="kr.co.swrts.contents.report.domains.RepairMstVO">
+/* insertRepair */
+	INSERT INTO REPAIR_MST (
+	    FR_WORK
+	    , TO_WORK
+	    , REMARK
+	    , COMPANY_CODE
+		, CREATED_BY
+	    , LAST_UPDATE_BY
+	) values (
+	    #{fr_work}
+	    ,#{to_work}
+	    ,#{remark}
+	    ,#{company_code}
+	    ,#{created_by}
+	    ,#{last_update_by}
+	)
+</insert>
+
+<update id="updateRepair" parameterType="kr.co.swrts.contents.report.domains.RepairMstVO">
+/* updateRepair */
+	UPDATE REPAIR_MST SET
+	    LAST_UPDATE_BY	=	#{last_update_by}
+	    ,LAST_UPDATE_DATE = NOW()
+ 	<if test='fr_work != null  and fr_work != ""'>
+		,FR_WORK		=	#{fr_work}
+ 	</if>
+ 	<if test='to_work != null  and to_work != ""'>
+		,TO_WORK		=	#{to_work}
+ 	</if>
+ 	 <if test='fr_img_id != null  and fr_img_id != ""'>
+		,FR_IMG_ID		=	#{fr_img_id}
+ 	</if>
+ 	<if test='to_img_id != null  and to_img_id != ""'>
+		,TO_IMG_ID		=	#{to_img_id}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>
+		,REMARK			=	#{remark}
+ 	</if>
+	where REPAIR_SEQ 	=	#{repair_seq}
+	
+</update>
 
 
 <select id="selectContractCnt" parameterType="map" resultType="int">

@@ -114,6 +114,23 @@ public interface ReportDao {
 	public List<RepairMstVO> selectRepairList(Map<String, Object> map) throws Exception;
 	
 	/**
+	 *하자보수 수정
+	 * @param RepairVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateRepair(RepairMstVO repairVO) throws Exception;
+	
+	/**
+	*하자보수 생성
+	*@param RepairVO
+	*@return
+	*@throws Exception
+	*/
+	public int insertRepair(RepairMstVO repairVO) throws Exception;
+	
+	
+	/**
 	*주요계약현황 개수 조회
 	*@param map
 	*@return

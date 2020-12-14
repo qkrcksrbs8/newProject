@@ -3,27 +3,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <style>
-
-table tbody tr td{
-    border: solid;
-}
-
+ .date_input{			/* input type="date" 수정	*/
+ 	width:150px;		/* 넓이는 150px 			*/
+ 	padding-right:5px; 	/* 우측 5px만큼 간격			*/
+ }
 </style>
-<script type="text/javascript">
-$(function() {
-});
-</script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/detailedWorkMstDetails.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/repairMstDetails.js"></script>
 
-<script>
+<script type="text/javascript">
 
 $(function(){
 
-	var selectWorkDate = "${workDate}";			//업무코드		2020, 2019, 2018 ...
-	$("#selectCode").val(selectWorkDate);		//페이지 진입 시 selectBox 선택
+	var selectFrCal = "${fr_cal}";	//시작일
+	var selectToCal = "${to_cal}";	//종료일
+	var addList = "${addList}";		//add:행추가 / normal:일반 출력
 	
-	var addList = "${addList}";					//add:행추가 / normal:일반 출력
+	$("#frCal").val(selectFrCal);	//검색 후 시작일 셋팅
+	$("#toCal").val(selectToCal);	//걸색 후 종료일 셋팅
 	
 	//-----
 	//행추가
@@ -44,59 +42,75 @@ $(function(){
 <body>
 
 <div class="container">
-
-	<!-- 페이지 제목 -->
-	<section id="content" class="board-list-header-wrap">
-		<div class="container">
-			<h1 class="board-list-header">하자보수현황</h1>
+	
+	<!-- 달력 -->
+	<div class="search_con clear">
+		<div class="search_title">검색일자</div>
+		<div>
+			<div class="cal_wrap">
+				<input type="date" class="date_input select_cal" id="frCal" name="frCal">
+			</div>
+			<p class="cal_to">~</p>
+			<div class="cal_wrap">
+				<input type="date" class="date_input select_cal" id="toCal" name="toCal">
+			</div>
 		</div>
-	</section> 
+	</div>
+		
 	
-	<button id="tableSave" class="btn btn-success" >저장</button>	
-	<button id="tableUp" class="btn btn-success" >수정</button>
-	<button id="tableDel" class="btn btn-success" >삭제</button>		
-	<button id="tableAdd" class="btn btn-success" >행추가</button>	
+	<!-- 버튼 모음입니다. --> 
+	<button id="tablePrint"	class="basin_btn"	style="float: right;" onclick="window.print()">인쇄</button>
+	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
+	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
+	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
+	<button id="tableSave"	class="basin_btn"	style="float: right;" >저장</button>	
 	
-	<!-- 게시글 있을 때. --> 
-	<section id="content">
-		<div class="container">
-			<div class="board-list-wrap board-list-header">
-				<ul class="row">
-					<li class="col-xs-1 col-md-1">체크</li>
-					<li class="col-xs-2 col-md-2">부문</li>
-					<li class="col-xs-3 col-md-3">예정업무</li>
-					<li class="col-xs-3 col-md-3">실시업무</li>
-					<li class="col-xs-1 col-md-1">REMARK</li>
-				</ul> 
-			</div>
-			<div class="board-list-wrap borard-list-con">
-				<form id="formArray" name="formArray"  autocomplete="off">
-					<c:set var="number" value="${detailWorkCnt}" />
-					<c:forEach var="detailWorkList" items="${detailWorkList}" varStatus="detailedWorkNum">
-						<ul class="row" >
-							<c:if test = "${detailWorkList.work_seq == 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" id="table_check" name="table_check" value="${detailWorkList.work_seq}" checked></li>
-								<li class="col-xs-2 col-md-2" id="sector"><input id="sector_val" type="text" value="${detailWorkList.sector}"></li>
-								<li class="col-xs-3 col-md-3" id="fr_work"><input id="fr_work_val" type="text" value="${detailWorkList.fr_work}"></li>
-								<li class="col-xs-3 col-md-3" id="to_work"><input id="to_work_val" type="text" value="${detailWorkList.to_work}"></li>
-								<li class="col-xs-1 col-md-1" id="remark"><input id="remark_val" type="text" value="${detailWorkList.remark}"></li>
-							</c:if>
-							<c:if test = "${detailWorkList.work_seq != 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></li>
-								<li class="col-xs-2 col-md-2" id="sector"><lable >${detailWorkList.sector}</lable></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.fr_work}</label></li>
-								<li class="col-xs-3 col-md-3"><label>${detailWorkList.to_work}</label></li>		
-								<li class="col-xs-1 col-md-1"><label>${detailWorkList.remark}</label></li>		
-							</c:if>
-						</ul>
-					</c:forEach>
-				</form>
-			</div>
-		</div> 
-	</section>	
+<!-- 게시글 있을 때. --> 
+	<table class="view_top_center_table">
+		<tr> 
+			<td >체크</td>
+			<td >부문</td>
+			<td >예정업무</td>
+			<td >실시업무</td>
+			<td >REMARK</td>
+		</tr>
+		<form id="formArray" name="formArray"  autocomplete="off">
+			<c:set var="number" value="${selectRepairCnt}" />
+			<c:forEach var="selectRepairList" items="${selectRepairList}" varStatus="detailedWorkNum">
+				<c:if test = "${selectRepairList.repair_seq == 0}">
+					<tr>
+						<td rowspan="2" class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${selectRepairList.repair_seq}"></td>
+						<td rowspan="2"><label >${selectRepairList.created_date}</label></td>
+						<td class="" >	<input class="default_input w120" id="fr_work" 	type="text"	value="${selectRepairList.fr_work}"></td>
+						<td class="" >	<input class="default_input w120" id="to_work" 	type="text"	value="${selectRepairList.to_work}"></td>
+						<td rowspan="2"><textarea class="default_textarea" style="resize:none;">${selectRepairList.remark}</textarea></td>
+					</tr>
+					<tr>
+						<td class=""><img src="${mainPath}${selectRepairList.fr_img_path}" width="300" height="210"></td> 
+<!-- 						<td class=""><img src="file:/c:/images/연혁.png" width="300" height="210"></td> -->
+						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${selectRepairList.to_img_path}</textarea></td>
+					</tr>
+				</c:if>
+				<c:if test = "${selectRepairList.repair_seq != 0}">
+					<tr>
+						<td rowspan="2" class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${selectRepairList.repair_seq}"></td>
+						<td rowspan="2"><label>${selectRepairList.created_date}</label></td>
+						<td class="">	<label>${selectRepairList.fr_work}</label></td>
+						<td class="">	<label>${selectRepairList.to_work}</label></td>
+						<td rowspan="2"><label>${selectRepairList.remark}</label></td>
+					</tr>
+					<tr>
+<%-- 						<td class=""><img src="${mainPath}${selectRepairList.fr_img_path}" width="300" height="210"></td> --%> 
+						<td class=uploadPopup><img src="https://s.pstatic.net/static/www/img/2018/sp_search.svg" width="300" height="210"></td> 
+						<td class="uploadPopup"><img src="https://s.pstatic.net/static/www/img/2018/sp_search.svg" width="300" height="210"></td> 
+					</tr> 
+				</c:if>
+			</c:forEach>
+		</form>
+	</table>
 	
 	<!-- 게시글 없을 때. -->
-	<c:if test="${detailWorkCnt==0}">
+	<c:if test="${selectRepairCnt==0}">
 		<section id="content">
 			<div class="container">
 				<div class="board-list-wrap board-list-header">
@@ -108,34 +122,58 @@ $(function(){
 		</section>
 	</c:if>
 	
-	<table class="table">
-		<tbody>
-			<tr>
-				<td>구분</td>
-				<td>일자</td>
-				<td>전</td>
-				<td>후</td>
-			</tr>
-			<tr>
-				<td rowspan="2">체크박스</td>
-				<td rowspan="2">일자</td>
-				<td>설명</td>
-				<td>설명</td>
-			</tr>
-			<tr>
-				<td>사진</td>
-				<td>사진</td>
-			</tr>
-		</tbody>
-	</table>
-	
 	<!-- 셀렉트박스 조회용 히든 폼 -->
-	<form id="selectForm" name="selectForm"  action="detailedWorkList" autocomplete="off">
-		<input id="workDate" name="workDate" type="hidden" value ="">
-		<input id="addList" name ="addList" type="hidden" value	="">
+	<form id="selectForm" name="selectForm"  action="repairList" autocomplete="off">
+		<input type="hidden" id="baseYear"	name="baseYear"	value ="">
+		<input type="hidden" id="addList" 	name ="addList" value ="">
+		<input type="hidden" id="fr_cal" 	name ="fr_cal"	value ="">
+		<input type="hidden" id="to_cal" 	name ="to_cal"	value ="">
 	</form>
 	
 </div>
+
+
+<!-- 공지사항 등록 팝업 -->
+<div id="schedule_reg_popup" class="mres_popup">
+	<div class="pop" style="width: 545px">
+		<div class="pop_top">
+			<p class="popup_title">공지사항 등록</p>
+			<a class="right schedule_reg_popup_close" href="#;"><img src="<%=request.getContextPath()%>/resources/img/close.png" alt="닫기" width="35px" /></a>
+		</div>
+		<form id="fileForm" name="fileForm" action="/fileUpload" method="post" autocomplete="off" enctype="multipart/form-data">
+		<input type="hidden" id="table_seq" name="table_seq" value=0>
+		<input type="hidden" id="table_name" name="table_name" value="">
+ 		<input type="hidden" id="file_seq" name="file_seq" value=0>
+ 		<input type="hidden" id="file_content" name="file_content" value="">
+ 
+		<div class="pop_con">
+			<table class="view_top_table">
+				<tr>
+					<th>첨부파일</th>
+					<td>
+					<input type="file" placeholder="" class="default_input" id="fileUpId" name="fileUpId">
+					<input type="text" class="default_input" id="filename" name="filename" readonly="readonly">
+					</td>
+				</tr>
+			</table> 
+			<table id="fileTable" class="view_top_table">
+				<tr>
+					<th>업로드일자</th>
+					<th>파일이름</th>		
+				</tr>
+			</table>
+		</div>
+		</form>
+		<div class="pop_bottom">
+			<a href="#;" class="basin_btn" id="imgUp">저장</a>
+			<a href="#;" class="basin_btn schedule_reg_popup_close">취소</a>
+		</div>
+	</div>
+</div>
+
+
+
+
 
 <div>
 </div>
