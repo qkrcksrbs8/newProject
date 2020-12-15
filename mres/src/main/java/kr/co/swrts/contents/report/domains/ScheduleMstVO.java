@@ -36,7 +36,7 @@ public class ScheduleMstVO {
 	private String contract 	=		new String();	//계약서
 	private String file_name 	=		"파일업로드"; 		//파일이름
 	private int file_seq 		=		0;				//파일시퀀스자
-	private String useflag = 			new String();	//사용구분
+	private String useflag = 			"1";			//사용구분
 	private String created_date = 		new String();	//최초생성일
 	private String created_by = 		new String();	//최초생성자
 	private String last_update_date = 	new String();	//최종수정일

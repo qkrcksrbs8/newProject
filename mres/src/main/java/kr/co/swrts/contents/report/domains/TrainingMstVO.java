@@ -5,7 +5,7 @@ package kr.co.swrts.contents.report.domains;
  *교육현황VO
  *</pre>
  *
- *@ClassName : DetailedWorkMstVO.java 
+ *@ClassName : TrainingMstVO.java 
  *@Description : 교육현황VO
  *@author 박찬균 주임연구원
  *@since 2020. 12. 15

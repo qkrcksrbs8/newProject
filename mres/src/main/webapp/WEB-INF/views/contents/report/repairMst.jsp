@@ -9,6 +9,10 @@
  	width:150px;		/* 넓이는 150px 			*/
  	padding-right:5px; 	/* 우측 5px만큼 간격			*/
  }
+ 
+  .rightBtn{
+ 	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
+ }
 </style>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/repairMstDetails.js"></script>
 
@@ -57,13 +61,12 @@ $(function(){
 		</div>
 	</div>
 		
-	
 	<!-- 버튼 모음입니다. --> 
-	<button id="tablePrint"	class="basin_btn"	style="float: right;" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
-	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
-	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
-	<button id="tableSave"	class="basin_btn"	style="float: right;" >저장</button>	
+	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
 	
 <!-- 게시글 있을 때. --> 
 	<table class="view_top_center_table">
@@ -81,8 +84,8 @@ $(function(){
 					<tr>
 						<td rowspan="2" class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${selectRepairList.repair_seq}"></td>
 						<td rowspan="2"><label >${selectRepairList.created_date}</label></td>
-						<td class="" >	<input class="default_input w120" id="fr_work" 	type="text"	value="${selectRepairList.fr_work}"></td>
-						<td class="" >	<input class="default_input w120" id="to_work" 	type="text"	value="${selectRepairList.to_work}"></td>
+						<td class="" >	<input class="default_input con_wrap_100" id="fr_work" 	type="text"	value="${selectRepairList.fr_work}"></td>
+						<td class="" >	<input class="default_input con_wrap_100" id="to_work" 	type="text"	value="${selectRepairList.to_work}"></td>
 						<td rowspan="2"><textarea class="default_textarea" style="resize:none;">${selectRepairList.remark}</textarea></td>
 					</tr>
 					<tr>

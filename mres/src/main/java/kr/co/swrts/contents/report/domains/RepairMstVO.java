@@ -5,7 +5,7 @@ package kr.co.swrts.contents.report.domains;
  *하자보수관리VO
  *</pre>
  *
- *@ClassName : DetailedWorkMstVO.java 
+ *@ClassName : RepairMstVO.java 
  *@Description : 하자보수관리VO
  *@author 박찬균 주임연구원
  *@since 2020. 12. 10
@@ -23,7 +23,7 @@ public class RepairMstVO {
 	private String to_img_id 		= new String();	//실시업무 이미지
 	private String to_img_path		= new String();	//실시업무 이미지 경로
 	private String remark 			= new String();	//비고
-	private String useflag			= new String(); //사용구분
+	private String useflag			= "1";			//사용구분
 	private String company_code 	= new String();	//매장코드
 	private String created_by 		= new String();	//최초생성자
 	private String created_date 	= new String();	//최초생성일

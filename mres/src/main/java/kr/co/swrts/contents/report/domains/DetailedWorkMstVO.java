@@ -21,7 +21,7 @@ public class DetailedWorkMstVO {
 	private String fr_work 			= new String();	//예정업무
 	private String to_work 			= new String();	//실시업무
 	private String remark 			= new String();	//비고
-	private String useflag			= new String(); //사용구분
+	private String useflag			= "1";			//사용구분
 	private String company_code 	= new String();	//매장코드
 	private String created_by 		= new String();	//최초생성자
 	private String created_date 	= new String();	//최초생성일

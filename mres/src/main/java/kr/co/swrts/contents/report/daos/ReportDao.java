@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
@@ -129,7 +130,13 @@ public interface ReportDao {
 	*/
 	public int insertRepair(RepairMstVO repairVO) throws Exception;
 	
-	
+	/**
+	*하자보수현황 삭제
+	*@param repairVO
+	*@return
+	*@throws Exception
+	*/
+	public int deleteRepair(RepairMstVO repairVO) throws Exception;
 	/**
 	*주요계약현황 개수 조회
 	*@param map
@@ -170,6 +177,22 @@ public interface ReportDao {
 	*/
 	public int deleteContract(ContractMstVO contractVO) throws Exception;
 	
+	
+	/**
+	*설비 및 수불 현황 리스트 개수 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public int selectPaymentStatusCnt(Map<String, Object> map) throws Exception;
+	
+	/**
+	*설비 및 수불 현황 리스트 개수 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<PaymentStatusMstVO> selectPaymentStatusList(Map<String, Object> map) throws Exception;
 	
 	/**
 	 *교육현황 리스트 수

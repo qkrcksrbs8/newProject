@@ -333,10 +333,19 @@
  	<if test='remark != null  and remark != ""'>
 		,REMARK			=	#{remark}
  	</if>
-	where REPAIR_SEQ 	=	#{repair_seq}
+	WHERE REPAIR_SEQ 	=	#{repair_seq}
 	
 </update>
 
+<update id="deleteRepair" parameterType="kr.co.swrts.contents.report.domains.RepairMstVO"> 
+	/* deleteRepair */
+	UPDATE REPAIR_MST SET
+		last_update_date = NOW()
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE REPAIR_SEQ = #{repair_seq}
+	
+</update> 
 
 <select id="selectContractCnt" parameterType="map" resultType="int">
 /* selectContractCnt */
@@ -354,11 +363,11 @@
 		CONTRACT_SEQ
 	    , CONTRACT_DETAILS
 	    , CONTRACT_COMPANY
-	    , DATE_FORMAT(FR_DAY,'%Y.%c.%d') AS FR_DAY
-	    , DATE_FORMAT(TO_DAY,'%Y.%c.%d') AS TO_DAY
+	    , DATE_FORMAT(FR_DAY,'%Y-%m-%d') AS FR_DAY
+	    , DATE_FORMAT(TO_DAY,'%Y-%m-%d') AS TO_DAY
 	    , CONTRACT_YEARS
 	    , CONTRACT_DIVISION
-	    , PAYMENT
+	    , FORMAT(PAYMENT,0) AS PAYMENT
 	    , REMARK
     FROM CONTRACT_MST
 	WHERE USEFLAG = #{useflag}
@@ -440,6 +449,38 @@
 	WHERE CONTRACT_SEQ = #{contract_seq}
 	
 </update> 
+
+<select id="selectPaymentStatusCnt" parameterType="map" resultType="int">
+/* selectPaymentStatusCnt */
+	SELECT 
+	    COUNT(PAYMENT_STATUS_SEQ)
+	FROM PAYMENT_STATUS_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY PAYMENT_STATUS_SEQ ASC
+	
+</select>
+
+<select id="selectPaymentStatusList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
+/* selectPaymentStatusList */
+	SELECT 
+	    PAYMENT_STATUS_SEQ 
+	    ,PRODUCT_NAME
+	    ,PRODUCT_UNIT 
+	    ,CARRIED_FORWARD 
+	    ,ENTER
+	    ,THIS_MONTH 
+	    ,EXODUS
+	    ,USEFLAG
+	    ,COMPANY_CODE
+	    ,CREATED_DATE
+	    ,CREATED_BY 
+	    ,LAST_UPDATE_DATE 
+	    ,LAST_UPDATE_BY 
+	FROM PAYMENT_STATUS_MST
+	WHERE USEFLAG = #{useflag}
+ 	ORDER BY PAYMENT_STATUS_SEQ ASC
+	
+</select>
 
 
 <select id="selectTrainingCnt" parameterType="map" resultType="int">

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
@@ -184,6 +185,18 @@ public class ReportDaoImle implements ReportDao {
 	public int updateRepair(RepairMstVO repairVO) throws Exception {
 		return sql.getSqlSession().update("updateRepair", repairVO);
 	}
+	
+	/**
+	*하자보수현황 삭제
+	*@param repairVO
+	*@return
+	*@throws Exception
+	*/
+	@Override
+	public int deleteRepair(RepairMstVO repairVO) throws Exception {
+		return sql.getSqlSession().update("deleteRepair", repairVO);
+	}
+	
 	/**
 	 * 주요계약현황 리스트 수
 	 * @param map
@@ -237,6 +250,27 @@ public class ReportDaoImle implements ReportDao {
 	@Override
 	public int deleteContract(ContractMstVO contractVO) throws Exception {
 		return sql.getSqlSession().update("deleteContract", contractVO);
+	}
+	
+	/**
+	 * 설비 및 수불현황 리스트 수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectPaymentStatusCnt(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectPaymentStatusCnt", map);
+	}
+	
+	/**
+	 * 설비 및 수불현황 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<PaymentStatusMstVO> selectPaymentStatusList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectPaymentStatusList", map);
 	}
 	
 	

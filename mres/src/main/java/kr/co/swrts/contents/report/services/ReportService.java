@@ -30,6 +30,7 @@ import kr.co.swrts.contents.report.daos.ReportDao;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
@@ -199,9 +200,10 @@ public class ReportService {
 			logger.error("ReportService.deleteSchedule() : ");
 			logger.error(e.toString());
 			
-		}
+		}//try - catch
 		
-	}
+	}//deleteSchedule()
+	
 	
 	/**
 	*세무업무 실적 리스트 조회
@@ -344,7 +346,7 @@ public class ReportService {
 			logger.error("ReportServiceImpl.deleteDetailedWork() : ");
 			logger.error(e.toString());
 			
-		}//try
+		}//try - catch
 		
 	}
 	
@@ -444,6 +446,47 @@ public class ReportService {
 		
 	}//insertRepair
 	
+	
+	/**
+	*하자보수현황 삭제
+	*@param request
+	*/
+	public void deleteRepair(HttpServletRequest request) {
+
+		logger.info("================================ START ================================");
+		
+		try {
+			
+			String str = request.getParameter("totalJson");									//매개변수 string으로 받기
+			logger.info(str); 																//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);										//json배열 선언
+			Gson gson = new Gson();															//gson 선언
+			Type listType = new TypeToken<ArrayList<RepairMstVO>>(){}.getType();			//하자보수현황VO의 List.class 
+			List<RepairMstVO> repairList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
+			RepairMstVO repairVO = new RepairMstVO();										//하자보수현황 VO
+			
+			//-----------------------------------
+			//파싱된 VOList 출력
+			//-----------------------------------
+			for(int i = 0; i < repairList.size(); ++i) {
+				
+				repairVO = repairList.get(i);												//반복문으로 객체 가져오기
+				reportDao.deleteRepair(repairVO);											//하자보수현황 삭제 DAO
+				
+			};//for
+		
+			logger.info("================================ E N D ================================");
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.deleteDetailedWork() : ");
+			logger.error(e.toString());
+			
+		}//try - catch
+		
+	}
+	
+	
 	/**
 	*주요현황 리스트 조회
 	*@param request
@@ -514,49 +557,14 @@ public class ReportService {
 			Type listType = new TypeToken<ArrayList<ContractMstVO>>(){}.getType();						//주요계약현황 실적VO의 List.class 
 			List<ContractMstVO> contractList = gson.fromJson(jsonArray.toString(), listType);			//jsonArray -> VO로 파싱
 			
-			String total_date 	= "";		//전체 계약기간 변수
-			String fr_day		= "";		//전체 계약기간에서 시작일을 담을 변수
-			String to_day 		= "";		//전체 계약기간에서 종요일을 담을 변수
-			String total_years 	= "";		//계약연수+계약구분
-			String contract_years = "";		//계약연수를 담을 변수
-			String contract_division = "";	//계약구분을 담을 변수
-			String removeChar = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";						//특수문자 제거 
-			String justNum = "[^0-9]";													//숫자 이외 제거
-			
 			//-----------------------------------
 			//파싱된 VOList 출력
-			//1. 계약기간 일자를 파싱하여 시작일, 종료일을 분리합니다.
-			//2. 계약연수와 계약구분을 분리합니다. 
-			//3. 저장 및 수정
+			//저장 및 수정
 			//-----------------------------------
 			for(int i = 0; i < contractList.size(); ++i) {
 
-				ContractMstVO contractVO = new ContractMstVO();										//주요계약현황 VO			
-				contractVO = contractList.get(i);													//반복문으로 객체 가져오기
-				
-				total_date = contractVO.getTotal_date().replaceAll(justNum, "");					//숫자 외 문자 제거
-				logger.info("######total_date : "+total_date);
-				
-				//-----------------------------
-				//total_date 길이가 16이 아니면 리턴
-				//-----------------------------
-				if(16 != total_date.length()) {               
-					return;
-				};//if
-				
-
-				total_years = contractVO.getTotal_years();									//계약년수 ex. 1년(자동연장)		
-				total_years = total_years.replaceAll("년", "").replaceAll(removeChar, "");	//년, 특수문자 제거
-				
-				fr_day = total_date.substring(0,8);											//시작일 ex. 1993/09/02
-				to_day = total_date.substring(8);											//종료일 ex. 2993/09/02
-				contract_years =  total_years.substring(0,1);								//첫 자리만 년수 인식. 2자리 수의 계약 기간은 없음
-				contract_division = total_years.substring(1);								//첫 자리를 제외한 나머지
-				
-				contractVO.setFr_day(fr_day);												//파싱된 시작일 ex. 19930902
-				contractVO.setTo_day(to_day);												//파싱된 종료일 ex. 29930902
-				contractVO.setContract_years(contract_years);								//파싱된 년수 ex. 1
-				contractVO.setContract_division(contract_division);							//파싱된 구분 ex. 자동연장
+				ContractMstVO contractVO = new ContractMstVO();								//주요계약현황 VO			
+				contractVO = contractList.get(i);											//반복문으로 객체 가져오기		
 				contractVO.setCreated_by("박주임");											//생성자 박주임
 				
 				logger.info("######"+contractVO.toString());
@@ -615,8 +623,62 @@ public class ReportService {
 		
 	}
 	
+	
 	/**
-	*세무업무 실적 리스트 조회
+	*설비 및 수불 현황 리스트 조회
+	*@param request
+	*@param addList
+	*@return
+	*/
+	public List<PaymentStatusMstVO> selectPaymentStatusList(HttpServletRequest request, String addList) {
+		
+		logger.info("================================ START ================================");
+		List<PaymentStatusMstVO> paymentStatusVOList = new ArrayList<PaymentStatusMstVO>();				//설비 및 수불 현황VO List
+		
+		try {
+													
+			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");																//1:사용 / 0:미사용
+			
+			int paymentStatusCnt = 0;																	//설비 및 수불 현황 개수 변수
+			paymentStatusCnt = reportDao.selectPaymentStatusCnt(map);									//설비 및 수불 현황 개수 조회
+			
+			//------------------
+			//세무업무 실적 리스트 개수 
+			//------------------
+			if(paymentStatusCnt > 0 ) {
+				paymentStatusVOList = reportDao.selectPaymentStatusList(map);						//설비 및 수불 현황 리스트 조회
+			};//if
+
+ 
+			//-----------------------------
+			//addList의 값이 add일 경우 리스트 추가
+			//-----------------------------
+			if("add".equals(addList)) {
+			
+				PaymentStatusMstVO contractVO = new PaymentStatusMstVO();							//vo 선언
+				paymentStatusVOList.add(contractVO);												//리스트에 추가
+
+			};//if
+
+			
+			logger.info(paymentStatusVOList.toString());
+			logger.info("================================ E N D ================================");	//리스트 로그 
+			return paymentStatusVOList;
+			
+		}catch(Exception e) {
+			
+			logger.error("ReportServiceImpl.selectPaymentStatusList() : ");							//설비 및 수불 현황 리스트 메서드
+			logger.error(e.toString());																//에러 내용
+			return paymentStatusVOList;
+			
+		}//try
+		
+	}//contractList
+	
+	
+	/**
+	*교육현황 리스트 조회
 	*@param request
 	*@param trainingDate
 	*@param addList

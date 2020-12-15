@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
@@ -139,7 +140,6 @@ public class ReportController {
 	};//scheduleMst
 	
 	
-	
 	/**
 	 * 연간스케쥴 저장/수정 메서드입니다.
 	 * @return
@@ -172,7 +172,6 @@ public class ReportController {
 	}
 
 	
-	
 	/**
 	 * 연간스케쥴 삭제
 	 * @return
@@ -204,7 +203,6 @@ public class ReportController {
 		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}
-	
 	
 	
 	/**
@@ -405,6 +403,37 @@ public class ReportController {
 	}
 	
 	
+	/**
+	 * 하자보수현황 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/deleteRepair", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> deleteRepair(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");	//deleteRepair 시작
+
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		
+		try {
+			
+			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
+			reportService.deleteRepair(request);						//하자보수현황 삭제
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//deleteRepair 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}
+	
 	
 	/**
 	 * 주요계약 현황
@@ -443,7 +472,7 @@ public class ReportController {
 			
 		}//catch
 
-	}//contractList
+	}//contractList()
 	
 	
 	/**
@@ -509,6 +538,46 @@ public class ReportController {
 	
 	
 	/**
+	 * 설비 및 수불 현황
+	 * 설비 및 수불 현황 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/paymentStatusList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView PaymentStatusList(HttpServletRequest request, Model model
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+
+		logger.info("================================ START ================================");	//paymentStatusList 시작
+		
+		logger.info("param addList : "+addList);
+		
+		List<PaymentStatusMstVO> paymentStatusList = new ArrayList<PaymentStatusMstVO>();	//테이블 리스트
+			
+		try {
+		
+			paymentStatusList =  reportService.selectPaymentStatusList(request, addList);	//설비 및 수불 현황 목록
+	
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("paymentStatusList", paymentStatusList);							//테이블 리스트
+			resultMap.put("paymentStatusCnt", paymentStatusList.size());					//테이블 수 
+			resultMap.put("addList", addList);												//add:행추가 / normal:일반 출력
+			
+			ModelAndView  mav = new ModelAndView("contents/report/paymentStatusMst.tiles",resultMap);	//paymentStatusList model 선언
+			logger.info("================================ E N D ================================");		//paymentStatusList 종료
+			return mav;																		//mav리턴
+			
+		}catch(Exception e) {
+			
+			ModelAndView  mav = new ModelAndView("PaymentStatusMst");						//paymentStatusList model 선언
+			mav.setViewName("contents/report/paymentStatusMst.tiles");			
+			logger.error(e.toString());														//오류메시지
+			return mav;																		//mav리턴
+			
+		}//catch
+
+	}//paymentStatusList
+	
+	
+	/**
 	 * 교육 현황
 	 * 교육 현황 리스트를 출력
 	 * @return
@@ -560,6 +629,7 @@ public class ReportController {
 		}//catch
 
 	}//contractList
+	
 	
 	/**
 	*파일 업로드
@@ -623,6 +693,7 @@ public class ReportController {
 		
 	}//fileDownLoad()
 	
+	
 	/**
 	*파일 리스트
 	*@param response
@@ -656,6 +727,7 @@ public class ReportController {
 		return new ResponseEntity<Map>(resultMap, statusCode);
 		
 	}//selectFileList()
+	
 	
 	/**
 	*숫자를 날짜로 변환

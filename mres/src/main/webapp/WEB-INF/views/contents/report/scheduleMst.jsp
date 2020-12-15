@@ -4,36 +4,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <style> 
-/* 마스크 뛰우기 */
-#mask {  
-    position:absolute;  
-    z-index:9000;  
-    background-color:#000;  
-    display:none;  
-    left:0;
-    top:0;
-} 
-/* 팝업으로 뜨는 윈도우 css  */ 
-.window{
-    display: none;
-    position:absolute;  
-    left:50%;
-    top:100px;
-    margin-left: -300px;
-    width:300px;
-    height:200px;
-    background-color:#FFF;
-    z-index:10000;   
+ .rightBtn{
+ 	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
  }
- 
 </style>
-<script type="text/javascript">
-$(function() {
-});
-</script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/scheduleMstDetails.js"></script>
 
-<script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/scheduleMstDetails.js"></script>
+<script type="text/javascript">
 
 $(function(){
 
@@ -69,11 +46,11 @@ $(function(){
 	</select>
 	
 	<!-- 버튼 모음입니다. -->
-	<button id="tablePrint"	class="basin_btn"	style="float: right;" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
-	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
-	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
-	<button id="tableSave"	class="basin_btn"	style="float: right;" >저장</button>	
+	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
 
 	
 	<form id="selectForm" name="selectForm"  action="<%=request.getContextPath()%>/scheduleList" autocomplete="off">
@@ -152,7 +129,6 @@ $(function(){
 			</tr>
 		</c:forEach>
 	</table>
-	`
 	
 		
 	<!-- 게시글 없을 때. --> 

@@ -55,8 +55,8 @@ $(function() {
 		//-------------------------
 		checkbox.each(function(i) {
 
-  			var tr = checkbox.parent().parent().eq(i);						// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   		var td = tr.children();											// checkbox.parent() : checkbox의 부모는 <li>이다.
+  			var tr = checkbox.parent().parent().eq(i);						// checkbox.parent().parent() : <td>의 부모이므로 <>이다.	
+	   		var td = tr.children();											// checkbox.parent() : checkbox의 부모는 <td>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
 			var schedule_seq = td.eq(0).children().val();					//연간스케쥴 시퀀스

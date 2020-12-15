@@ -3,7 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
+<style>
+ .rightBtn{
+ 	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
+ }
+</style>
 <script type="text/javascript">
 $(function() {
 });
@@ -48,11 +52,11 @@ $(function(){
 	</select>
 	
 	<!-- 버튼 모음입니다. -->
-	<button id="tablePrint"	class="basin_btn"	style="float: right;" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn"	style="float: right;" >행추가</button>	
-	<button id="tableDel"	class="basin_btn"	style="float: right;" >삭제</button>	
-	<button id="tableUp"	class="basin_btn"	style="float: right;" >수정</button>	
-	<button id="tableSave"	class="basin_btn"	style="float: right;" >저장</button>	
+	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
 	
 <!-- 게시글 있을 때. --> 
 	<table class="view_top_center_table">

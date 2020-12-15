@@ -5,10 +5,10 @@ package kr.co.swrts.contents.report.domains;
  *주요계약현황VO
  *</pre>
  *
- *@ClassName : ScheduleMstVO.java 
+ *@ClassName : ContractMstVO.java 
  *@Description : 주요계약현황VO
  *@author 박찬균 주임연구원
- *@since 2020. 12. 7
+ *@since 2020. 12. 14
  *@version 1.0
  *@see
  *@Modification Information
@@ -18,15 +18,13 @@ public class ContractMstVO {
 	private int contract_seq		= 0;			//주요계약현황번호
 	private String contract_details = new String();	//계약내용
 	private String contract_company = new String();	//업체명
-	private String total_date		= new String();	//시작일+종료일
 	private String fr_day			= new String();	//시작일
 	private String to_day			= new String();	//종료일 
-	private String total_years 		= new String();	//계약년수 + 계약구분
 	private String contract_years	= new String();	//계약년수
 	private String contract_division= new String();	//계약구분
-	private double payment			= 0.0;			//계약금액
+	private String payment			= new String();	//계약금액
 	private String remark 			= new String();	//비고
-	private String useflag			= new String(); //사용구분
+	private String useflag			= "1";			//사용구분
 	private String company_code 	= new String();	//매장코드
 	private String created_by 		= new String();	//최초생성자
 	private String created_date 	= new String();	//최초생성일
@@ -51,12 +49,6 @@ public class ContractMstVO {
 	public void setContract_company(String contract_company) {
 		this.contract_company = contract_company;
 	}
-	public String getTotal_date() {
-		return total_date;
-	}
-	public void setTotal_date(String total_date) {
-		this.total_date = total_date;
-	}
 	public String getFr_day() {
 		return fr_day;
 	}
@@ -68,12 +60,6 @@ public class ContractMstVO {
 	}
 	public void setTo_day(String to_day) {
 		this.to_day = to_day;
-	}
-	public String getTotal_years() {
-		return total_years;
-	}
-	public void setTotal_years(String total_years) {
-		this.total_years = total_years;
 	}
 	public String getContract_years() {
 		return contract_years;
@@ -87,10 +73,10 @@ public class ContractMstVO {
 	public void setContract_division(String contract_division) {
 		this.contract_division = contract_division;
 	}
-	public double getPayment() {
+	public String getPayment() {
 		return payment;
 	}
-	public void setPayment(double payment) {
+	public void setPayment(String payment) {
 		this.payment = payment;
 	}
 	public String getRemark() {
@@ -139,12 +125,11 @@ public class ContractMstVO {
 	@Override
 	public String toString() {
 		return "ContractMstVO [contract_seq=" + contract_seq + ", contract_details=" + contract_details
-				+ ", contract_company=" + contract_company + ", total_date=" + total_date + ", fr_day=" + fr_day
-				+ ", to_day=" + to_day + ", total_years=" + total_years + ", contract_years=" + contract_years
-				+ ", contract_division=" + contract_division + ", payment=" + payment + ", remark=" + remark
-				+ ", useflag=" + useflag + ", company_code=" + company_code + ", created_by=" + created_by
-				+ ", created_date=" + created_date + ", last_update_by=" + last_update_by + ", last_update_date="
-				+ last_update_date + "]";
+				+ ", contract_company=" + contract_company + ", fr_day=" + fr_day + ", to_day=" + to_day
+				+ ", contract_years=" + contract_years + ", contract_division=" + contract_division + ", payment="
+				+ payment + ", remark=" + remark + ", useflag=" + useflag + ", company_code=" + company_code
+				+ ", created_by=" + created_by + ", created_date=" + created_date + ", last_update_by=" + last_update_by
+				+ ", last_update_date=" + last_update_date + "]";
 	}
 	
 }

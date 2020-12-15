@@ -1,7 +1,7 @@
 $(function() {
 
 	//------------------
-	//셀렉트박스 조회
+	//날짜조회
 	//------------------
 	$('.select_cal').change(function() {
 		
@@ -173,8 +173,8 @@ $(function() {
    	   				var remark_val	= td.eq(4).text();					//비고
    	   				
    	   				td.eq(0).attr("disabled", true);
-   	   				td.eq(2).html('<input type="text" class="default_input w120" id="fr_work" value="'+fr_work_val+'">');	//예정업무	수정 가능한 필드로 변경
-   	   				td.eq(3).html('<input type="text" class="default_input w120" id="to_work" value="'+to_work_val+'">');	//실시업무	수정 가능한 필드로 변경
+   	   				td.eq(2).html('<input type="text" class="default_input con_wrap_100" id="fr_work" value="'+fr_work_val+'">');	//예정업무	수정 가능한 필드로 변경
+   	   				td.eq(3).html('<input type="text" class="default_input con_wrap_100" id="to_work" value="'+to_work_val+'">');	//실시업무	수정 가능한 필드로 변경
    	   				td.eq(4).html('<textarea class="default_textarea" style="resize:none;">'+remark_val+'</textarea>');		//비고	수정 가능한 필드로 변경
 
    	   			});//checkbox.each
@@ -273,18 +273,18 @@ $(function() {
 				seq	= td.eq(0).children().val();			//시퀀스 - 0:신규	
 			};//if
 			
-			var work_seq = td.eq(0).children().val();		//세부업무실적 시퀀스
-			if(work_seq == 'on'){work_seq = 0;};			//세부업무실적 시퀀스가 on일경우 0으로 변환
+			var repair_seq = td.eq(0).children().val();		//하자보수 시퀀스
+			if(repair_seq == 'on'){repair_seq = 0;};		//하자보수 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
 			var jsonObj = new Object();						//JsonObject를 위한 객체생성
-			jsonObj.work_seq	= work_seq;					//업무내용 
+			jsonObj.repair_seq	= repair_seq;				//업무내용 
 			jsonArr[i] = jsonObj;							//Array 배열 push
 
 		});
 
 		var stringJson = JSON.stringify(jsonArr); 			//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./deleteDetailedWork";					//url 테이블 데이터 삭제
+		var url = "./deleteRepair";							//url 테이블 데이터 삭제
 		
 		$.ajax({
 			 type: "POST"
@@ -304,8 +304,9 @@ $(function() {
 					$("#tableAdd").attr("disabled", false);	//행추가 버튼 활성화 
 				};//if
 				
-				var checkbox = $("input[name=table_check]:checked");//체크된 체크박스
-				checkbox.parent().parent().remove();
+				var checkbox = $("input[name=table_check]:checked");//체크된 체크박스;
+				checkbox.parent().parent().next().remove();			//테이블 rowspan으로 분할되어 있으므로, 다음행(이미지)삭제
+				checkbox.parent().parent().remove()					//현재 row 삭제
 				alert("삭제성공!");
 
 			} else if ("9000" == data.resultCode){
