@@ -45,7 +45,9 @@ if(color != ''){
 				<li><a href="<%=request.getContextPath()%>/repairList">하자보수현황</a></li>
 				<li><a href="<%=request.getContextPath()%>/contractList">주요계약현황</a></li>
 				<li><a href="<%=request.getContextPath()%>/paymentStatusList">설비및수불현황</a></li>
+				<li><a href="<%=request.getContextPath()%>/liftList">시설물점검현황</a></li>
 				<li><a href="<%=request.getContextPath()%>/trainingList">교육현황</a></li>
+				<li><a href="<%=request.getContextPath()%>/meetingLogList">관리단회의록</a></li>
 			</ul>
 		</li>
 		<li>  

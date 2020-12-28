@@ -3,19 +3,24 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
+<style>
+ .rightBtn{
+ 	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
+ }
+</style>
 <script type="text/javascript">
 $(function() {
 });
 </script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/detailedWorkMstDetails.js"></script>
-
-<script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/trainingMstDetails.js"></script>
+ 
+<script type="text/javascript">
 
 $(function(){
 
+	$(".sub_title").text("교육현황");	//서브타이틀
 	var selectTrainingDate = "${trainingDate}";			//업무코드		2020, 2019, 2018 ...
-	$("#selectCode").val(selectWorkDate);		//페이지 진입 시 selectBox 선택
+	$("#selectCode").val(selectTrainingDate);		//페이지 진입 시 selectBox 선택
 	
 	var addList = "${addList}";					//add:행추가 / normal:일반 출력
 	
@@ -39,66 +44,57 @@ $(function(){
 
 <div class="container">
 
-	<!-- 페이지 제목 -->
-	<section id="content" class="board-list-header-wrap">
-		<div class="container">
-			<h1 class="board-list-header">세부업무실적</h1>
-		</div>
-	</section> 
-	
+
+	<label>조회기간 </label>
 	<!-- 기준년도 셀렉트박스 -->
-	<select id="selectCode" name="selectCode">
+	<select class="default_select w70" id="selectCode" name="selectCode">
 	    <option value="2020">2020</option>
 	    <option value="2019">2019</option> 
 	    <option value="2018">2018</option>
 	    <option value="2017">2017</option>
 	</select>
-	<button id="tableSave" class="btn btn-success" >저장</button>	
-	<button id="tableUp" class="btn btn-success" >수정</button>
-	<button id="tableDel" class="btn btn-success" >삭제</button>		
-	<button id="tableAdd" class="btn btn-success" >행추가</button>	
+	
+	<!-- 버튼 모음입니다. -->
+	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
 	
 	<!-- 게시글 있을 때. --> 
-	<section id="content">
-		<div class="container">
-			<div class="board-list-wrap board-list-header">
-				<ul class="row">
-					<li class="col-xs-1 col-md-1">체크</li>
-					<li class="col-xs-2 col-md-2">구분</li>
-					<li class="col-xs-2 col-md-2">일자</li>
-					<li class="col-xs-2 col-md-2">교육진행</li>
-					<li class="col-xs-2 col-md-2">참석인원</li>
-					<li class="col-xs-1 col-md-1">교육내용</li>
-				</ul> 
-			</div>
-			<div class="board-list-wrap borard-list-con">
-				<form id="formArray" name="formArray"  autocomplete="off">
-					<c:set var="number" value="${trainingCnt}" />
-					<c:forEach var="trainingList" items="${trainingList}" varStatus="trainingNum">
-						<ul class="row" >
-							<c:if test = "${trainingList.training_seq == 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" id="table_check" name="table_check" value="${trainingList.training_seq}" checked></li>
-								<li class="col-xs-2 col-md-2" id="division"><input id="division_val" type="text" value="${trainingList.division}"></li>
-								<li class="col-xs-2 col-md-2" id="training_date"><input id="training_date_val" type="text" value="${trainingList.training_date}"></li>
-								<li class="col-xs-2 col-md-2" id="training_progress"><input id="training_progress_val" type="text" value="${trainingList.training_progress}"></li>
-								<li class="col-xs-2 col-md-2" id="attend_count"><input id="attend_count_val" type="text" value="${trainingList.attend_count}"></li>
-								<li class="col-xs-1 col-md-1" id="training_content"><input id="training_content_val" type="text" value="${trainingList.training_content}"></li>
-							</c:if>
-							<c:if test = "${trainingList.training_seq != 0}">
-								<li class="col-xs-1 col-md-1 tableCount"><input type="checkbox" name="table_check" value="${trainingList.training_seq}"></li>
-								<li class="col-xs-2 col-md-2"><lable >${trainingList.division}</lable></li>
-								<li class="col-xs-2 col-md-2"><lable >${trainingList.training_date}</lable></li>
-								<li class="col-xs-2 col-md-2"><label>${trainingList.training_progress}</label></li>
-								<li class="col-xs-2 col-md-2"><label>${trainingList.attend_count}</label></li>		
-								<li class="col-xs-1 col-md-1"><label>${trainingList.training_content}</label></li>		
-							</c:if>
-						</ul>
-					</c:forEach>
-				</form>
-			</div>
-		</div> 
-	</section>	
-	
+	<table class="view_top_center_table">
+		<tr> 
+			<td>체크</td>
+			<td>구분</td>
+			<td>일자</td>
+			<td>교육진행</td>
+			<td>참석인원</td>
+			<td>교육내용</td>
+		</tr> 
+	<c:set var="number" value="${trainingCnt}" />
+	<c:forEach var="trainingList" items="${trainingList}" varStatus="trainingNum">
+			<c:if test = "${trainingList.training_seq == 0}">
+				<tr>
+					<td><input type="checkbox" id="table_check" name="table_check" value="${trainingList.training_seq}" checked></td>
+					<td><input class="default_input con_wrap_100" id="division" 			type="text"	value="${trainingList.division}" maxlength="12"></td>
+					<td><input class="default_input con_wrap_100" id="training_date" 		type="text"	value="${trainingList.training_date}"></td>
+					<td><input class="default_input con_wrap_100" id="training_progress" 	type="text"	value="${trainingList.training_progress}" maxlength="15"></td>
+					<td><input class="default_input con_wrap_100" id="attend_count" 		type="text"	value="${trainingList.attend_count}" maxlength="21"></td>
+					<td><input class="default_input w250" id="training_content" 	type="text"	value="${trainingList.training_content}" maxlength="50"></td>
+				</tr>
+			</c:if>
+			<c:if test = "${trainingList.training_seq != 0}">
+				<tr>
+					<td><input type="checkbox" id="table_check" name="table_check" value="${trainingList.training_seq}" checked></td>
+					<td><input class="default_input con_wrap_100" id="division" 			type="text"	value="${trainingList.division}"		readonly="readonly" maxlength="12"></td>
+					<td><input class="default_input con_wrap_100" id="training_date" 		type="text"	value="${trainingList.training_date}"	readonly="readonly"></td>
+					<td><input class="default_input con_wrap_100" id="training_progress" 	type="text"	value="${trainingList.training_progress}" readonly="readonly" maxlength="15"></td>
+					<td><input class="default_input con_wrap_100" id="attend_count" 		type="text"	value="${trainingList.attend_count}"	readonly="readonly" maxlength="21"></td>
+					<td><input class="default_input w250" id="training_content" 	type="text"	value="${trainingList.training_content}"readonly="readonly" maxlength="50"></td>
+				</tr>	
+			</c:if>
+	</c:forEach>
+	</table>
 	<!-- 게시글 없을 때. -->
 	<c:if test="${trainingCnt==0}">
 		<section id="content">

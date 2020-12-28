@@ -25,6 +25,8 @@ $(function() {
 		//시작일이 종료일보다 클 수 없습니다. 저장 불가능
 		if(to_cal < fr_cal){
 			alert("시작일이 종료일보다 클 수 없습니다.");
+			td.eq(4).children().children().children().children().val(fr_day);
+			td.eq(5).children().val('0개월');					//계약연수
 			$("#fr_cal").focus();	//시작일 입력칸으로 포커스 이동
 			return;
 		}//if
@@ -176,14 +178,6 @@ $(function() {
 
    	   				var tr = checkbox.parent().parent().eq(i);				// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
    	   				var td = tr.children();									// checkbox.parent() : checkbox의 부모는 <td>이다. 	   		
-	   				var contract_seq 		= td.eq(0).children().val();	//시퀀스
-					var contract_details	= td.eq(1).children().val();	//계약내용
-					var contract_company	= td.eq(2).children().val();	//업체명
-					var fr_day		 		= td.eq(3).children().children().children().children().val();	//시작일
-					var to_day	 			= td.eq(4).children().children().children().children().val();	//종료일
-					var total_years 		= td.eq(5).children().val();	//계약연수+계약구분
-					var payment 			= td.eq(6).children().val();	//계약금액
-					var remark 				= td.eq(7).children().val();	//비고
    	   				
    	   				td.eq(0).attr("disabled", true);
    	   				td.eq(1).children().removeAttr('readonly');				//부문	수정 가능한 필드로 변경
@@ -207,6 +201,8 @@ $(function() {
    				if(result){
    				
    					var seq = 0;//시퀀스 - 0:신규
+					var resultCnt = 0;	//공백 체크여부			
+					var resultMsg = '';	//공백이면 메시지 리턴
    					
 					//----------------------
 					//li.eq(0)은 체크박스입니다.
@@ -216,14 +212,23 @@ $(function() {
 	   	   				var tr	= checkbox.parent().parent().eq(i);						// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
 	   	   				var td	= tr.children();										// checkbox.parent() : checkbox의 부모는 <td>이다.
 	   	   				seq		= td.eq(0).children().val();							//시퀀스 - 0:신규
-		   				var contract_details_val	= td.eq(1).children().val();		//계약내용
-		   				var contract_company_val	= td.eq(2).children().val();		//업체명
-		   				var fr_day_val	 			= td.eq(3).children().children().children().children().val();//시작일
-						var to_day_val				= td.eq(4).children().children().children().children().val();//종료일
-		   				var total_years_val 		= td.eq(5).children().val();		//계약연수
-		   				var payment_val 			= td.eq(6).children().val();		//계약금액
-		   				var remark_val 				= td.eq(7).children().val();		//비고
 	   	   				
+						contract_details	= td.eq(1).children().val();
+						contract_company	= td.eq(2).children().val();
+						
+						if(''==contract_details || null == contract_details ){
+								resultMsg = checkMsg(resultMsg, '계약내용');
+								resultCnt++;
+							}
+						if(''==contract_company || null == contract_company ){
+							resultMsg = checkMsg(resultMsg, '업체명');
+							resultCnt++;
+						}
+						if(resultCnt > 0){
+							alert(resultMsg+'을(를) 입력해 주세요.');
+							return;
+						}
+
 	   	   				td.eq(1).children().attr('readonly','readonly');				//수정 완료되면 다시 label로 변경
 	   	   				td.eq(2).children().attr('readonly','readonly');				//수정 완료되면 다시 label로 변경
 	   	   				td.eq(3).children().children().children().children().attr('readonly','readonly');//시작일
@@ -241,11 +246,14 @@ $(function() {
    						$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
    					};//if
    					
-	   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
-	   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
-	   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
-	   				
-	   				alert("저장 버튼을 눌러주세요.");					//수정 완료
+	   				if(resultMsg < 0){ 
+		
+		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
+		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
+		   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
+						alert("저장 버튼을 눌러주세요.");	//수정 완료	
+						
+					}//if				//수정 완료
 	   				
    				}else{return;};									//수정 완료 버튼을 누르지 않으면 리턴
    				//else
@@ -377,5 +385,16 @@ $(function() {
 			
 	 });	
 		
+	//저장 시 공백 문자열체크
+	//항목1, 항목2, 항목3  처럼 , 구분자 생성하는 메서드
+	function checkMsg(oldStr, newStr){
+		
+		if(''==oldStr || null == oldStr){
+			return newStr;
+		}else{
+			return oldStr+', '+newStr;
+		}//if - else
+		
+	}//checkMsg
 	
 });

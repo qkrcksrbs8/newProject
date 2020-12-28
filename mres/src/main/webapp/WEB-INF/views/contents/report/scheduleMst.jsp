@@ -7,6 +7,8 @@
  .rightBtn{
  	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
  }
+ .marginLeft{
+ }
 </style>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/scheduleMstDetails.js"></script>
@@ -14,6 +16,7 @@
 
 $(function(){
 
+	$(".sub_title").text("연간스케쥴");	//서브타이틀
 	var selectDivision = "${division}";			//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
 	$("#selectCode").val(selectDivision);		//페이지 진입 시 selectBox 선택
 	
@@ -31,6 +34,16 @@ $(function(){
 		
 	};//if
 	
+	
+	
+	function maxVauleCheck(str){
+		
+		var regExp = /[^(가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9)]/gi;
+		var result = str;
+		
+		
+
+	}//최대 값 체크
 });
 
 </script>
@@ -58,7 +71,7 @@ $(function(){
 		<input id="addList" name ="addList" type="hidden" value	="">
 	</form>
 	
-	<table class="view_top_center_table">
+	<table class="view_top_center_table marginLeft">
 		<tr> 
 			<td rowspan="2">체크</td>
 			<td rowspan="2">업무내용</td>
@@ -87,9 +100,9 @@ $(function(){
 		<c:forEach var="scheduleList" items="${scheduleList}" varStatus="scheduleNum">
 			<tr>
 				<c:if test = "${scheduleList.schedule_seq == 0}">
-					<td class="tableCount">		<input name="table_check"	type="checkbox"	value="${scheduleList.schedule_seq}" disabled="true" checked></td>
-					<td class="" id="">	<input class="default_input w120" id="workInfo" 		type="text"		value="${scheduleList.work_info}"></td>
-					<td class=""><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></td>
+					<td class="tableCount">		<input name="table_check" type="checkbox"	value="${scheduleList.schedule_seq}" disabled="true" checked></td>
+					<td class="" id="">	<input class="default_input w250 maxVal" id="workInfo" 		type="text"		value="${scheduleList.work_info}" maxlength="25"></td>
+					<td class=""><input class="default_input w120 check_sycle${scheduleNum.count-1}" value="${scheduleList.check_cycle}" readonly="readonly"></td>
 					<td class="tableCheck"><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_mar" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_mar}" <c:if test="${scheduleList.schedule_mar ne '0'}">checked</c:if>></td>
@@ -102,14 +115,14 @@ $(function(){
 					<td class="tableCheck"><input id="schedule_oct" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_oct}" <c:if test="${scheduleList.schedule_oct ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_nov" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_nov}" <c:if test="${scheduleList.schedule_nov ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_dec" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_dec}" <c:if test="${scheduleList.schedule_dec ne '0'}">checked</c:if>></td>
-					<td class=""><label class=""><input class="default_input w120" id="entity" type="text" value="${scheduleList.entity}"></label></td>
-					<td class=""><label class="">${scheduleList.contract}</label></td>
-					<td class=""><label class="filePopup">${scheduleList.file_name}</label></td>
+					<td class=""><input class="default_input w120 maxVal" id="entity" type="text" value="${scheduleList.entity}" maxlength="10"></td>
+					<td class=""><input class="default_input w120" value="${scheduleList.contract}" readonly="readonly"></td> 
+					<td class=""><input class="default_input w120 filePopup" value="${scheduleList.file_name}"></td>
 				</c:if>	
 				<c:if test = "${scheduleList.schedule_seq != 0}">
 					<td class="tableCount"><input type="checkbox" name="table_check" value="${scheduleList.schedule_seq}"></td>
-					<td class=""id="workInfo"><label >${scheduleList.work_info}</label></td>
-					<td class=""><label class="check_sycle${scheduleNum.count-1}">${scheduleList.check_cycle}</label></td>
+					<td class=""><input class="default_input w250 maxVal" id="workInfo" 	type="text"		value="${scheduleList.work_info}" readonly="readonly"></td>
+					<td class=""><input class="default_input w120 check_sycle${scheduleNum.count-1}" value="${scheduleList.check_cycle}" readonly="readonly"></td>
 					<td class="tableCheck"><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_feb" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_feb}" <c:if test="${scheduleList.schedule_feb ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_mar" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_mar}" <c:if test="${scheduleList.schedule_mar ne '0'}">checked</c:if>></td>
@@ -122,9 +135,9 @@ $(function(){
 					<td class="tableCheck"><input id="schedule_oct" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_oct}" <c:if test="${scheduleList.schedule_oct ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_nov" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_nov}" <c:if test="${scheduleList.schedule_nov ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_dec" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_dec}" <c:if test="${scheduleList.schedule_dec ne '0'}">checked</c:if>></td>
-					<td class=""><label class="">${scheduleList.entity}</label></td>
-					<td class=""><label class="">${scheduleList.contract}</label></td>
-					<td class=""><label class="" id="uploadPopup">${scheduleList.file_name}</label></td>			
+					<td class=""><input class="default_input w120 maxVal" id="entity" type="text" value="${scheduleList.entity}" readonly="readonly"></td>
+					<td class=""><input class="default_input w120" value="${scheduleList.contract}" readonly="readonly"></td>
+					<td class=""><input class="default_input w120 uploadPopup" value="${scheduleList.file_name}" readonly="readonly"></td>	
 				</c:if>
 			</tr>
 		</c:forEach>

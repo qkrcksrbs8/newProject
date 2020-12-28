@@ -29,7 +29,8 @@ $(function() {
 
 $(function(){
 
-	var addList = "${addList}";					//add:행추가 / normal:일반 출력
+	$(".sub_title").text("주요계약현황");	//서브타이틀
+	var addList = "${addList}";			//add:행추가 / normal:일반 출력
 	
 	//행추가
 	if("add" == addList){
@@ -72,8 +73,8 @@ $(function(){
 		<tr>
 			<c:if test = "${contractList.contract_seq == 0}">
 				<td><input name="table_check" 			type="checkbox" value="${contractList.contract_seq}" checked></td>
-				<td><input class="default_input w120" id="contract_details_val" type="text" value="${contractList.contract_details}"></td>
-				<td><input class="default_input w120" id="contract_company_val" type="text" value="${contractList.contract_company}"></td>
+				<td><input class="default_input w120" id="contract_details_val" type="text" value="${contractList.contract_details}" maxlength="25"></td>
+				<td><input class="default_input w120" id="contract_company_val" type="text" value="${contractList.contract_company}" maxlength="25"></td>
 				<td>
 					<div class="search_con clear divCal">
 						<div>
@@ -93,14 +94,14 @@ $(function(){
 						</div>
 					</div>
 				</td>
-				<td><input class="default_input w120" id="total_years_val" 	type="text" value="${contractList.contract_years}"></td>
-				<td><input class="default_input w120" id="payment_val" 		type="text" value="${contractList.payment}"></td>
-				<td><input class="default_input w120" id="remark_val" 		type="text" value="${contractList.remark}"></td> 
+				<td><input class="default_input w120" id="total_years_val" 	type="text" value="${contractList.contract_years}" readonly="readonly"></td>
+				<td><input class="default_input w120" id="payment_val" 		type="text" value="${contractList.payment}" maxlength="21"></td>
+				<td><input class="default_input w120" id="remark_val" 		type="text" value="${contractList.remark}" maxlength="150"></td> 
 			</c:if>
 			<c:if test = "${contractList.contract_seq != 0}">
 				<td><input type="checkbox" name="table_check" value="${contractList.contract_seq}"></td>
-				<td><input class="default_input w120" id="contract_details_val" type="text" value="${contractList.contract_details}" readonly="readonly"></td>
-				<td><input class="default_input w120" id="contract_company_val" type="text" value="${contractList.contract_company}" readonly="readonly"></td>
+				<td><input class="default_input w120" id="contract_details_val" type="text" value="${contractList.contract_details}" readonly="readonly" maxlength="25"></td>
+				<td><input class="default_input w120" id="contract_company_val" type="text" value="${contractList.contract_company}" readonly="readonly" maxlength="25"></td>
 				<td>
 					<div class="search_con clear divCal">
 						<div>
@@ -121,8 +122,8 @@ $(function(){
 					</div>
 				</td>
 				<td><input class="default_input w120" id="total_years_val" 	type="text" value="${contractList.contract_years}"	readonly="readonly"></td>
-				<td><input class="default_input w120" id="payment_val" 		type="text" value="${contractList.payment}" 		readonly="readonly"></td>
-				<td><input class="default_input w120" id="remark_val" 		type="text" value="${contractList.remark}" 			readonly="readonly"></td>
+				<td><input class="default_input w120" id="payment_val" 		type="text" value="${contractList.payment}" 		readonly="readonly" maxlength="21"></td>
+				<td><input class="default_input w120" id="remark_val" 		type="text" value="${contractList.remark}" 			readonly="readonly" maxlength="150"></td>
 			</c:if>
 		</tr>
 		</c:forEach>
@@ -140,10 +141,6 @@ $(function(){
 			</div>
 		</section>
 	</c:if>
-	
-	
-	
-	
 	
 	<!-- 셀렉트박스 조회용 히든 폼 -->
 	<form id="selectForm" name="selectForm"  action="contractList" autocomplete="off">

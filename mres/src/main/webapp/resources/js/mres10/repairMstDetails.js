@@ -33,22 +33,8 @@ $(function() {
 		$("#to_cal").val(to_cal);//종료일
 		$("#selectForm").submit();//날짜로 조회
 	});
-	
-	
-	//------------------------------------------------------------
-	//1~12월 체크박스 클릭 시 체크 여부에 따라 점검주기의 n회/년 으로 텍스트가 바뀝니다.
-	//------------------------------------------------------------
-	$(".tableCheck").click(function(){
-			
-		var rowIndex = $(this).parent().parent().children().index($(this).parent());//클릭한 row
-		var checkMonth = 'checkMonth'+rowIndex;										//input name+row
-		var cehckLength = $('input:checkbox[name='+checkMonth+']:checked').length;	//클릭한 row의 월 체크 개수
-		var check_sycle = 'check_sycle'+rowIndex; 									//클릭한 row의 점검주기 클래스
-		$('.'+check_sycle).text(cehckLength+'회/년');									//클릭한 row의 월 체크 개수 n회/년 적용
-		
-	});
 
-	
+
    	//-----------------------------
    	//파일이름을 누르면 호출되는 팝업창 입니다.
    	//-----------------------------
@@ -58,8 +44,7 @@ $(function() {
 		
 	});
    	
-   	
-  
+ 
 	//---------------------
 	//테이블을 저장하는 로직입니다.
 	//---------------------
@@ -91,10 +76,10 @@ $(function() {
 
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
 			var repair_seq 	= td.eq(0).children().val();	//세부업무 실적 시퀀스
-			var created_date= td.eq(1).text();				//부문
-			var fr_work		= td.eq(2).text();				//예정업무
-			var to_work 	= td.eq(3).text();				//실시업무
-			var remark 		= td.eq(4).text();				//remark
+			var created_date= td.eq(1).children().val();	//부문
+			var fr_work		= td.eq(2).children().val();	//예정업무
+			var to_work 	= td.eq(3).children().val();	//실시업무
+			var remark 		= td.eq(4).children().val();	//remark
 
 			if(repair_seq == 'on'){repair_seq = 0;};		//하자보수현황 시퀀스가 on일경우 0으로 변환
 			
@@ -167,19 +152,14 @@ $(function() {
    				checkbox.each(function(i) {
 
    	   				var tr = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   		
-   	   				var fr_work_val = td.eq(2).text();					//예정업무
-   	   				var to_work_val = td.eq(3).text();					//실시업무
-   	   				var remark_val	= td.eq(4).text();					//비고
-   	   				
+   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	 	
+	   				td.eq(2).children().removeAttr('readonly');		//관리주체	수정 가능한 필드로 변경
+	   				td.eq(3).children().removeAttr('readonly');		//관리주체	수정 가능한 필드로 변경
+	   				td.eq(4).children().removeAttr('readonly');		//관리주체	수정 가능한 필드로 변경		
    	   				td.eq(0).attr("disabled", true);
-   	   				td.eq(2).html('<input type="text" class="default_input con_wrap_100" id="fr_work" value="'+fr_work_val+'">');	//예정업무	수정 가능한 필드로 변경
-   	   				td.eq(3).html('<input type="text" class="default_input con_wrap_100" id="to_work" value="'+to_work_val+'">');	//실시업무	수정 가능한 필드로 변경
-   	   				td.eq(4).html('<textarea class="default_textarea" style="resize:none;">'+remark_val+'</textarea>');		//비고	수정 가능한 필드로 변경
 
    	   			});//checkbox.each
 
-				
    				$("#tableUp").text("수정 완료");			//수정 버튼의 글자를	 수정 완료로 변경
    				$("#tableSave").attr("disabled", true);	//저장 버튼 비활성화	 수정 중일 때 
    				$("#tableDel").attr("disabled", true);	//삭제 버튼 비활성화	 수정 중일 때 
@@ -192,6 +172,8 @@ $(function() {
    				if(result){//수정 완료
    				
    					var seq = 0;//시퀀스 - 0:신규
+					var resultCnt = 0;	//공백 체크여부			
+					var resultMsg = '';	//공백이면 메시지 리턴
    					
 					//----------------------
 					//td.eq(0)은 체크박스입니다.
@@ -201,13 +183,26 @@ $(function() {
 	   	   				var tr			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
 	   	   				var td			= tr.children();					// checkbox.parent() : checkbox의 부모는 <td>이다.
 	   	   				seq				= td.eq(0).children().val();		//시퀀스 - 0:신규
-	   	   				var fr_work_val = td.eq(2).children().val();		//예정업무
-	   	   				var to_work_val = td.eq(3).children().val();		//실시업무
-	   	   				var remark_val	= td.eq(4).children().val();		//비고
-	   	   				
-	   	   				td.eq(2).html('<label>'+fr_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				td.eq(3).html('<label>'+to_work_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				td.eq(4).html('<label>'+remark_val+'</label>');		//수정 완료되면 다시 label로 변경
+
+						fr_work			= td.eq(2).children().val();
+						to_work			= td.eq(3).children().val();
+						
+						if(''==fr_work || null == fr_work ){
+							resultMsg = checkMsg(resultMsg, '예정업무');
+							resultCnt++;
+						}
+						if(''==to_work || null == to_work ){
+							resultMsg = checkMsg(resultMsg, '실시업무');
+							resultCnt++;
+						}
+						if(resultCnt > 0){ 
+							alert(resultMsg+'을(를) 입력해 주세요.');
+							return;
+						}
+
+	   	   				td.eq(2).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용
+	   	   				td.eq(3).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용 
+	   	   				td.eq(4).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용
 	
 	   	   			});//checkbox.each
 	   				
@@ -218,11 +213,14 @@ $(function() {
    						$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
    					};//if
    					
-	   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
-	   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
-	   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
-	   				
-	   				alert("저장 버튼을 눌러주세요.");					//수정 완료
+	   				if(resultMsg < 0){ 
+		
+		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
+		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
+		   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
+						alert("저장 버튼을 눌러주세요.");	//수정 완료	
+						
+					}//if
 	   				
    				} else {return;};								//수정 완료 버튼을 누르지 않으면 리턴
    				
@@ -349,20 +347,43 @@ $(function() {
 
 
 	popup();
+	
 	//----------------
-	//파일첨부 팝업입니다.
+	//예정업무 파일첨부 팝업입니다.
 	//----------------
-	$(".uploadPopup").click(function(){
-
+	$(".frUploadPopup").click(function(){
 		
-		var tr = $(this).parent().parent().eq(0);	//클릭한 테이블의 tr
-		var td = tr.children();						//클릭한 테이블의 td
+		var tr = $(this).parent().prev().eq(0);	//클릭한 테이블의 tr
+		var td = tr.children();					//클릭한 테이블의 td
 		var table_seq	= td.eq(0).children().val();//시퀀스
-		
-
+		var table_name = "frRepairMst";			//테이블 이름
+	
+		alert(table_seq); 
+	
 		$("#table_seq").val(table_seq);				//테이블 시퀀스 필드에 값 셋팅
+		$("#table_name").val(table_name);			//테이블 이름 필드에 값 셋팅
 		
-		$("#schedule_reg_popup .popup_title").html("이미지 업로드/다운로드");
+		$("#schedule_reg_popup .popup_title").html("파일 업로드/다운로드");
+		$("#fileForm")[0].reset();
+		$("#filename").hide();
+		$("#schedule_reg_popup").popup('show');
+		
+	});
+	
+	//----------------
+	//실시업무 파일첨부 팝업입니다.
+	//----------------
+	$(".toUploadPopup").click(function(){
+		
+		var tr = $(this).parent().prev().eq(0);	//클릭한 테이블의 tr
+		var td = tr.children();					//클릭한 테이블의 td
+		var table_seq	= td.eq(0).children().val();//시퀀스
+		var table_name = "toRepairMst";			//테이블 이름
+	
+		$("#table_seq").val(table_seq);				//테이블 시퀀스 필드에 값 셋팅
+		$("#table_name").val(table_name);			//테이블 이름 필드에 값 셋팅
+		
+		$("#schedule_reg_popup .popup_title").html("파일 업로드/다운로드");
 		$("#fileForm")[0].reset();
 		$("#filename").hide();
 		$("#schedule_reg_popup").popup('show');
@@ -376,15 +397,93 @@ $(function() {
 		$("#schedule_reg_popup").popup('hide');//팝업 종료	
 	});//
    	
+	//파일 업로드
 	$("#imgUp").click(function(){
-		alert("구현 중");
-	});
+		
+		var form = $("#fileForm")[0];
+        var formData = new FormData(form);
+        formData.append("message", "ajax로 파일 전송하기");
+        formData.append("file", $("#fileUpId")[0].files[0]);
+		
+		$.ajax({ 
+              url : "./fileUpload"
+            , type : "POST"
+            , processData : false
+            , contentType : false
+            , data : formData
+			, dataType : 'json'
+            , success:function(data) { 
+				
+				//0000:파일 업로드 성공|2000:파일 업로드 중 실패|2200:이미지 파일이 아님|3000:서비스 로직 진입 후 실패 |4000:파일 null|9000:fileUpload()컨트롤러 오류
+				if("0000" == data.resultCode){
+					alert("업로드 되었습니다.");
+			
+			   		var selectcDivision = $("#selectCode").val();	//셀렉트박스  날짜
+				    $("#division").val(selectcDivision);			//업무구분
+				    $("#addList").val("add");						//행추가 변수 값 add
+					$("#addList").val("");							//행추가 변수 공백
+					$("#selectForm").submit();						//서브밋
+//					$("#pdf_reg_popup").popup('hide');
+					
+				}else if("2000" == data.resultCode){
+					alert("파일 업로드 오류. 관리자에게 문의해 주세요.");
+				}else if("2200" == data.resultCode){
+					alert("이미지 파일만 업로드 가능합니다.");
+				}else if("3000" == data.resultCode){
+					alert("파일 업로드 오류. 관리자에게 문의해 주세요.");
+				}else if("4000" == data.resultCode){
+					alert("파일이 전송되지 않았습니다. 다시 시도해 주세요.");
+				}else if("9000" == data.resultCode){
+					alert("파일 업로드 오류. 관리자에게 문의해 주세요.");
+				}
+				
+            }//success
 
+        });//$ajax
+		
+	})//imgUp click
+		
+	
 	//이 함수에 값을 넣으면 숫자만 반환합니다.
 	function onlyInt(str){
 	    var res;							//반환할 변수
 	    res = str.replace(/[^0-9]/g,"");	//숫자를 제외한 나머지 공백. ex)2020-10-10 -> 20201010
 	    return res;							//숫자 반환
 	}//onlyInt
+
+	//특수문자 입력 불가
+	$(document).on("keyup",".maxVal",function(){ 
+	   	
+		var x = $(this).val();						//현재 입력된 값
+	  	x = x.replace( /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi,'');   				// 입력값이 숫자가 아니면 공백
+	  	$(this).val(x); 							//현재 필드에 파싱된 값 리턴
+
+		maxVal(x, 5);	
+	 });//동적 이벤트 부여
+
+	//예정업무, 실시업무, remark 150자 제한
+	$('.maxLen').on('keyup', function() {
+		if($(this).val().length > 150) {
+	
+			alert("글자수는 150자로 이내로 제한됩니다.");
+	
+			$(this).val($(this).val().substring(0, 150));
+	
+		}
+	
+	});
+	
+	//저장 시 공백 문자열체크
+	//항목1, 항목2, 항목3  처럼 , 구분자 생성하는 메서드
+	function checkMsg(oldStr, newStr){
+		
+		if(''==oldStr || null == oldStr){
+			return newStr;
+		}else{
+			return oldStr+', '+newStr;
+		}//if - else
+		
+	}//checkMsg
+	
 
 });

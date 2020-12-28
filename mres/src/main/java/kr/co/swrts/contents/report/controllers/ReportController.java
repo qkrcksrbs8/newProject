@@ -26,11 +26,14 @@ import org.springframework.web.servlet.ModelAndView;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.LiftMstVO;
 import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
 import kr.co.swrts.contents.report.domains.TrainingMstVO;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import kr.co.swrts.contents.report.services.ReportService;
 
 /**
@@ -329,7 +332,7 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/repairList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView RepairList(HttpServletRequest request, Model model
+	public ModelAndView RepairList(HttpServletRequest request, Model model, HttpSession session
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList
 								, @RequestParam(value="fr_cal", required =false,  defaultValue="") String fr_cal
 								, @RequestParam(value="to_cal", required =false,  defaultValue="") String to_cal) {
@@ -344,7 +347,7 @@ public class ReportController {
 			
 		try {
 		
-			repairList =  reportService.selectRepairList(request, addList, fr_cal, to_cal);	//하자보수 리스트 조회
+			repairList =  reportService.selectRepairList(request, addList, fr_cal, to_cal, session);	//하자보수 리스트 조회
 			
 			String mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
 			
@@ -379,7 +382,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertRepair", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> InsertRepair(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertRepair(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//insertRepair 시작
 
@@ -389,7 +392,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.insertRepair(request);						//하자보수 저장/수정
+			reportService.insertRepair(request, session);						//하자보수 저장/수정
 			
 		}catch(Exception e) {
 			
@@ -576,6 +579,193 @@ public class ReportController {
 
 	}//paymentStatusList
 	
+
+	/**
+	 * 설비 및 수불 현황 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/insertPaymentStatus", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> InsertPaymentStatus(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");	//insertPaymentStatus 시작
+
+		HttpStatus statusCode = HttpStatus.OK;								//통신 상태 값
+		Map<String, Object> resultMap	= new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();	//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.insertPaymentStatus(request);			//설비 및 수불현황 저장/수정
+			resultMap.put("resultCode", statusMap.get("resultCode"));		//0000:정상 | 8000:디비오류 | 9000:비정상
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");							//0000:정상 | 8000:디비오류 | 9000:비정상
+			logger.error(e.toString());										//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//insertPaymentStatus 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}//InsertPaymentStatus()
+	
+	
+	/**
+	 * 설비 및 수불 현황 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/deletePaymentStatus", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> DeletePaymentStatus(HttpServletRequest request, Model model) {
+
+		logger.info("================================ START ================================");	//deletePaymentStatus 시작
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.deletePaymentStatus(request);		//설비 및 수불 현황 삭제
+			resultMap.put("resultCode", statusMap.get("resultCode"));	//0000:정상 | 8000:디비오류 | 9000:비정상
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");						//0000:정상 | 8000:디비오류 | 9000:비정상
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//deletePaymentStatus 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}
+	
+	/**
+	 * 승강기/화재예방 리스트
+	 * 승강기/화재예방 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/liftList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView LiftList(HttpServletRequest request, Model model
+								, @RequestParam(value="inspection_division", required =false,  defaultValue="1") String inspection_division) {
+
+		logger.info("================================ START ================================");	//lift 시작
+		
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
+			
+		try {
+		
+			statusMap = reportService.selectLiftList(request, inspection_division);	//승강기 목록
+	
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("liftList", statusMap.get("selectLiftVOList"));//테이블 리스트
+			resultMap.put("liftCnt", statusMap.get("liftCnt"));			//테이블 수 
+			resultMap.put("inspection_division", statusMap.get("inspection_division"));	//1:승강기 2:화재예방
+			
+			ModelAndView  mav = new ModelAndView("contents/report/liftMst.tiles",resultMap);	//lift model 선언
+			logger.info("================================ E N D ================================");	//lift 종료
+			return mav;													//mav리턴
+			
+		}catch(Exception e) {
+			
+			ModelAndView  mav = new ModelAndView("LiftListMst");		//liftList model 선언
+			mav.setViewName("contents/report/liftMst.tiles");			
+			logger.error(e.toString());									//오류메시지
+			return mav;													//mav리턴
+			
+		}//catch
+
+	}//liftList
+	
+	
+	/**
+	 * 승강기/화재예방 세부내용 리스트
+	 * 승강기/화재예방 세부내용 리스트를 출력
+	 * @return
+	 */
+	@RequestMapping(value="/liftContnet", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView LiftContent(HttpServletRequest request, Model model
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList
+								, @RequestParam(value="inspection_division", required =false,  defaultValue="") String inspection_division
+								, @RequestParam(value="lift_seq", required =false,  defaultValue="0") int lift_seq) {
+		
+		logger.info("================================ START ================================");	//liftContnet 시작
+		
+		logger.info("param addList : "+addList);
+		logger.info("param lift_seq : "+lift_seq);
+		logger.info("param inspection_division : "+inspection_division);
+		
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//반환할 map
+		
+		try {
+		 
+			statusMap =  reportService.selectLiftContentList(request, addList, lift_seq);	//승강기 목록
+			resultMap.put("addList", addList);												//add:행추가 / normal:일반 출력
+			resultMap.put("LiftVO", statusMap.get("selectLiftVO"));							//승강기 내용
+			resultMap.put("liftContentCnt", statusMap.get("liftContentCnt"));	 			//승강기 상세내용 개수
+			resultMap.put("liftContentList", statusMap.get("selectLiftContentList"));		//승강기 상세내용 리스트
+			resultMap.put("lift_seq", lift_seq);											//승강기 목록 번호가 있으면 바로 리턴
+			resultMap.put("inspection_division", inspection_division);		//1:승강기 2:화재예방
+			
+			ModelAndView  mav = new ModelAndView("contents/report/liftContentMst.tiles",resultMap);	//liftContnet model 선언
+			logger.info("================================ E N D ================================");	//liftContnet 종료
+			return mav;													//mav리턴
+			
+		}catch(Exception e) {
+			
+			ModelAndView  mav = new ModelAndView("LiftContent");	//liftContnet model 선언
+			mav.setViewName("contents/report/liftContentMst.tiles");			
+			logger.error(e.toString());									//오류메시지
+			return mav;													//mav리턴
+			
+		}//catch
+
+	}//liftList
+	
+	
+	/**
+	 * 승강기/화재예방 저장 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/insertLift", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> InsertLift(HttpServletRequest request, Model model
+			, @RequestParam(value="lift_seq", required =false,  defaultValue="0") int lift_seq
+			, @RequestParam(value="sub_manager", required =false,  defaultValue="") String sub_manager) {
+
+		logger.info("================================ START ================================");	//insertLift 시작 
+
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.insertLift(request, lift_seq, sub_manager);						//주요계약현황 저장/수정
+			resultMap.put("resultCode", statusMap.get("resultCode"));						//0000:정상  / 9000:오류
+			if(0 == lift_seq) {
+				resultMap.put("lift_seq", statusMap.get("lift_seq"));						//승강기 목록 번호가 없으면 조회 후 리턴
+			}else {
+				resultMap.put("lift_seq", lift_seq);										//승강기 목록 번호가 있으면 바로 리턴
+			}
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");						//0000:정상  / 9000:오류
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//insertLift 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+	}	
+	
 	
 	/**
 	 * 교육 현황
@@ -583,52 +773,212 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/trainingList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView TrainingList(HttpServletRequest request, Model model
+	public ModelAndView TrainingList(HttpServletRequest request, Model model, HttpSession session
 								, @RequestParam(value="trainingDate", required =false, defaultValue="0000") String trainingDate
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 
-		logger.info("================================ START ================================");						//trainingList 시작
+		logger.info("================================ START ================================");	//trainingList 시작
 		
 		logger.info("param addList : "+addList);
+		logger.info("param trainingDate : "+trainingDate);
 		
-		List<TrainingMstVO> trainingList = new ArrayList<TrainingMstVO>();											//trainingList 리스트
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
 			
 		try {
 		
-			trainingList =  reportService.selectTrainingList(request, trainingDate, addList);						//교육현황 목록
+			statusMap =  reportService.selectTrainingList(request, session, trainingDate, addList);	//교육현황 목록
 	
-			//--------------------------------------- 
-			//기준년도의 default는 "0000"
-			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
-			//---------------------------------------
-			if("0000".equals(trainingDate)) {
-				
-				LocalDate now = LocalDate.now();																	//현재 날짜
-				trainingDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));								//년월일 파싱 2020.10.10 
-				trainingDate = trainingDate.substring(0,4);															//년도 파싱 2020
-				
-			}
-			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("trainingList", trainingList);															//테이블 리스트
-			resultMap.put("trainingCnt", trainingList.size());														//테이블 수 
-			resultMap.put("trainingDate", trainingDate);															//교육일자
-			resultMap.put("addList", addList);																		//add:행추가 / normal:일반 출력
+			resultMap.put("trainingList", statusMap.get("trainingList"));		//테이블 리스트
+			resultMap.put("trainingCnt", statusMap.get("trainingCnt"));	//테이블 수 
+			resultMap.put("trainingDate", statusMap.get("trainingDate"));		//교육일자
+			resultMap.put("addList", addList);					//add:행추가 / normal:일반 출력
 			
-			ModelAndView  mav = new ModelAndView("contents/report/trainingMst.tiles",resultMap);					//trainingList model 선언
-			logger.info("================================ E N D ================================");					//trainingList 종료
-			return mav;																								//mav리턴
+			ModelAndView  mav = new ModelAndView("contents/report/trainingMst.tiles",resultMap);//trainingList model 선언
+			logger.info("================================ E N D ================================");	//trainingList 종료
+			return mav;	//mav리턴
 			
 		}catch(Exception e) {
-			
-			ModelAndView  mav = new ModelAndView("TrainingList");													//trainingList model 선언
+			 
+			ModelAndView  mav = new ModelAndView("TrainingList");	//trainingList model 선언
 			mav.setViewName("contents/report/trainingMst.tiles");			
-			logger.error(e.toString());																				//오류메시지
-			return mav;																								//mav리턴
+			logger.error(e.toString());								//오류메시지
+			return mav;												//mav리턴
 			
 		}//catch
 
 	}//contractList
+	
+
+	/**
+	 * 교육현황 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/insertTraining", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> InsertTraining(HttpServletRequest request, HttpSession session, Model model) {
+
+		logger.info("================================ START ================================");	//insertTraining 시작
+
+		HttpStatus statusCode = HttpStatus.OK;								//통신 상태 값
+		Map<String, Object> resultMap	= new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();	//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.insertTraining(request, session);		//교육현황 저장/수정
+			resultMap.put("resultCode", statusMap.get("resultCode"));		//0000:정상 | 8000:디비오류 | 9000:비정상
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");							//0000:정상 | 8000:디비오류 | 9000:비정상
+			logger.error(e.toString());										//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//insertTraining 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}//InsertPaymentStatus()
+	
+	
+	/**
+	 * 설비 및 수불 현황 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/deleteTraining", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> DeleteTraining(HttpServletRequest request, HttpSession session) {
+
+		logger.info("================================ START ================================");	//deleteTraining 시작
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.deleteTraining(request, session);			//설비 및 수불 현황 삭제
+			resultMap.put("resultCode", statusMap.get("resultCode"));	//0000:정상 | 8000:디비오류 | 9000:비정상
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");						//0000:정상 | 8000:디비오류 | 9000:비정상
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//deleteTraining 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}//deleteTraining()
+	
+	
+	/**
+	 * 관리단회의록 
+	 * 관리단회의록 조회
+	 * @return
+	 */
+	@RequestMapping(value = "/meetingLogList", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView MeetingLogList(HttpServletRequest request, HttpSession session
+			, @RequestParam(value="selectDate", required =false, defaultValue="0000") String selectDate
+			, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+		
+		logger.info("================================ START ================================");			//meetingLogList 시작
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();	//상태 값을 담은 map
+		
+		try{
+
+			 
+			statusMap = reportService.selectMeetingLog(request, session, selectDate, addList);		//meetingLogList 조회
+			resultMap.put("meetingLogCnt", statusMap.get("meetingLogCnt"));							//테이블 리스트
+			resultMap.put("meetingLogList", statusMap.get("meetingLogList"));						//테이블 수 
+			resultMap.put("addList", addList);														//add:행추가 / normal:일반 출력
+			resultMap.put("selectDate", statusMap.get("selectDate"));								//기준년도	
+			ModelAndView  mav = new ModelAndView("contents/report/meetingLogMst.tiles",resultMap);	//meetingLogList model
+			
+			System.out.println("#########################"+statusMap.get("meetingLogList").toString());
+			
+			logger.info("================================ E N D ================================");	//meetingLogList 종료
+			return mav;
+			
+		}catch(Exception e) {
+			
+			logger.error("java.lang.Exception : ReportController.meetingLogList()");
+			logger.error(e.toString());
+			ModelAndView  mav = new ModelAndView("contents/report/meetingLogMst.tiles");		//meetingLogList model
+			return mav;
+		}//try
+		
+	};//meetingLogList
+	
+	
+	/**
+	 * 관리단회의록 저장/수정 메서드입니다.
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/insertMeetingLog", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> InsertMeetingLog(HttpServletRequest request, HttpSession session, Model model) {
+
+		logger.info("================================ START ================================");	//insertMeetingLog 시작
+
+		HttpStatus statusCode = HttpStatus.OK;								//통신 상태 값
+		Map<String, Object> resultMap	= new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();	//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.insertMeetingLog(request, session);		//교육현황 저장/수정
+			resultMap.put("resultCode", statusMap.get("resultCode"));		//0000:정상 | 8000:디비오류 | 9000:비정상
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");							//0000:정상 | 8000:디비오류 | 9000:비정상
+			logger.error(e.toString());										//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//insertMeetingLog 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}//insertMeetingLog()
+	
+	
+	/**
+	 * 관리단회의록 삭제
+	 * @return
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/deleteMeetingLog", method = {RequestMethod.POST}) 
+	public ResponseEntity<Map> DeleteMeetingLog(HttpServletRequest request, HttpSession session) {
+
+		logger.info("================================ START ================================");	//deleteMeetingLog 시작
+		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
+		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
+		
+		try {
+			
+			statusMap = reportService.deleteMeetingLog(request, session);//관리단회의록 삭제
+			resultMap.put("resultCode", statusMap.get("resultCode"));	//0000:정상 | 8000:디비오류 | 9000:비정상
+			
+		}catch(Exception e) {
+			
+			resultMap.put("resultCode", "9000");						//0000:정상 | 8000:디비오류 | 9000:비정상
+			logger.error(e.toString());									//오류메시지
+			
+		};
+		
+		logger.info("================================ E N D ================================");	//deleteMeetingLog 종료
+		return new ResponseEntity<Map>(resultMap, statusCode);
+		
+	}//deleteMeetingLog()
 	
 	
 	/**
@@ -639,25 +989,29 @@ public class ReportController {
 	*/
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/fileUpload", method = {RequestMethod.POST,RequestMethod.GET})
-	public ResponseEntity<Map> fileSubmit(HttpServletRequest request, FileMstVO fileMstVO
+	public ResponseEntity<Map> fileSubmit(HttpServletRequest request, HttpSession session
+							, FileMstVO fileMstVO
 							, @RequestParam("file") MultipartFile file
-							, @RequestParam("table_seq") int table_seq) {
+//							, @RequestParam(value="file", required =false, defaultValue="") MultipartFile file
+							, @RequestParam(value="table_seq", required =false, defaultValue="0") int table_seq) {
 
 		logger.info("================================ START ================================");	
 		
 		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
 		Map<String, Object> resultMap = new HashMap<String, Object>();	//리턴해주는 데이터를 담을 map
-		List<FileMstVO> fileList = new ArrayList<FileMstVO>();				//파일VO List
+		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 mapstatusMap
+		
 		try {
 
-			resultMap.put("resultCode", "0000");
-			fileList = reportService.fileInsert(request, fileMstVO, file, table_seq);
-			resultMap.put("fileCnt", fileList.size());						//파일 리스트 개수
-			resultMap.put("fileList", fileList);							//파일 리스트
+			statusMap = reportService.fileInsert(request, session, fileMstVO, file, table_seq);	//파일업로드
+			resultMap.put("resultCode", statusMap.get("resultCode"));//0000:파일 업로드 성공|2000:파일 업로드 중 실패|2100:pdf파일이 아님|3000:서비스 로직 진입 후 실패 |4000:파일 null|9000:fileUpload()컨트롤러 오류
+			resultMap.put("fileList", statusMap.get("fileList"));	//파일 리스트 개수
+			resultMap.put("fileCnt", statusMap.get("fileCnt"));		//파일 리스트
 				
 		}catch(Exception e) {
 			
 			logger.error("fileUpload() : "+e.toString());
+			resultMap.put("resultCode", "9000");//0000:파일 업로드 성공|2000:파일 업로드 중 실패|2100:pdf파일이 아님|3000:서비스 로직 진입 후 실패 |4000:파일 null|9000:fileUpload()컨트롤러 오류
 			
 		}//try - catch 
 		
@@ -676,9 +1030,9 @@ public class ReportController {
 	*/
 	@RequestMapping(value="/fileDownload")
 	public void fileDownload( HttpServletResponse response, HttpServletRequest request
-							, @RequestParam("table_seq") int table_seq
-							, @RequestParam("table_name") String table_name
-							, @RequestParam("file_seq") int file_seq) {
+							, @RequestParam(value="table_name", required =false, defaultValue="none") String table_name
+							, @RequestParam(value="table_seq", required =false, defaultValue="0") int table_seq
+							, @RequestParam(value="file_seq", required =false, defaultValue="0") int file_seq) {
 
 		logger.info("================================ START ================================");	
 		
@@ -702,8 +1056,9 @@ public class ReportController {
 	*/
 	@RequestMapping(value="/selectFileList")
 	public ResponseEntity<Map> selectFileList( HttpServletResponse response, HttpServletRequest request
-							, @RequestParam("table_name") String table_name
-							, @RequestParam("table_seq") int table_seq) {
+							, HttpSession session
+							, @RequestParam(value="table_name", required =false, defaultValue="none") String table_name
+							, @RequestParam(value="table_seq", required =false, defaultValue="0") int table_seq) {
 
 		logger.info("================================ START ================================");	
 		HttpStatus statusCode = HttpStatus.OK;								//통신 상태 값
@@ -712,7 +1067,7 @@ public class ReportController {
 		
 		try {
 
-			fileList = reportService.selectFileList(table_name, table_seq);	//파일 리스트
+			fileList = reportService.selectFileList(table_name, table_seq, session);	//파일 리스트
 			resultMap.put("resultCode", "0000");							//0000:정상  9000:비정상
 			resultMap.put("fileCnt", fileList.size());						//파일 리스트 개수
 			resultMap.put("fileList", fileList);							//파일 리스트

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.LiftContentMstVO;
+import kr.co.swrts.contents.report.domains.LiftMstVO;
+import kr.co.swrts.contents.report.domains.MeetingLogMstVO;
 import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
@@ -137,6 +140,7 @@ public interface ReportDao {
 	*@throws Exception
 	*/
 	public int deleteRepair(RepairMstVO repairVO) throws Exception;
+	
 	/**
 	*주요계약현황 개수 조회
 	*@param map
@@ -177,7 +181,6 @@ public interface ReportDao {
 	*/
 	public int deleteContract(ContractMstVO contractVO) throws Exception;
 	
-	
 	/**
 	*설비 및 수불 현황 리스트 개수 조회
 	*@param map
@@ -195,13 +198,124 @@ public interface ReportDao {
 	public List<PaymentStatusMstVO> selectPaymentStatusList(Map<String, Object> map) throws Exception;
 	
 	/**
+	*설비 및 수불 현황 수정
+	*@param contractVO
+	*@return
+	*@throws Exception
+	*/
+	public int updatePaymentStatus(PaymentStatusMstVO paymentStatusMstVO) throws Exception;
+	
+	/**
+	*설비 및 수불 현황 생성
+	*@param contractVO
+	*@return
+	*@throws Exception
+	*/
+	public int insertPaymentStatus(PaymentStatusMstVO paymentStatusMstVO) throws Exception;
+	
+	/**
+	*설비 및 수불 현황  삭제
+	*@param paymentStatusMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int deletePaymentStatus(PaymentStatusMstVO paymentStatusMstVO) throws Exception;
+
+	/**
+	*승강기 목록 개수 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public int selectLiftCnt(Map<String, Object> map) throws Exception; 
+	
+	/**
+	*승강기 목록 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<LiftMstVO> selectLiftList(Map<String, Object> map) throws Exception;
+	
+	/**
+	*승강기 목록 단건 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public LiftMstVO selectLift(Map<String, Object> map) throws Exception;
+	
+	/**
+	*승강기 시퀀스 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public int selectLiftSeq(LiftMstVO liftMstVO) throws Exception;
+	
+	/**
+	*승강기 목록 수정
+	*@param liftMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int updateLift(LiftMstVO liftMstVO) throws Exception;
+	
+	/**
+	*승강기 목록 생성
+	*@param liftMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int insertLift(LiftMstVO liftMstVO) throws Exception;
+	
+	/**
+	*승강기 상세내용 개수
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public int selectLiftContentCnt(Map<String, Object> map) throws Exception;
+	
+	/**
+	*승강기 상세내용 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<LiftContentMstVO> selectLiftContentList(Map<String, Object> map) throws Exception;
+	
+	/**
+	*승상기 상세내용 default 조회
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<LiftContentMstVO> selectLiftDefaultList(Map<String, Object> map) throws Exception;
+	
+	/**
+	*승강기 상세내용 수정
+	*@param liftContentMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int updateLiftContent(LiftContentMstVO liftContentMstVO) throws Exception;
+	
+	/**
+	*승강기 상세내용 생성(제거 예정)
+	*@param liftContentMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int insertLiftContent(LiftContentMstVO liftContentMstVO) throws Exception;
+	
+	/**
 	 *교육현황 리스트 수
 	 * @param map
 	 * @return
 	 * @throws Exception
 	 */
 	public int selectTrainingCnt(Map<String, Object> map) throws Exception;
-	
 	
 	/**
 	*교육현황 리스트 조회
@@ -210,6 +324,70 @@ public interface ReportDao {
 	*@throws Exception
 	*/
 	public List<TrainingMstVO> selectTrainingList(Map<String, Object> map) throws Exception;
+	
+	/**
+	*교육현황 수정
+	*@param contractVO
+	*@return
+	*@throws Exception
+	*/
+	public int updateTraining(TrainingMstVO trainingMstVO) throws Exception;
+	
+	/**
+	*교육현황 생성
+	*@param contractVO
+	*@return
+	*@throws Exception
+	*/
+	public int insertTraining(TrainingMstVO trainingMstVO) throws Exception;
+	
+	/**
+	*교육현황 삭제
+	*@param trainingMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int deleteTraining(TrainingMstVO trainingMstVO) throws Exception;
+	
+	/**
+	*관리단회의록 리스트 개수
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public int selectMeetingLogCnt(Map<String, Object> map) throws Exception;
+	
+	/**
+	*관리단회의록 리스트
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<MeetingLogMstVO> selectMeetingLogList(Map<String, Object> map) throws Exception;
+
+	/**
+	*관리단회의록 수정
+	*@param meetingLogMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int updateMeetingLog(MeetingLogMstVO meetingLogMstVO) throws Exception;
+	
+	/**
+	*관리단회의록 저장
+	*@param meetingLogMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int insertMeetingLog(MeetingLogMstVO meetingLogMstVO) throws Exception;
+	
+	/**
+	*관리단회의록 삭제
+	*@param meetingLogMstVO
+	*@return
+	*@throws Exception
+	*/
+	public int deleteMeetingLog(MeetingLogMstVO meetingLogMstVO) throws Exception;
 	
 	/**
 	 * 파일 정보 저장

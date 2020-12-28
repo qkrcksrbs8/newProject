@@ -13,6 +13,12 @@
   .rightBtn{
  	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
  }
+ 
+ .textarea_size{
+	resize:none;		/* 체크박스 사이즈 조정 불가 */
+ 	width:300px;		/* 가로300px */
+ 	height:210px;		/* 세로210px */
+ }
 </style>
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/repairMstDetails.js"></script>
 
@@ -20,6 +26,7 @@
 
 $(function(){
 
+	$(".sub_title").text("하자보수현황");//서브타이틀
 	var selectFrCal = "${fr_cal}";	//시작일
 	var selectToCal = "${to_cal}";	//종료일
 	var addList = "${addList}";		//add:행추가 / normal:일반 출력
@@ -39,6 +46,8 @@ $(function(){
 		
 	};//if
    	
+	$("#schedule_reg_popup").popup('hide');//팝업 종료	
+	
 });
 
 </script>
@@ -77,39 +86,46 @@ $(function(){
 			<td >실시업무</td>
 			<td >REMARK</td>
 		</tr>
-		<form id="formArray" name="formArray"  autocomplete="off">
 			<c:set var="number" value="${selectRepairCnt}" />
 			<c:forEach var="selectRepairList" items="${selectRepairList}" varStatus="detailedWorkNum">
 				<c:if test = "${selectRepairList.repair_seq == 0}">
 					<tr>
-						<td rowspan="2" class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${selectRepairList.repair_seq}"></td>
+						<td rowspan="2" class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${selectRepairList.repair_seq}" checked></td>
 						<td rowspan="2"><label >${selectRepairList.created_date}</label></td>
-						<td class="" >	<input class="default_input con_wrap_100" id="fr_work" 	type="text"	value="${selectRepairList.fr_work}"></td>
-						<td class="" >	<input class="default_input con_wrap_100" id="to_work" 	type="text"	value="${selectRepairList.to_work}"></td>
-						<td rowspan="2"><textarea class="default_textarea" style="resize:none;">${selectRepairList.remark}</textarea></td>
+						<td class="" >	<input class="default_input con_wrap_100" id="fr_work" 	type="text"	value="${selectRepairList.fr_work}" maxlength="150"></td>
+						<td class="" >	<input class="default_input con_wrap_100" id="to_work" 	type="text"	value="${selectRepairList.to_work}" maxlength="150"></td>
+						<td rowspan="2"><textarea class="default_textarea maxVal maxVal" style="resize:none;">${selectRepairList.remark}</textarea></td>
 					</tr>
 					<tr>
-						<td class=""><img src="${mainPath}${selectRepairList.fr_img_path}" width="300" height="210"></td> 
-<!-- 						<td class=""><img src="file:/c:/images/연혁.png" width="300" height="210"></td> -->
-						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${selectRepairList.to_img_path}</textarea></td>
+						<td class=""><input class="default_input con_wrap_100"	type="text"	value="저장 후 이미지 등록을 해주세요." readonly="readonly"></td> 
+						<td class=""><input class="default_input con_wrap_100"	type="text"	value="저장 후 이미지 등록을 해주세요." readonly="readonly"></td>
 					</tr>
 				</c:if>
 				<c:if test = "${selectRepairList.repair_seq != 0}">
 					<tr>
 						<td rowspan="2" class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${selectRepairList.repair_seq}"></td>
 						<td rowspan="2"><label>${selectRepairList.created_date}</label></td>
-						<td class="">	<label>${selectRepairList.fr_work}</label></td>
-						<td class="">	<label>${selectRepairList.to_work}</label></td>
-						<td rowspan="2"><label>${selectRepairList.remark}</label></td>
+						<td class="" >	<input class="default_input con_wrap_100" id="fr_work" 	type="text"	value="${selectRepairList.fr_work}" readonly="readonly" maxlength="150"></td>
+						<td class="" >	<input class="default_input con_wrap_100" id="to_work" 	type="text"	value="${selectRepairList.to_work}" readonly="readonly" maxlength="150"></td>
+						<td rowspan="2"><textarea class="default_textarea textarea_size maxVal maxLen" style="resize:none; " readonly="readonly">${selectRepairList.remark}</textarea></td>
 					</tr>
 					<tr>
-<%-- 						<td class=""><img src="${mainPath}${selectRepairList.fr_img_path}" width="300" height="210"></td> --%> 
-						<td class=uploadPopup><img src="https://s.pstatic.net/static/www/img/2018/sp_search.svg" width="300" height="210"></td> 
-						<td class="uploadPopup"><img src="https://s.pstatic.net/static/www/img/2018/sp_search.svg" width="300" height="210"></td> 
+					
+						<c:if test = "${selectRepairList.fr_img_name != ''}">
+							<td class=frUploadPopup><img src="${selectRepairList.fr_img_path}" width="300" height="210"></td> 
+						</c:if>
+						<c:if test = "${selectRepairList.fr_img_name == ''}">
+							<td class="frUploadPopup"><label style="width:300px; height:210px;" >이미지 업로드</label></td>
+						</c:if>
+						<c:if test = "${selectRepairList.to_img_name != ''}">
+						<td class="toUploadPopup"><img src="${selectRepairList.to_img_path}" width="300" height="210"></td> 
+						</c:if>
+						<c:if test = "${selectRepairList.to_img_name == ''}">
+							<td class="toUploadPopup"><label class="width="300" height="210"">이미지 업로드</label></td>
+						</c:if>
 					</tr> 
 				</c:if>
 			</c:forEach>
-		</form>
 	</table>
 	
 	<!-- 게시글 없을 때. -->
@@ -135,45 +151,48 @@ $(function(){
 	
 </div>
 
-
-<!-- 공지사항 등록 팝업 -->
-<div id="schedule_reg_popup" class="mres_popup">
-	<div class="pop" style="width: 545px">
-		<div class="pop_top">
-			<p class="popup_title">공지사항 등록</p>
-			<a class="right schedule_reg_popup_close" href="#;"><img src="<%=request.getContextPath()%>/resources/img/close.png" alt="닫기" width="35px" /></a>
-		</div>
-		<form id="fileForm" name="fileForm" action="/fileUpload" method="post" autocomplete="off" enctype="multipart/form-data">
-		<input type="hidden" id="table_seq" name="table_seq" value=0>
-		<input type="hidden" id="table_name" name="table_name" value="">
- 		<input type="hidden" id="file_seq" name="file_seq" value=0>
- 		<input type="hidden" id="file_content" name="file_content" value="">
- 
-		<div class="pop_con">
-			<table class="view_top_table">
-				<tr>
-					<th>첨부파일</th>
-					<td>
-					<input type="file" placeholder="" class="default_input" id="fileUpId" name="fileUpId">
-					<input type="text" class="default_input" id="filename" name="filename" readonly="readonly">
-					</td>
-				</tr>
-			</table> 
-			<table id="fileTable" class="view_top_table">
-				<tr>
-					<th>업로드일자</th>
-					<th>파일이름</th>		
-				</tr>
-			</table>
-		</div>
-		</form>
-		<div class="pop_bottom">
-			<a href="#;" class="basin_btn" id="imgUp">저장</a>
-			<a href="#;" class="basin_btn schedule_reg_popup_close">취소</a>
+<!-- 관리단회의록 등록 팝업 -->
+	<div id="schedule_reg_popup" class="mres_popup">
+		<div class="pop" style="width: 545px">
+			<div class="pop_top">
+				<p class="popup_title">공지사항 등록</p>
+				<a class="right schedule_reg_popup_close" href="#;"><img src="<%=request.getContextPath()%>/resources/img/close.png" alt="닫기" width="35px" /></a>
+			</div>
+			<form id="fileForm" name="fileForm" action="/fileUpload" method="post" autocomplete="off" enctype="multipart/form-data">
+			<input type="hidden" id="table_seq" name="table_seq" value=0>
+			<input type="hidden" id="table_name" name="table_name" value="none">
+	 		<input type="hidden" id="file_seq" name="file_seq" value=0>
+	 
+			<div class="pop_con">
+				<table class="view_top_table">
+					<tr>
+						<th>첨부파일</th>
+						<td>
+						<input type="file" placeholder="" class="default_input" id="fileUpId" name="fileUpId">
+						<input type="text" class="default_input" id="filename" name="filename" readonly="readonly">
+						</td>
+					</tr>
+					<tr>
+						<th>내용</th>
+						<td><input type="text" class="default_input con_wrap_100" name="file_content" required="required" placeholder="파일 내용"></td>
+					</tr>
+				</table> 
+				<table id="fileTable" class="view_top_table">
+					<tr>
+						<th>업로드일자</th>
+						<th>내용</th>
+						<th>파일이름</th>		
+					</tr>
+				</table>
+			</div>
+			</form>
+			<div class="pop_bottom">
+				<a href="#;" class="basin_btn" id="imgUp">저장</a>
+				<a href="#;" class="basin_btn schedule_reg_popup_close">취소</a>
+			</div>
 		</div>
 	</div>
-</div>
-
+	<!-- 공지사항 등록 팝업 END-->
 
 
 

@@ -267,7 +267,8 @@
 	SELECT
 		COUNT(1)
 	FROM REPAIR_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
  	ORDER BY REPAIR_SEQ ASC
 	
 </select>
@@ -275,18 +276,21 @@
 <select id="selectRepairList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.RepairMstVO">
 /* selectRepairList */
 	SELECT 
-	    A.REPAIR_SEQ AS REPAIR_SEQ
-	    , A.FR_WORK AS FR_WORK
-	    , A.TO_WORK AS TO_WORK
-	    , A.FR_IMG_ID AS FR_IMG_ID
-	    , A.TO_IMG_ID AS TO_IMG_ID
-	    , (SELECT FILE_PATH FROM FILE_MST WHERE FILE_SEQ = A.FR_IMG_ID) AS FR_IMG_PATH
-	    , (SELECT FILE_PATH FROM FILE_MST WHERE FILE_SEQ = A.TO_IMG_ID) AS FR_IMG_PATH
-	    , A.REMARK AS REMARK
-	    , A.COMPANY_CODE AS COMPANY_CODE
-	    , A.CREATED_DATE AS CREATED_DATE
-	FROM REPAIR_MST A
-	WHERE USEFLAG = #{useflag}
+	    REPAIR_SEQ
+	    , FR_WORK
+	    , TO_WORK
+	    ,FR_IMG_ID
+	    ,(SELECT FILE_PATH FROM FILE_MST WHERE FILE_SEQ = FR_IMG_ID) AS FR_IMG_PATH
+	    ,(SELECT FILE_NAME FROM FILE_MST WHERE FILE_SEQ = FR_IMG_ID) AS FR_IMG_NAME
+	    ,TO_IMG_ID
+	    ,(SELECT FILE_PATH FROM FILE_MST WHERE FILE_SEQ = TO_IMG_ID) AS TO_IMG_PATH
+	    ,(SELECT FILE_NAME FROM FILE_MST WHERE FILE_SEQ = TO_IMG_ID) AS TO_IMG_NAME
+	    , REMARK
+	    , COMPANY_CODE
+	    , CREATED_DATE
+	FROM REPAIR_MST
+	WHERE USEFLAG		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
 	<if test='fr_cal != null  and fr_cal != "" and to_cal != null  and to_cal != ""'>
 		AND CREATED_DATE BETWEEN #{fr_cal} AND #{to_cal}
  	</if>
@@ -309,15 +313,18 @@
 	    ,#{remark}
 	    ,#{company_code}
 	    ,#{created_by}
-	    ,#{last_update_by}
+	    ,#{created_by}
 	)
 </insert>
 
 <update id="updateRepair" parameterType="kr.co.swrts.contents.report.domains.RepairMstVO">
 /* updateRepair */
 	UPDATE REPAIR_MST SET
-	    LAST_UPDATE_BY	=	#{last_update_by}
-	    ,LAST_UPDATE_DATE = NOW()
+	    LAST_UPDATE_BY		= #{last_update_by}
+	    ,LAST_UPDATE_DATE 	= NOW()
+	<if test='company_code != null  and company_code != ""'>
+		,COMPANY_CODE	= #{company_code}
+ 	</if>
  	<if test='fr_work != null  and fr_work != ""'>
 		,FR_WORK		=	#{fr_work}
  	</if>
@@ -456,6 +463,7 @@
 	    COUNT(PAYMENT_STATUS_SEQ)
 	FROM PAYMENT_STATUS_MST
 	WHERE USEFLAG = #{useflag}
+	AND CREATED_DATE BETWEEN DATE_FORMAT(#{frThisYear},'%y/%m/%d') and LAST_DAY(#{toThisYear})
  	ORDER BY PAYMENT_STATUS_SEQ ASC
 	
 </select>
@@ -463,36 +471,344 @@
 <select id="selectPaymentStatusList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
 /* selectPaymentStatusList */
 	SELECT 
-	    PAYMENT_STATUS_SEQ 
+	    PAYMENT_STATUS_SEQ
 	    ,PRODUCT_NAME
 	    ,PRODUCT_UNIT 
-	    ,CARRIED_FORWARD 
-	    ,ENTER
-	    ,THIS_MONTH 
-	    ,EXODUS
-	    ,USEFLAG
-	    ,COMPANY_CODE
-	    ,CREATED_DATE
-	    ,CREATED_BY 
-	    ,LAST_UPDATE_DATE 
-	    ,LAST_UPDATE_BY 
-	FROM PAYMENT_STATUS_MST
-	WHERE USEFLAG = #{useflag}
- 	ORDER BY PAYMENT_STATUS_SEQ ASC
+	    ,IFNULL(CARRIED_FORWARD,0) AS CARRIED_FORWARD
+	    ,IFNULL(ENTER,0) AS ENTER
+	    ,IFNULL(EXODUS,0) AS EXODUS
+	    ,FORMAT(IFNULL(ENTER,0) + IFNULL(CARRIED_FORWARD,0) - IFNULL(EXODUS,0),0) THIS_MONTH
+	    ,USEFLAG    
+	    ,REMARK
+	FROM (
+	    SELECT 
+	        B.PAYMENT_STATUS_SEQ
+	        ,B.PRODUCT_NAME
+	        ,B.PRODUCT_UNIT 
+	        ,IFNULL(
+	            (
+	                SELECT FORMAT(IFNULL(CARRIED_FORWARD,0) + IFNULL(ENTER,0) - IFNULL(EXODUS,0),0) AS CARRIED_FORWARD
+		            FROM PAYMENT_STATUS_MST   
+		            WHERE CREATED_DATE BETWEEN DATE_FORMAT(#{frLastYear},'%y/%m/%d') 
+		                AND LAST_DAY(#{toLastYear})
+	                    AND B.PRODUCT_NAME = PRODUCT_NAME
+	                    AND B.PRODUCT_UNIT = PRODUCT_UNIT
+	                limit 1
+	            )
+	        ,0) AS CARRIED_FORWARD
+	        ,B.ENTER
+	        ,B.EXODUS
+	        ,B.THIS_MONTH
+	        ,B.USEFLAG
+	        ,B.REMARK
+	    FROM PAYMENT_STATUS_MST B
+	    WHERE USEFLAG = #{useflag}
+		AND CREATED_DATE BETWEEN DATE_FORMAT(#{frThisYear},'%y/%m/%d') and LAST_DAY(#{toThisYear})
+	) A
+	ORDER BY PAYMENT_STATUS_SEQ ASC
 	
 </select>
 
+
+<update id="updatePaymentStatus" parameterType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
+/* updatePaymentStatus */
+	UPDATE PAYMENT_STATUS_MST SET
+	    LAST_UPDATE_BY	=	#{created_by}
+	    ,LAST_UPDATE_DATE = NOW()
+ 	<if test='product_name != null  and product_name != ""'>
+		,PRODUCT_NAME		=	#{product_name}
+ 	</if>
+ 	<if test='product_unit != null  and product_unit != ""'>
+		,PRODUCT_UNIT		=	#{product_unit}
+ 	</if>
+ 	<if test='carried_forward != null  and carried_forward != ""'>
+		,CARRIED_FORWARD				=	#{carried_forward}
+ 	</if>
+ 	<if test='enter != null  and enter != ""'>
+		,ENTER				=	#{enter}
+ 	</if>
+ 	<if test='exodus != null  and exodus != ""'>
+		,EXODUS				=	#{exodus}
+ 	</if>
+ 	<if test='this_month != null  and this_month != ""'>
+		,THIS_MONTH			=	#{this_month}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>
+		,REMARK				=	#{remark}
+ 	</if>
+	WHERE PAYMENT_STATUS_SEQ =	#{payment_status_seq}
+	
+</update>
+
+<insert id="insertPaymentStatus" parameterType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
+/* insertPaymentStatus */
+	INSERT INTO PAYMENT_STATUS_MST (
+	    PRODUCT_NAME
+		,PRODUCT_UNIT
+		,ENTER
+		,EXODUS
+		,THIS_MONTH
+		,REMARK
+		,COMPANY_CODE
+		,CREATED_BY
+		,LAST_UPDATE_BY
+	) values (
+	    #{product_name}
+	    ,#{product_unit}
+	    ,#{enter}
+	    ,#{exodus}
+	    ,#{this_month}
+	    ,#{remark}
+	    ,#{company_code}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<update id="deletePaymentStatus" parameterType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO"> 
+	/* deletePaymentStatus */
+	UPDATE PAYMENT_STATUS_MST SET
+		last_update_date = NOW()
+		,last_update_by = '박주임' 
+		,USEFLAG = 0
+	WHERE PAYMENT_STATUS_SEQ = #{payment_status_seq}
+	
+</update> 
+
+<select id="selectLiftCnt" parameterType="map" resultType="int">
+/* selectLiftCnt */
+	SELECT
+		COUNT(1)
+    FROM LIFT_MST
+	WHERE USEFLAG = #{useflag}
+	AND INSPECTION_DIVISION = #{inspection_division}
+	<if test='lift_seq != null  and lift_seq != 0'>
+		,LIFT_SEQ				=	#{lift_seq}
+ 	</if>
+</select>
+
+
+<select id="selectLiftList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.LiftMstVO">
+/* selectLiftList */
+	SELECT 
+		LIFT_SEQ
+		, INSPECTION_DIVISION
+		, INSPECTION_FIELD
+		, BUILDING_NAME
+		, INSPECTION_COMPANY
+		, MAIN_MANAGER
+		, SUB_MANAGER
+		, DATE_FORMAT(INSPECTION_DATE,'%Y-%m-%d') AS INSPECTION_DATE
+    FROM LIFT_MST
+	WHERE USEFLAG = #{useflag}
+	AND INSPECTION_DIVISION = #{inspection_division}
+ 	ORDER BY LIFT_SEQ ASC
+	
+</select>
+
+<select id="selectLift" parameterType="map" resultType="kr.co.swrts.contents.report.domains.LiftMstVO">
+/* selectLiftList */
+	SELECT 
+		LIFT_SEQ
+		, INSPECTION_DIVISION
+		, INSPECTION_FIELD
+		, BUILDING_NAME
+		, INSPECTION_COMPANY
+		, MAIN_MANAGER
+		, SUB_MANAGER
+		, DATE_FORMAT(INSPECTION_DATE,'%Y-%m-%d') AS INSPECTION_DATE
+    FROM LIFT_MST
+	WHERE USEFLAG = #{useflag}
+	AND LIFT_SEQ = #{lift_seq}
+ 	ORDER BY LIFT_SEQ ASC
+	
+</select>
+
+<select id="selectLiftSeq" parameterType="kr.co.swrts.contents.report.domains.LiftMstVO" resultType="int">
+/* selectLiftSeq */
+	SELECT 
+		LIFT_SEQ
+    FROM LIFT_MST
+	WHERE USEFLAG = #{useflag}
+	and INSPECTION_DIVISION = #{inspection_division}
+	AND INSPECTION_FIELD = #{inspection_field}
+	AND BUILDING_NAME = #{building_name}
+	AND INSPECTION_COMPANY = #{inspection_company}
+	AND MAIN_MANAGER = #{main_manager}
+	
+</select>
+
+<update id="updateLift" parameterType="kr.co.swrts.contents.report.domains.LiftMstVO">
+/* updateLift */
+	UPDATE LIFT_MST SET
+	    LAST_UPDATE_BY	=	#{created_by}
+	    ,LAST_UPDATE_DATE = NOW()
+ 	<if test='inspection_division != null  and inspection_division != ""'>
+		,INSPECTION_DIVISION	=	#{inspection_division}
+ 	</if>
+ 	<if test='inspection_field != null  and inspection_field != ""'>
+		,INSPECTION_FIELD		=	#{inspection_field}
+ 	</if>
+ 	<if test='building_name != null  and building_name != ""'>
+		,BUILDING_NAME		=	#{building_name}
+ 	</if>
+ 	<if test='inspection_company != null  and inspection_company != ""'>
+		,INSPECTION_COMPANY	=	#{inspection_company}
+ 	</if>
+ 	<if test='main_manager != null  and main_manager != ""'>
+		,MAIN_MANAGER		=	#{main_manager}
+ 	</if>
+ 	<if test='sub_manager != null  and sub_manager != ""'>
+		,SUB_MANAGER		=	#{sub_manager}
+ 	</if>
+ 	<if test='inspection_date != null  and inspection_date != ""'> 
+		,INSPECTION_DATE	=	#{inspection_date}
+ 	</if>
+	WHERE LIFT_SEQ =	#{lift_seq}
+	
+</update>
+
+<insert id="insertLift" parameterType="kr.co.swrts.contents.report.domains.LiftMstVO">
+/* insertLift */
+	INSERT INTO LIFT_MST (
+		INSPECTION_DIVISION
+		,INSPECTION_FIELD
+		,BUILDING_NAME
+		,INSPECTION_COMPANY
+		,MAIN_MANAGER
+		,SUB_MANAGER
+		,INSPECTION_DATE
+		,CREATED_BY
+		,LAST_UPDATE_BY
+	) values (
+		#{inspection_division}
+	    ,#{inspection_field}
+	    ,#{building_name}
+	    ,#{inspection_company}
+	    ,#{main_manager}
+	    ,#{sub_manager}
+	    ,#{inspection_date}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<select id="selectLiftContentCnt" parameterType="map" resultType="int">
+/* selectLiftContentCnt */
+	SELECT
+		COUNT(1)
+    FROM LIFT_CONTENT_MST
+	WHERE USEFLAG = #{useflag}
+	
+</select>
+
+<select id="selectLiftContentList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.LiftContentMstVO">
+/* selectLiftContentList */
+	SELECT 
+		LIFT_CONTENT_SEQ
+		,LIFT_SEQ
+		,DIVISION
+		,ITEM_CHECK
+		,RESULT_CHECK
+		,FR_WORK
+		,TO_WORK
+		, DATE_FORMAT(SCHEDULE_DATE,'%Y-%m-%d') AS SCHEDULE_DATE
+    FROM LIFT_CONTENT_MST
+	WHERE USEFLAG = #{useflag}
+	<if test='lift_seq != null  and lift_seq != ""'>
+		AND LIFT_SEQ = #{lift_seq}
+ 	</if>
+ 	ORDER BY LIFT_CONTENT_SEQ ASC
+	
+</select> 
+
+<select id="selectLiftDefaultList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.LiftContentMstVO">
+/* selectLiftContentList */
+	SELECT 
+		LIFT_CONTENT_SEQ
+		,LIFT_SEQ
+		,DIVISION
+		,ITEM_CHECK
+		,RESULT_CHECK
+		,FR_WORK
+		,TO_WORK
+		, DATE_FORMAT(SCHEDULE_DATE,'%Y-%m-%d') AS SCHEDULE_DATE
+    FROM LIFT_CONTENT_MST
+	WHERE USEFLAG = #{useflag}
+	AND COMPANY_CODE = #{company_code}
+ 	ORDER BY LIFT_CONTENT_SEQ ASC
+	
+</select> 
+
+<update id="updateLiftContent" parameterType="kr.co.swrts.contents.report.domains.LiftContentMstVO">
+/* updateLiftContent */
+	UPDATE LIFT_CONTENT_MST SET
+	    LAST_UPDATE_BY	=	#{created_by}
+	    ,LAST_UPDATE_DATE = NOW()
+ 	<if test='division != null  and division != ""'>
+		,DIVISION		=	#{division}
+ 	</if>
+ 	<if test='item_check != null  and item_check != ""'>
+		,ITEM_CHECK		=	#{item_check}
+ 	</if>
+ 	<if test='result_check != null  and result_check != ""'>
+		,RESULT_CHECK	=	#{result_check}
+ 	</if>
+ 	<if test='fr_work != null  and fr_work != ""'>
+		,FR_WORK		=	#{fr_work}
+ 	</if>
+ 	<if test='to_work != null  and to_work != ""'>
+		,TO_WORK		=	#{to_work}
+ 	</if>
+ 	<if test='schedule_date != null  and schedule_date != ""'>
+		,SCHEDULE_DATE	=	#{schedule_date}
+ 	</if>
+ 	<if test='remark != null  and remark != ""'>   
+		,REMARK			=	#{remark}
+ 	</if>
+	WHERE LIFT_CONTENT_SEQ =	#{lift_content_seq}
+	<if test='lift_content_seq != null  and lift_content_seq != ""'>
+		AND LIFT_SEQ		=	#{lift_seq}
+ 	</if>
+</update>
+
+<insert id="insertLiftContent" parameterType="kr.co.swrts.contents.report.domains.LiftContentMstVO">
+/* insertLiftContent */
+	INSERT INTO LIFT_CONTENT_MST (
+	  	LIFT_SEQ
+		,DIVISION
+		,ITEM_CHECK
+		,RESULT_CHECK
+		,FR_WORK
+		,TO_WORK
+		,SCHEDULE_DATE
+		,CREATED_BY
+		,LAST_UPDATE_BY
+	) values (
+	    #{lift_seq}
+	    ,#{division}
+	    ,#{item_check}
+	    ,#{result_check}
+	    ,#{fr_work}
+	    ,#{to_work}
+	    ,#{schedule_date}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
 
 <select id="selectTrainingCnt" parameterType="map" resultType="int">
 /* selectTrainingCnt */
 	SELECT
 		COUNT(1)
     FROM TRAINING_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
+	AND DATE_FORMAT(TRAINING_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(#{fr_training_date},'%Y%m%d') AND DATE_FORMAT(#{to_training_date},'%Y%m%d')
  	ORDER BY TRAINING_SEQ ASC
 	
 </select>
-
+ 
 
 <select id="selectTrainingList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.TrainingMstVO">
 /* selectTrainingList */
@@ -504,10 +820,162 @@
 	    , ATTEND_COUNT
 	    , TRAINING_CONTENT
     FROM TRAINING_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
+	AND DATE_FORMAT(TRAINING_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(#{fr_training_date},'%Y%m%d') AND DATE_FORMAT(#{to_training_date},'%Y%m%d')
  	ORDER BY TRAINING_SEQ ASC
 	
 </select>
+
+
+<update id="updateTraining" parameterType="kr.co.swrts.contents.report.domains.TrainingMstVO">
+/* updateTraining */
+	UPDATE TRAINING_MST SET
+	    LAST_UPDATE_BY	=	#{created_by}
+	    ,LAST_UPDATE_DATE = NOW()
+ 	<if test='division != null  and division != ""'>
+		,DIVISION		=	#{division}
+ 	</if>
+ 	<if test='training_date != null  and training_date != ""'>
+		,TRAINING_DATE		=	#{training_date}
+ 	</if>
+ 	<if test='training_progress != null  and training_progress != ""'>
+		,TRAINING_PROGRESS	=	#{training_progress}
+ 	</if>
+ 	<if test='attend_count != null  and attend_count != ""'>
+		,ATTEND_COUNT		=	#{attend_count}
+ 	</if>
+ 	<if test='training_content != null  and training_content != ""'>
+		,TRAINING_CONTENT	=	#{training_content}
+ 	</if>
+	WHERE TRAINING_SEQ =	#{training_seq}
+	AND COMPANY_CODE	=	#{company_code}
+ 	
+</update>
+
+
+<insert id="insertTraining" parameterType="kr.co.swrts.contents.report.domains.TrainingMstVO">
+/* insertTraining */
+	INSERT INTO TRAINING_MST (
+	    DIVISION
+		,TRAINING_DATE
+		,TRAINING_PROGRESS
+		,ATTEND_COUNT
+		,TRAINING_CONTENT
+		,COMPANY_CODE
+		,CREATED_BY
+		,LAST_UPDATE_BY
+	) values (
+	    #{division}
+	    ,#{training_date}
+	    ,#{training_progress}
+	    ,#{attend_count}
+	    ,#{training_content}
+	    ,#{company_code}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<update id="deleteTraining" parameterType="kr.co.swrts.contents.report.domains.TrainingMstVO"> 
+	/* deleteTraining */
+	UPDATE TRAINING_MST SET
+		last_update_date = NOW()
+		,last_update_by = #{last_update_by} 
+		,USEFLAG = 0
+	WHERE TRAINING_SEQ = #{training_seq}
+	
+</update> 
+
+<select id="selectMeetingLogCnt" parameterType="map" resultType="int">
+/* selectMeetingLogCnt */
+	SELECT
+		COUNT(1)
+    FROM MEETING_LOG_MST
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
+	AND DATE_FORMAT(MEETING_LOG_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(#{fr_training_date},'%Y%m%d') AND DATE_FORMAT(#{to_training_date},'%Y%m%d')
+ 	ORDER BY MEETING_LOG_SEQ ASC
+	
+</select>
+
+<select id="selectMeetingLogList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.MeetingLogMstVO">
+/* selectMeetingLogList */
+	SELECT
+    MEETING_LOG_SEQ
+        , MEETING_LOG_DATE
+        , MEETING_LOG_PROGRESS
+        , ATTEND_COUNT
+	    , FILE_SEQ
+        , COMPANY_CODE
+	    , (SELECT FILE_SEQ FROM FILE_MST WHERE TABLE_SEQ = MEETING_LOG_SEQ AND TABLE_NAME ='meetingLogMst' ORDER BY MEETING_LOG_SEQ DESC) AS FILE_SEQ
+	    , (SELECT FILE_NAME FROM FILE_MST WHERE TABLE_SEQ = MEETING_LOG_SEQ AND TABLE_NAME ='meetingLogMst' ORDER BY MEETING_LOG_SEQ DESC) AS FILE_NAME
+	    , (SELECT FILE_PATH FROM FILE_MST WHERE TABLE_SEQ = MEETING_LOG_SEQ AND TABLE_NAME ='meetingLogMst' ORDER BY MEETING_LOG_SEQ DESC) AS FILE_PATH
+    FROM MEETING_LOG_MST
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
+	
+</select>
+
+<update id="updateMeetingLog" parameterType="kr.co.swrts.contents.report.domains.MeetingLogMstVO">
+/* updateMeetingLog */
+	UPDATE MEETING_LOG_MST SET
+	    LAST_UPDATE_BY		=	#{created_by}
+	    ,LAST_UPDATE_DATE 	= NOW()
+ 	<if test='meeting_log_date != null  and meeting_log_date != ""'>
+		,MEETING_LOG_DATE		=	#{meeting_log_date}
+ 	</if>
+ 	<if test='meeting_log_progress != null  and meeting_log_progress != ""'>
+		,MEETING_LOG_PROGRESS	=	#{meeting_log_progress}
+ 	</if>
+ 	<if test='attend_count != null  and attend_count != ""'>
+		,ATTEND_COUNT			=	#{attend_count}
+ 	</if>
+ 	<if test='meeting_agenda != null  and meeting_agenda != ""'>
+		,MEETING_AGENDA			=	#{meeting_agenda}
+ 	</if>
+ 	<if test='file_Seq != null  and file_Seq != ""'>
+		,FILE_SEQ				=	#{file_Seq}
+ 	</if>
+	WHERE MEETING_LOG_SEQ =	#{meeting_log_seq}
+	AND COMPANY_CODE	=	#{company_code}
+ 	
+</update>
+
+
+<insert id="insertMeetingLog" parameterType="kr.co.swrts.contents.report.domains.MeetingLogMstVO">
+/* insertMeetingLog */
+	INSERT INTO MEETING_LOG_MST (
+	    MEETING_LOG_DATE
+	    ,MEETING_LOG_PROGRESS
+	    ,ATTEND_COUNT
+	    ,MEETING_AGENDA
+	    ,FILE_SEQ
+		,COMPANY_CODE
+		,CREATED_BY
+		,LAST_UPDATE_BY
+	) values (
+	    #{meeting_log_date}
+	    ,#{meeting_log_progress}
+	    ,#{attend_count}
+	    ,#{meeting_agenda}
+	    ,#{file_Seq}
+	    ,#{company_code}
+	    ,#{created_by}
+	    ,#{created_by}
+	)
+</insert>
+
+<update id="deleteMeetingLog" parameterType="kr.co.swrts.contents.report.domains.MeetingLogMstVO"> 
+	/* deleteMeetingLog */
+	UPDATE MEETING_LOG_MST SET
+		last_update_date = NOW()
+		,last_update_by = #{last_update_by} 
+		,USEFLAG = 0
+	WHERE MEETING_LOG_SEQ = #{meeting_log_seq}
+	
+</update> 
+
 
 <insert id="insertFile" parameterType="kr.co.swrts.contents.report.domains.FileMstVO">
 /* insertFile */
@@ -537,9 +1005,10 @@
 <select id="selectFileSeq" parameterType="kr.co.swrts.contents.report.domains.FileMstVO" resultType="int">
 /* "selectFileSeq" */
 	SELECT  
-	    TABLE_SEQ
+	    FILE_SEQ
 	FROM FILE_MST
-	WHERE FILE_PATH = #{file_path}
+	WHERE TABLE_SEQ = #{table_seq}
+	AND TABLE_NAME = #{table_name}
 	ORDER BY FILE_SEQ DESC LIMIT 1
 	
 </select>
@@ -554,7 +1023,7 @@
 	    , FILE_PATH
 	    , FILE_SIZE
     FROM FILE_MST
-	WHERE FILE_SEQ = #{file_seq}
+	WHERE FILE_SEQ 		= #{file_seq}
 	
 </select>
 
@@ -563,9 +1032,9 @@
 	SELECT 
 	      COUNT(FILE_SEQ)
 	FROM FILE_MST
-	WHERE TABLE_NAME = #{table_name}
-	AND TABLE_SEQ = #{table_seq}
-	AND USEFLAG = #{useflag}
+	WHERE TABLE_NAME 	= #{table_name}
+	AND TABLE_SEQ 		= #{table_seq}
+	AND USEFLAG 		= #{useflag}
 	
 </select>
 
@@ -582,9 +1051,9 @@
 	        ,TABLE_NAME
 	        ,COMPANY_CODE
 	FROM FILE_MST
-	WHERE TABLE_NAME = #{table_name}
-	AND TABLE_SEQ = #{table_seq}
-	AND USEFLAG = #{useflag}
+	WHERE TABLE_NAME 	= #{table_name}
+	AND TABLE_SEQ 		= #{table_seq}
+	AND USEFLAG 		= #{useflag}
 	
 </select>
 

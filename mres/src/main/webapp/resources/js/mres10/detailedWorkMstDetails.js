@@ -13,20 +13,6 @@ $(function() {
 	});
 	
 	
-	//------------------------------------------------------------
-	//1~12월 체크박스 클릭 시 체크 여부에 따라 점검주기의 n회/년 으로 텍스트가 바뀝니다.
-	//------------------------------------------------------------
-	$(".tableCheck").click(function(){
-			
-		var rowIndex = $(this).parent().parent().children().index($(this).parent());//클릭한 row
-		var checkMonth = 'checkMonth'+rowIndex;										//input name+row
-		var cehckLength = $('input:checkbox[name='+checkMonth+']:checked').length;	//클릭한 row의 월 체크 개수
-		var check_sycle = 'check_sycle'+rowIndex; 									//클릭한 row의 점검주기 클래스
-		$('.'+check_sycle).text(cehckLength+'회/년');									//클릭한 row의 월 체크 개수 n회/년 적용
-		
-	});
-
-	
    	//-----------------------------
    	//파일이름을 누르면 호출되는 팝업창 입니다.
    	//-----------------------------
@@ -146,18 +132,12 @@ $(function() {
    				checkbox.each(function(i) {
 
    	   				var tr = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
-   	   				var sector_val	= td.eq(1).text();					//부문
-   	   				var fr_work_val = td.eq(2).text();					//예정업무
-   	   				var to_work_val = td.eq(3).text();					//실시업무
-   	   				var remark_val	= td.eq(4).text();					//비고
+   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   		
+					td.eq(1).children().removeAttr('readonly');			//업무내용	수정 가능한 필드로 변경
+	   				td.eq(2).children().removeAttr('readonly');		//관리주체	수정 가능한 필드로 변경
+	   				td.eq(3).children().removeAttr('readonly');		//관리주체	수정 가능한 필드로 변경
+	   				td.eq(4).children().removeAttr('readonly');		//관리주체	수정 가능한 필드로 변경
    	   				
-   	   				td.eq(0).attr("disabled", true);
-   	   				td.eq(1).html('<input id="sector_val"	type="text" value="'+sector_val+'">');	//부문	수정 가능한 필드로 변경
-   	   				td.eq(2).html('<textarea class="default_textarea" style="resize:none;">'+fr_work_val+'</textarea>');	//예정업무	수정 가능한 필드로 변경
-   	   				td.eq(3).html('<textarea class="default_textarea" style="resize:none;">'+to_work_val+'</textarea>');	//실시업무	수정 가능한 필드로 변경
-   	   				td.eq(4).html('<textarea class="default_textarea" style="resize:none;">'+remark_val+'</textarea>');		//비고	수정 가능한 필드로 변경
-
    	   			});//checkbox.each
 
 				
@@ -169,6 +149,8 @@ $(function() {
    			} else {
    				
    				var result = confirm("수정 완료 하시겠습니까?");//수정 여부 물어보기
+				var resultCnt = 0;	//공백 체크여부			
+				var resultMsg = '';	//공백이면 메시지 리턴
    							
    				if(result){//수정 완료
    				
@@ -182,15 +164,33 @@ $(function() {
 	   	   				var tr			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
 	   	   				var td			= tr.children();					// checkbox.parent() : checkbox의 부모는 <li>이다.
 	   	   				seq				= td.eq(0).children().val();		//시퀀스 - 0:신규
-	   	   				var sector_val	= td.eq(1).children().val();		//부문
-	   	   				var fr_work_val = td.eq(2).children().val();		//예정업무
-	   	   				var to_work_val = td.eq(3).children().val();		//실시업무
-	   	   				var remark_val	= td.eq(4).children().val();		//비고
-	   	   				
-	   	   				td.eq(1).html('<label>'+sector_val+'</label>');		//수정 완료되면 다시 label로 변경
-	   	   				td.eq(2).html('<textarea class="default_textarea" style="resize:none;" readonly="readonly">'+fr_work_val+'</textarea>');	//수정 완료되면 다시 label로 변경
-	   	   				td.eq(3).html('<textarea class="default_textarea" style="resize:none;" readonly="readonly">'+to_work_val+'</textarea>');	//수정 완료되면 다시 label로 변경
-	   	   				td.eq(4).html('<textarea class="default_textarea" style="resize:none;" readonly="readonly">'+remark_val+'</textarea>');		//수정 완료되면 다시 label로 변경
+
+						sector			= td.eq(1).children().val();
+						fr_work			= td.eq(2).text();
+						to_work			= td.eq(3).text();
+						
+						if(''==sector || null == sector ){
+							resultMsg = checkMsg(resultMsg, '부문');
+							resultCnt++;
+						}
+						if(''==fr_work || null == fr_work ){
+							resultMsg = checkMsg(resultMsg, '예정업무');
+							resultCnt++;
+						}
+						if(''==to_work || null == to_work ){
+							resultMsg = checkMsg(resultMsg, '실시업무');
+							resultCnt++;
+						}
+						if(resultCnt > 0){
+							alert(resultMsg+'을(를) 입력해 주세요.');
+							return;
+						}
+
+
+	   	   				td.eq(1).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용
+	   	   				td.eq(2).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용
+	   	   				td.eq(3).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용 
+	   	   				td.eq(4).children().attr('readonly','readonly');	//수정 완료되면 readonly 적용
 	
 	   	   			});//checkbox.each
 	   				
@@ -201,12 +201,16 @@ $(function() {
    						$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
    					};//if
    					
-	   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
-	   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
-	   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
-	   				
-	   				alert("저장 버튼을 눌러주세요.");					//수정 완료
-	   				
+		
+	   				if(resultMsg < 0){
+		
+		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
+		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
+		   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
+						alert("저장 버튼을 눌러주세요.");	//수정 완료	
+						
+					}//if
+					
    				} else {return;};								//수정 완료 버튼을 누르지 않으면 리턴
    				
    			};//else
@@ -329,4 +333,39 @@ $(function() {
 
    	});
    	
+
+	//특수문자 입력 불가
+	$(document).on("keyup",".maxVal",function(){ 
+	   	
+		var x = $(this).val();						//현재 입력된 값
+	  	x = x.replace( /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi,'');   				// 입력값이 숫자가 아니면 공백
+	  	$(this).val(x); 							//현재 필드에 파싱된 값 리턴
+
+		maxVal(x, 5);	
+	 });//동적 이벤트 부여
+
+	//예정업무, 실시업무, remark 150자 제한
+	$('.maxLen').on('keyup', function() {
+		if($(this).val().length > 150) {
+	
+			alert("글자수는 150자로 이내로 제한됩니다.");
+	
+			$(this).val($(this).val().substring(0, 150));
+	
+		}
+	
+	});
+	
+	//저장 시 공백 문자열체크
+	//항목1, 항목2, 항목3  처럼 , 구분자 생성하는 메서드
+	function checkMsg(oldStr, newStr){
+		
+		if(''==oldStr || null == oldStr){
+			return newStr;
+		}else{
+			return oldStr+', '+newStr;
+		}//if - else
+		
+	}//checkMsg
+	
 });

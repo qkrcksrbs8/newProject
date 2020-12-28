@@ -20,12 +20,15 @@ public class TrainingMstVO {
 	private String training_date	= new String(); //기준년도
 	private String training_progress= new String();	//교육진행
 	private String attend_count		= new String(); //참석인원
-	private String training_content= new String(); //교육내용
+	private String training_content	= new String(); //교육내용
 	private String company_code 	= new String();	//매장코드
 	private String created_by 		= new String();	//최초생성자
 	private String created_date 	= new String();	//최초생성일
 	private String last_update_by	= new String();	//마지막수정자
 	private String last_update_date = new String();	//마지막수정일
+	
+	private String fr_training_date = new String(); //검색 시작일
+	private String to_training_date = new String(); //검색 종료일
 	
 	public int getTraining_seq() {
 		return training_seq;
@@ -57,11 +60,11 @@ public class TrainingMstVO {
 	public void setAttend_count(String attend_count) {
 		this.attend_count = attend_count;
 	}
-	public String getTraining_countent() {
+	public String getTraining_content() {
 		return training_content;
 	}
-	public void setTraining_countent(String training_countent) {
-		this.training_content = training_countent;
+	public void setTraining_content(String training_content) {
+		this.training_content = training_content;
 	}
 	public String getCompany_code() {
 		return company_code;
@@ -93,6 +96,18 @@ public class TrainingMstVO {
 	public void setLast_update_date(String last_update_date) {
 		this.last_update_date = last_update_date;
 	}
+	public String getFr_training_date() {
+		return fr_training_date;
+	}
+	public void setFr_training_date(String fr_training_date) {
+		this.fr_training_date = fr_training_date;
+	}
+	public String getTo_training_date() {
+		return to_training_date;
+	}
+	public void setTo_training_date(String to_training_date) {
+		this.to_training_date = to_training_date;
+	}
 	
 	@Override
 	public String toString() {
@@ -100,7 +115,8 @@ public class TrainingMstVO {
 				+ training_date + ", training_progress=" + training_progress + ", attend_count=" + attend_count
 				+ ", training_content=" + training_content + ", company_code=" + company_code + ", created_by="
 				+ created_by + ", created_date=" + created_date + ", last_update_by=" + last_update_by
-				+ ", last_update_date=" + last_update_date + "]";
+				+ ", last_update_date=" + last_update_date + ", fr_training_date=" + fr_training_date
+				+ ", to_training_date=" + to_training_date + "]";
 	}
 	
 }

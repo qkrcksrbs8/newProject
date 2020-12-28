@@ -18,10 +18,11 @@ $(function() {
 
 $(function(){
 
-	var selectWorkDate = "${workDate}";			//업무코드		2020, 2019, 2018 ...
-	$("#selectCode").val(selectWorkDate);		//페이지 진입 시 selectBox 선택
+	$(".sub_title").text("세부업무실적");		//서브타이틀
+	var selectWorkDate = "${workDate}";		//업무코드		2020, 2019, 2018 ...
+	$("#selectCode").val(selectWorkDate);	//페이지 진입 시 selectBox 선택
 	
-	var addList = "${addList}";					//add:행추가 / normal:일반 출력
+	var addList = "${addList}";				//add:행추가 / normal:일반 출력
 	
 	//-----
 	//행추가
@@ -67,27 +68,25 @@ $(function(){
 			<td >실시업무</td>
 			<td >REMARK</td>
 		</tr>
-		<form id="formArray" name="formArray"  autocomplete="off">
 			<c:set var="number" value="${detailWorkCnt}" />
 			<c:forEach var="detailWorkList" items="${detailWorkList}" varStatus="detailedWorkNum">
 				<tr>
 					<c:if test = "${detailWorkList.work_seq == 0}">
 						<td class=" tableCount"><input type="checkbox" id="table_check" name="table_check" value="${detailWorkList.work_seq}" checked></td>
-						<td class="" id="sector"><input id="sector_val" type="text" value="${detailWorkList.sector}"></td>
-						<td class=""><textarea class="default_textarea" style="resize:none;">${detailWorkList.fr_work}</textarea></td>
-						<td class=""><textarea class="default_textarea" style="resize:none;">${detailWorkList.to_work}</textarea></td>		
-						<td class=""><textarea class="default_textarea" style="resize:none;">${detailWorkList.remark}</textarea></td>	
+						<td class="" id="sector"><input type="text" class="default_input maxVal" value="${detailWorkList.sector}" maxlength="10"></td>
+						<td class=""><textarea class="default_textarea maxVal maxLen" style="resize:none;" >${detailWorkList.fr_work}</textarea></td>
+						<td class=""><textarea class="default_textarea maxVal maxLen" style="resize:none;" >${detailWorkList.to_work}</textarea></td>		
+						<td class=""><textarea class="default_textarea maxVal maxLen" style="resize:none;" >${detailWorkList.remark}</textarea></td>	
 					</c:if>
 					<c:if test = "${detailWorkList.work_seq != 0}">
 						<td class="tableCount"><input type="checkbox" name="table_check" value="${detailWorkList.work_seq}"></td>
-						<td class="" id="sector"><label >${detailWorkList.sector}</label></td>
-						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${detailWorkList.fr_work}</textarea></td>
-						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${detailWorkList.to_work}</textarea></td>		
-						<td class=""><textarea class="default_textarea" style="resize:none;" readonly="readonly">${detailWorkList.remark}</textarea></td>		
+						<td class="" id="sector"><input type="text" class="default_input maxVal" value="${detailWorkList.sector}" maxlength="10" readonly="readonly"></td>
+						<td class=""><textarea class="default_textarea maxVal maxLen" style="resize:none;" readonly="readonly">${detailWorkList.fr_work}</textarea></td>
+						<td class=""><textarea class="default_textarea maxVal maxLen" style="resize:none;" readonly="readonly">${detailWorkList.to_work}</textarea></td>		
+						<td class=""><textarea class="default_textarea maxVal maxLen" style="resize:none;" readonly="readonly">${detailWorkList.remark}</textarea></td>		
 					</c:if>
 				</tr>
 			</c:forEach>
-		</form>
 	</table>
 	
 	<!-- 게시글 없을 때. -->

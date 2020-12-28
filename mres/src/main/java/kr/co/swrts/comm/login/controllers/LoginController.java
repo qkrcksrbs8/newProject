@@ -51,7 +51,9 @@ public class LoginController {
 		
 		session.setAttribute("loginInfo", "loginok");
 		session.setAttribute("userId", "test");
+		session.setAttribute("companyCode", "12467");
 
+		System.out.println("########################## 로그인 아이디 : : "+session.getAttribute("userId"));
 		
 		mav.setViewName("redirect:/main");
 		

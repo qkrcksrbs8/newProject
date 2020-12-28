@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import kr.co.swrts.contents.report.domains.ContractMstVO;
 import kr.co.swrts.contents.report.domains.DetailedWorkMstVO;
 import kr.co.swrts.contents.report.domains.FileMstVO;
+import kr.co.swrts.contents.report.domains.LiftContentMstVO;
+import kr.co.swrts.contents.report.domains.LiftMstVO;
+import kr.co.swrts.contents.report.domains.MeetingLogMstVO;
 import kr.co.swrts.contents.report.domains.PaymentStatusMstVO;
 import kr.co.swrts.contents.report.domains.RepairMstVO;
 import kr.co.swrts.contents.report.domains.ScheduleMstVO;
@@ -272,10 +275,160 @@ public class ReportDaoImle implements ReportDao {
 	public List<PaymentStatusMstVO> selectPaymentStatusList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectPaymentStatusList", map);
 	}
+
+	/**
+	 * 설비 및 수불현황 수정
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int updatePaymentStatus(PaymentStatusMstVO paymentStatusMstVO) throws Exception {
+		return sql.getSqlSession().update("updatePaymentStatus", paymentStatusMstVO);
+	}
 	
+	/**
+	 * 설비 및 수불현황 생성
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int insertPaymentStatus(PaymentStatusMstVO paymentStatusMstVO) throws Exception {
+		return sql.getSqlSession().insert("insertPaymentStatus", paymentStatusMstVO);
+	}
 	
+	/**
+	 * 설비 및 수불현황 삭제
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int deletePaymentStatus(PaymentStatusMstVO paymentStatusMstVO) throws Exception {
+		return sql.getSqlSession().update("deletePaymentStatus", paymentStatusMstVO);
+	}
 	
-	//--------------------------------중간부터 개발 중
+	/**
+	 * 승강기 목록 개수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectLiftCnt(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectLiftCnt", map);
+	}
+	
+	/**
+	 * 승강기 목록 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<LiftMstVO> selectLiftList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectLiftList", map);
+	}
+	
+	/**
+	 * 승강기 단건 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public LiftMstVO selectLift(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectLift", map);
+	}
+
+	/**
+	 * 승강기 시퀀스 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectLiftSeq(LiftMstVO liftMstVO) throws Exception {
+		return sql.getSqlSession().selectOne("selectLiftSeq", liftMstVO);
+	}
+	
+	/**
+	 * 승강기 목록 수정
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int updateLift(LiftMstVO liftMstVO) throws Exception {
+		return sql.getSqlSession().update("updateLift", liftMstVO);
+	}
+	
+	/**
+	 * 승강기 목록 생성
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int insertLift(LiftMstVO liftMstVO) throws Exception {
+		return sql.getSqlSession().insert("insertLift", liftMstVO);
+	}
+	
+	/**
+	 * 승강기 상세내용 개수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectLiftContentCnt(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectLiftContentCnt", map);
+	}
+	
+	/**
+	 * 승강기 상세내용 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<LiftContentMstVO> selectLiftContentList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectLiftContentList", map);
+	}
+	
+	/**
+	 * 승강기 상세내용 default 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<LiftContentMstVO> selectLiftDefaultList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectLiftDefaultList", map);
+	}
+	
+	/**
+	 * 승강기 상세내용 수정
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int updateLiftContent(LiftContentMstVO liftContentMstVO) throws Exception {
+		return sql.getSqlSession().update("updateLiftContent", liftContentMstVO);
+	}
+	
+	/**
+	 * 승강기 상세내용 생성
+	 * @param paymentStatusMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int insertLiftContent(LiftContentMstVO liftContentMstVO) throws Exception {
+		return sql.getSqlSession().insert("insertLiftContent", liftContentMstVO);
+	}
 	
 	/**
 	 * 교육현황 리스트 수
@@ -298,10 +451,98 @@ public class ReportDaoImle implements ReportDao {
 	public List<TrainingMstVO> selectTrainingList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectTrainingList", map);
 	}
-
-
+	
 	/**
-	 * 주요계약현황 리스트
+	 * 교육현황 수정
+	 * @param trainingMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int updateTraining(TrainingMstVO trainingMstVO) throws Exception {
+		return sql.getSqlSession().update("updateTraining", trainingMstVO);
+	}
+	
+	/**
+	 * 교육현황 저장
+	 * @param trainingMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int insertTraining(TrainingMstVO trainingMstVO) throws Exception {
+		return sql.getSqlSession().insert("insertTraining", trainingMstVO);
+	}
+	
+	/**
+	 * 교육현황 삭제
+	 * @param trainingMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int deleteTraining(TrainingMstVO trainingMstVO) throws Exception {
+		return sql.getSqlSession().update("deleteTraining", trainingMstVO);
+	}
+	
+	/**
+	 * 관리단회의록 리스트 수
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int selectMeetingLogCnt(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectOne("selectMeetingLogCnt", map);
+	}
+	
+	/**
+	 * 관리단회의록 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<MeetingLogMstVO> selectMeetingLogList(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectMeetingLogList", map);
+	}
+	
+	/**
+	 * 관리단회의록 수정
+	 * @param MeetingLogMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int updateMeetingLog(MeetingLogMstVO meetingLogMstVO) throws Exception {
+		return sql.getSqlSession().update("updateMeetingLog", meetingLogMstVO);
+	}
+	
+	/**
+	 * 관리단회의록 저장
+	 * @param MeetingLogMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int insertMeetingLog(MeetingLogMstVO meetingLogMstVO) throws Exception {
+		return sql.getSqlSession().insert("insertMeetingLog", meetingLogMstVO);
+	}
+	
+	/**
+	 * 관리단회의록 삭제
+	 * @param trainingMstVO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int deleteMeetingLog(MeetingLogMstVO meetingLogMstVO) throws Exception {
+		return sql.getSqlSession().update("deleteMeetingLog", meetingLogMstVO);
+	}
+	
+	
+	/**
+	 * 파일 리스트
 	 * @param map
 	 * @return
 	 * @throws Exception

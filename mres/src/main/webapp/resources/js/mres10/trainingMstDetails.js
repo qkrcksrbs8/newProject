@@ -13,20 +13,6 @@ $(function() {
 	});
 	
 	
-	//------------------------------------------------------------
-	//1~12월 체크박스 클릭 시 체크 여부에 따라 점검주기의 n회/년 으로 텍스트가 바뀝니다.
-	//------------------------------------------------------------
-	$(".tableCheck").click(function(){
-			
-		var rowIndex = $(this).parent().parent().children().index($(this).parent());//클릭한 row
-		var checkMonth = 'checkMonth'+rowIndex;										//input name+row
-		var cehckLength = $('input:checkbox[name='+checkMonth+']:checked').length;	//클릭한 row의 월 체크 개수
-		var check_sycle = 'check_sycle'+rowIndex; 									//클릭한 row의 점검주기 클래스
-		$('.'+check_sycle).text(cehckLength+'회/년');									//클릭한 row의 월 체크 개수 n회/년 적용
-		
-	});
-
-	
    	//-----------------------------
    	//파일이름을 누르면 호출되는 팝업창 입니다.
    	//-----------------------------
@@ -62,16 +48,16 @@ $(function() {
 		//-----------------
 		checkbox.each(function(i) {
 
-  			var ul = checkbox.parent().parent().eq(i);		// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   		var li = ul.children();							// checkbox.parent() : checkbox의 부모는 <li>이다.
+  			var tr = checkbox.parent().parent().eq(i);		// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
+	   		var td = tr.children();							// checkbox.parent() : checkbox의 부모는 <td>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
-			var training_seq 		= li.eq(0).children().val();	//교육현황 시퀀스
-			var division 			= li.eq(1).text();				//구분
-			var training_date 		= li.eq(2).text();				//일자
-			var training_progress	= li.eq(3).text();				//교육진행
-			var attend_count 		= li.eq(4).text();				//참석인원
-			var training_content 	= li.eq(5).text();				//교육내용
+			var training_seq 		= td.eq(0).children().val();	//교육현황 시퀀스
+			var division 			= td.eq(1).children().val();	//구분
+			var training_date 		= td.eq(2).children().val();	//일자
+			var training_progress	= td.eq(3).children().val();	//교육진행
+			var attend_count 		= td.eq(4).children().val();	//참석인원
+			var training_content 	= td.eq(5).children().val();	//교육내용
 
 			if(training_seq == 'on'){training_seq = 0;};			//교육현황 실적 시퀀스가 on일경우 0으로 변환
 			
@@ -125,7 +111,6 @@ $(function() {
 	})
 	
    	
-		
    	//----------------------------
    	//수정 기능을 정의한 메서드입니다.
    	//----------------------------
@@ -153,26 +138,18 @@ $(function() {
    				
    				checkbox.each(function(i) {
 
-   	   				var ul = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-   	   				var li = ul.children();								// checkbox.parent() : checkbox의 부모는 <li>이다. 	   				
+   	   				var tr = checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
+   	   				var td = tr.children();								// checkbox.parent() : checkbox의 부모는 <td>이다. 	   				
    	   				
-					var training_seq_val 		= li.eq(0).children().val();	//교육현황 시퀀스
-					var division_val 			= li.eq(1).text();				//구분
-					var training_date_val 		= li.eq(2).text();				//일자
-					var training_progress_val	= li.eq(3).text();				//교육진행
-					var attend_count_val 		= li.eq(4).text();				//참석인원
-					var training_content_val 	= li.eq(5).text();				//교육내용
-   	   				
-   	   				li.eq(0).attr("disabled", true);
-   	   				li.eq(1).html('<input id="division_val"	type="text" value="'+division_val+'">');					//구분	수정 가능한 필드로 변경
-   	   				li.eq(2).html('<input id="training_date_val"	type="text" value="'+training_date_val+'">');		//일자	수정 가능한 필드로 변경
-   	   				li.eq(3).html('<input id="training_progress_val"	type="text" value="'+training_progress_val+'">');//교육진행	수정 가능한 필드로 변경
-   	   				li.eq(4).html('<input id="attend_count_val"	type="text" value="'+attend_count_val+'">');			//참석인원	수정 가능한 필드로 변경
-					li.eq(5).html('<input id="training_content_val"	type="text" value="'+training_content_val+'">');	//교육내용	수정 가능한 필드로 변경
+   	   				td.eq(0).attr("disabled", true);
+					td.eq(1).children().removeAttr('readonly');			//구분	수정 가능한 필드로 변경
+	   				td.eq(2).children().removeAttr('readonly');			//일자	수정 가능한 필드로 변경
+	   				td.eq(3).children().removeAttr('readonly');			//교육진행	수정 가능한 필드로 변경
+	   				td.eq(4).children().removeAttr('readonly');			//참석인원	수정 가능한 필드로 변경
+	   				td.eq(5).children().removeAttr('readonly');			//교육내용	수정 가능한 필드로 변경
 
    	   			});
 
-				
    				$("#tableUp").text("수정 완료");			//수정 버튼의 글자를	 수정 완료로 변경
    				$("#tableSave").attr("disabled", true);	//저장 버튼 비활성화	 수정 중일 때 
    				$("#tableDel").attr("disabled", true);	//삭제 버튼 비활성화	 수정 중일 때 
@@ -185,26 +162,48 @@ $(function() {
    				if(result){
    				
    					var seq = 0;//시퀀스 - 0:신규
+					var resultCnt = 0;	//공백 체크여부			
+					var resultMsg = '';	//공백이면 메시지 리턴
    					
 					//----------------------
 					//li.eq(0)은 체크박스입니다.
 					//----------------------
    					checkbox.each(function(i) {
 	
-	   	   				var ul			= checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.	
-	   	   				var li			= ul.children();							// checkbox.parent() : checkbox의 부모는 <li>이다.
-	   	   				seq				= li.eq(0).children().val();				//시퀀스 - 0:신규
-						var division_val 			= li.eq(1).text();				//구분
-						var training_date_val 		= li.eq(2).text();				//일자
-						var training_progress_val	= li.eq(3).text();				//교육진행
-						var attend_count_val 		= li.eq(4).text();				//참석인원
-						var training_content_val 	= li.eq(5).text();				//교육내용
-	   	   				
-	   	   				li.eq(1).html('<label>'+division_val+'</label>');			//수정 완료되면 다시 label로 변경
-	   	   				li.eq(2).html('<label>'+training_date_val+'</label>');		//수정 완료되면 다시 label로 변경
-	   	   				li.eq(3).html('<label>'+training_progress_val+'</label>');	//수정 완료되면 다시 label로 변경
-	   	   				li.eq(4).html('<label>'+attend_count_val+'</label>');		//수정 완료되면 다시 label로 변경
-	   	   				li.eq(4).html('<label>'+training_content_val+'</label>');	//수정 완료되면 다시 label로 변경
+	   	   				var tr			= checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
+	   	   				var td			= tr.children();							// checkbox.parent() : checkbox의 부모는 <td>이다.
+	   	   				seq				= td.eq(0).children().val();				//시퀀스 - 0:신규
+	   	   				division		= td.eq(1).children().val();
+						training_progress	= td.eq(3).children().val();
+						attend_count	= td.eq(4).children().val();
+						training_content= td.eq(5).children().val();
+						
+						if(''==division || null == division ){
+							resultMsg = checkMsg(resultMsg, '구분');
+							resultCnt++;
+						} 
+						if(''==training_progress || null == training_progress ){
+							resultMsg = checkMsg(resultMsg, '교육진행');
+							resultCnt++;
+						}
+						if(''==attend_count || null == attend_count ){
+							resultMsg = checkMsg(resultMsg, '참석인원');
+							resultCnt++;
+						}
+						if(''==training_content || null == training_content ){
+							resultMsg = checkMsg(resultMsg, '교육내용');
+							resultCnt++;
+						}
+						if(resultCnt > 0){
+							alert(resultMsg+'을(를) 입력해 주세요.');
+							return;
+						}
+
+	   	   				td.eq(1).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
+	   	   				td.eq(2).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
+	   	   				td.eq(3).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
+	   	   				td.eq(4).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
+	   	   				td.eq(5).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
 	
 	   	   			});
 	   				
@@ -215,12 +214,15 @@ $(function() {
    						$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
    					};//if
    					
-	   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
-	   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
-	   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
-	   				
-	   				alert("저장 버튼을 눌러주세요.");					//수정 완료
-	   				
+	   				if(resultMsg < 0){ 
+		
+		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
+		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
+		   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
+						alert("저장 버튼을 눌러주세요.");	//수정 완료	
+						
+					}//if
+					
    				}else{return;};									//수정 완료 버튼을 누르지 않으면 리턴
    				//else
    				
@@ -256,10 +258,10 @@ $(function() {
 		//-----------------
 		checkbox.each(function(i) {
 
-			// checkbox.parent() : checkbox의 부모는 <li>이다.
-			// checkbox.parent().parent() : <li>의 부모이므로 <ul>이다.
-			var ul = checkbox.parent().parent().eq(i);
-			var li = ul.children();
+			// checkbox.parent() : checkbox의 부모는 <td>이다.
+			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
 			
 			// li.eq(0)은 체크박스 이므로  li.eq(1)의 값부터 가져온다.
 			
@@ -268,10 +270,10 @@ $(function() {
 			//한 번 담으면 나머지는 패스
 			//-------------------------------
 			if(seq != -1){
-				seq	= li.eq(0).children().val();			//시퀀스 - 0:신규	
+				seq	= td.eq(0).children().val();			//시퀀스 - 0:신규	
 			};//if
 			
-			var training_seq = li.eq(0).children().val();	//교육현황 시퀀스
+			var training_seq = td.eq(0).children().val();	//교육현황 시퀀스
 			if(training_seq == 'on'){training_seq = 0;};	//교육현황 시퀀스가 on일경우 0으로 변환
 			
 			// 가져온 값을 배열에 담는다.
@@ -343,5 +345,17 @@ $(function() {
 		$("#addList").val("");									//행추가 변수 공백
 
    	});
+
+	//저장 시 공백 문자열체크
+	//항목1, 항목2, 항목3  처럼 , 구분자 생성하는 메서드
+	function checkMsg(oldStr, newStr){
+		
+		if(''==oldStr || null == oldStr){
+			return newStr;
+		}else{
+			return oldStr+', '+newStr;
+		}//if - else
+		
+	}//checkMsg
    	
 });

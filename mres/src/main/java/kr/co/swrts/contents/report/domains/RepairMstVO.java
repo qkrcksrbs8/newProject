@@ -18,10 +18,12 @@ public class RepairMstVO {
 	private int repair_seq 			= 0;			//하자보수관리번호
 	private String fr_work 			= new String();	//예정업무
 	private String to_work 			= new String();	//실시업무
-	private String fr_img_id 		= new String();	//예정업무 이미지
+	private int fr_img_id 			= 0;			//예정업무 이미지
 	private String fr_img_path		= new String();	//예정업무 이미지 경로
-	private String to_img_id 		= new String();	//실시업무 이미지
+	private String fr_img_name		= new String();	//예정업무 이미지 이름
+	private int to_img_id 			= 0;			//실시업무 이미지
 	private String to_img_path		= new String();	//실시업무 이미지 경로
+	private String to_img_name		= new String();	//실시업무 이미지 이름
 	private String remark 			= new String();	//비고
 	private String useflag			= "1";			//사용구분
 	private String company_code 	= new String();	//매장코드
@@ -50,10 +52,10 @@ public class RepairMstVO {
 	public void setTo_work(String to_work) {
 		this.to_work = to_work;
 	}
-	public String getFr_img_id() {
+	public int getFr_img_id() {
 		return fr_img_id;
 	}
-	public void setFr_img_id(String fr_img_id) {
+	public void setFr_img_id(int fr_img_id) {
 		this.fr_img_id = fr_img_id;
 	}
 	public String getFr_img_path() {
@@ -62,10 +64,16 @@ public class RepairMstVO {
 	public void setFr_img_path(String fr_img_path) {
 		this.fr_img_path = fr_img_path;
 	}
-	public String getTo_img_id() {
+	public String getFr_img_name() {
+		return fr_img_name;
+	}
+	public void setFr_img_name(String fr_img_name) {
+		this.fr_img_name = fr_img_name;
+	}
+	public int getTo_img_id() {
 		return to_img_id;
 	}
-	public void setTo_img_id(String to_img_id) {
+	public void setTo_img_id(int to_img_id) {
 		this.to_img_id = to_img_id;
 	}
 	public String getTo_img_path() {
@@ -73,6 +81,12 @@ public class RepairMstVO {
 	}
 	public void setTo_img_path(String to_img_path) {
 		this.to_img_path = to_img_path;
+	}
+	public String getTo_img_name() {
+		return to_img_name;
+	}
+	public void setTo_img_name(String to_img_name) {
+		this.to_img_name = to_img_name;
 	}
 	public String getRemark() {
 		return remark;
@@ -132,11 +146,11 @@ public class RepairMstVO {
 	@Override
 	public String toString() {
 		return "RepairMstVO [repair_seq=" + repair_seq + ", fr_work=" + fr_work + ", to_work=" + to_work
-				+ ", fr_img_id=" + fr_img_id + ", fr_img_path=" + fr_img_path + ", to_img_id=" + to_img_id
-				+ ", to_img_path=" + to_img_path + ", remark=" + remark + ", useflag=" + useflag + ", company_code="
-				+ company_code + ", created_by=" + created_by + ", created_date=" + created_date + ", last_update_by="
-				+ last_update_by + ", last_update_date=" + last_update_date + ", fr_cal=" + fr_cal + ", to_cal="
-				+ to_cal + "]";
+				+ ", fr_img_id=" + fr_img_id + ", fr_img_path=" + fr_img_path + ", fr_img_name=" + fr_img_name
+				+ ", to_img_id=" + to_img_id + ", to_img_path=" + to_img_path + ", to_img_name=" + to_img_name
+				+ ", remark=" + remark + ", useflag=" + useflag + ", company_code=" + company_code + ", created_by="
+				+ created_by + ", created_date=" + created_date + ", last_update_by=" + last_update_by
+				+ ", last_update_date=" + last_update_date + ", fr_cal=" + fr_cal + ", to_cal=" + to_cal + "]";
 	}
 	
 }
