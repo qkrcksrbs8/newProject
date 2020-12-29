@@ -49,6 +49,14 @@ public class ReportDaoImle implements ReportDao {
 	}
 	
 	/**
+	 * 연간스케쥴 기본값
+	 */
+	@Override
+	public List<ScheduleMstVO> selectScheduleDefault(Map<String, Object> map) throws Exception {
+		return sql.getSqlSession().selectList("selectScheduleDefault", map);
+	}
+	
+	/**
 	 * 연간스케쥴 리스트
 	 */
 	@Override

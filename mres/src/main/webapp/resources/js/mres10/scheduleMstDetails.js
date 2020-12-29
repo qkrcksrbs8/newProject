@@ -5,10 +5,26 @@ $(function() {
 	//------------------
 	$('#selectCode').change(function() {
 		
-		var division = $(this).val();		//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	    $("#division").val(division);		//업무구분
-	    $("#addList").val("");				//행추가 변수 값 초기화
-		$("#selectForm").submit();			//서브밋
+		var selectCode = $(this).val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+		var selectCalDate = $("#selectCalDate").val();	//기준년도
+	    $("#division").val(selectCode);					//업무구분
+		$("#selectCalDate").val(selectCalDate);			//업무구분
+	    $("#addList").val("");							//행추가 변수 값 초기화
+		$("#selectForm").submit();						//서브밋
+		
+	});
+	
+	//------------------
+	//기준년도 조회
+	//------------------
+	$('#selectDate').change(function() {
+		
+		var selectCalDate = $(this).val();				//기준년도
+		var selectCode = $("selectCode").val();			//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	    $("#division").val(selectCode);					//업무구분
+		$("#selectCalDate").val(selectCalDate);			//업무구분
+	    $("#addList").val("");							//행추가 변수 값 초기화
+		$("#selectForm").submit();						//서브밋
 		
 	});
 	
@@ -75,8 +91,7 @@ $(function() {
 			var schedule_nov = td.eq(13).children().is(":checked")? 1 : 0;	//11월
 			var schedule_dec = td.eq(14).children().is(":checked")? 1 : 0; 	//12월
 			var entity = td.eq(15).children().val();						//계약주체
-			var contract = td.eq(16).text();								//계약서
-			var file_name = td.eq(17).text();								//파일이름
+			var file_name = td.eq(16).text();								//파일이름
 			
 			//연간스케쥴 시퀀스가 on일경우 0으로 변환
 			if(schedule_seq == 'on'){schedule_seq = 0;};
@@ -100,8 +115,7 @@ $(function() {
 			jsonObj.schedule_nov= schedule_nov;		//11월
 			jsonObj.schedule_dec= schedule_dec;		//12월
 			jsonObj.entity		= entity;			//관리주체
-			jsonObj.contract	= contract;			//계약서이름
-			jsonObj.file_name	= file_name;		//파일이름
+			jsonObj.contract	= file_name;		//계약서이름
 
 			jsonArr[i] = jsonObj;					//Array 배열 push
 
@@ -359,8 +373,9 @@ $(function() {
 	//----------------
 	//파일첨부 팝업입니다.
 	//----------------
-	$("#uploadPopup").click(function(){
-
+	$(".uploadBtn").click(function(){
+//	function uploadPopup(){
+		
 //		$("#fileTable").empty();//현재 파일 리스트 제거
 		$(".removeTr").remove();
 		
@@ -409,6 +424,7 @@ $(function() {
 		$("#filename").hide();
 		$("#schedule_reg_popup").popup('show');
 		
+//	}
 	});
 	
 	//----------------

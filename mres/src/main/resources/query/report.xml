@@ -14,10 +14,45 @@
 	<if test='division != null  and division != ""'>
 		and DIVISION	=	#{division}
  	</if>
+ 	AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+ 	AND COMPANY_CODE = #{company_code}
  	ORDER BY SCHEDULE_SEQ ASC
 	
 </select>
 
+<select id="selectScheduleDefault" parameterType="map" resultType="kr.co.swrts.contents.report.domains.ScheduleMstVO">
+/* selectScheduleDefault */
+	SELECT
+        A.SCHEDULE_SEQ 		AS SCHEDULE_SEQ
+        , A.DIVISION 		AS DIVISION 
+	 	, A.COMPANY_CODE 	AS COMPANY_CODE
+		, A.WORK_INFO 		AS WORK_INFO
+		, A.CHECK_CYCLE 	AS CHECK_CYCLE 
+		, A.SCHEDULE_JAN 	AS SCHEDULE_JAN
+		, A.SCHEDULE_FEB 	AS SCHEDULE_FEB
+		, A.SCHEDULE_MAR 	AS SCHEDULE_MAR
+		, A.SCHEDULE_APR 	AS SCHEDULE_APR 
+		, A.SCHEDULE_MAY 	AS SCHEDULE_MAY
+		, A.SCHEDULE_JUN 	AS SCHEDULE_JUN
+		, A.SCHEDULE_JUL 	AS SCHEDULE_JUL
+		, A.SCHEDULE_AUG 	AS SCHEDULE_AUG
+		, A.SCHEDULE_SEP 	AS SCHEDULE_SEP
+		, A.SCHEDULE_OCT 	AS SCHEDULE_OCT
+		, A.SCHEDULE_NOV 	AS SCHEDULE_NOV
+		, A.SCHEDULE_DEC 	AS SCHEDULE_DEC
+		, A.ENTITY 			AS ENTITY
+        , A.CONTRACT 		AS CONTRACT
+        , A.FILE_SEQ 		AS FILE_SEQ
+        , A.USEFLAG 		AS USEFLAG
+	FROM SCHEDULE_MST A
+	WHERE USEFLAG = #{useflag}
+	<if test='division != null  and division != ""'>
+		and DIVISION	=	#{division}
+ 	</if>
+ 	AND COMPANY_CODE = #{company_code}
+ 	ORDER BY SCHEDULE_SEQ ASC
+	
+</select>
 
 <select id="selectScheduleList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.ScheduleMstVO">
 /* selectScheduleList */
@@ -48,6 +83,8 @@
 	<if test='division != null  and division != ""'>
 		and DIVISION	=	#{division}
  	</if>
+ 	AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+ 	AND COMPANY_CODE = #{company_code}
  	ORDER BY SCHEDULE_SEQ ASC
 	
 </select>
@@ -95,18 +132,15 @@
 	    ,#{entity}
 	    ,#{contract}
 	    ,#{created_by}
-	    ,#{last_update_by}
+	    ,#{created_by}
 	)
 </insert>
 
 <update id="updateSchedule" parameterType="kr.co.swrts.contents.report.domains.ScheduleMstVO">
 /* updateSchedule */
 	UPDATE SCHEDULE_MST SET
-	    LAST_UPDATE_BY	=	#{last_update_by}
+	    LAST_UPDATE_BY	=	#{created_by}
 	    ,LAST_UPDATE_DATE = NOW()
-	<if test='company_code != null  and company_code != ""'>
-		,COMPANY_CODE	=	#{company_code}
- 	</if>	    
  	<if test='work_info != null  and work_info != ""'>
 		,WORK_INFO		=	#{work_info}
  	</if>
@@ -159,6 +193,7 @@
 		,FILE_SEQ		=	#{file_seq}
  	</if>
 	where SCHEDULE_SEQ 	=	#{schedule_seq}
+	AND COMPANY_CODE = #{company_code}
 	
 </update>
 
@@ -166,9 +201,10 @@
 	/* deleteSchdule */
 	UPDATE SCHEDULE_MST SET
 		last_update_date = NOW()
-		,last_update_by = '박주임' 
+		,last_update_by = #{created_by} 
 		,USEFLAG = 0
 	WHERE SCHEDULE_SEQ = #{schedule_seq}
+	AND COMPANY_CODE = #{company_code}
 	
 </update> 
 
@@ -179,6 +215,7 @@
 	FROM DETAILED_WORK_MST
 	WHERE USEFLAG = #{useflag}
 	AND WORK_DATE = #{work_date}
+	AND COMPANY_CODE = #{company_code}
  	ORDER BY WORK_SEQ ASC
 	
 </select>
@@ -197,6 +234,7 @@
     FROM DETAILED_WORK_MST
 	WHERE USEFLAG = #{useflag}
 	AND WORK_DATE = #{work_date}
+	AND COMPANY_CODE = #{company_code}
  	ORDER BY WORK_SEQ ASC
 	
 </select>
@@ -221,18 +259,15 @@
 	    ,#{remark}
 	    ,#{company_code}
 	    ,#{created_by}
-	    ,#{last_update_by}
+	    ,#{created_by}
 	)
 </insert>
 
 <update id="updateDetailedWork" parameterType="kr.co.swrts.contents.report.domains.DetailedWorkMstVO">
 /* updateDetailedWork */
 	UPDATE DETAILED_WORK_MST SET
-	    LAST_UPDATE_BY	=	#{last_update_by}
+	    LAST_UPDATE_BY	=	#{created_by}
 	    ,LAST_UPDATE_DATE = NOW()
-	<if test='company_code != null  and company_code != ""'>
-		,COMPANY_CODE	=	#{company_code}
- 	</if>
  	<if test='sector != null  and sector != ""'>
 		,SECTOR			=	#{sector}
  	</if>
@@ -256,9 +291,10 @@
 	/* deleteDetailedWork */
 	UPDATE DETAILED_WORK_MST SET
 		last_update_date = NOW()
-		,last_update_by = '박주임' 
+		,last_update_by = #{created_by}
 		,USEFLAG = 0
 	WHERE WORK_SEQ = #{work_seq}
+	AND COMPANY_CODE = #{company_code}
 	
 </update> 
 
@@ -460,12 +496,12 @@
 <select id="selectPaymentStatusCnt" parameterType="map" resultType="int">
 /* selectPaymentStatusCnt */
 	SELECT 
-	    COUNT(PAYMENT_STATUS_SEQ)
+	    COUNT(PAYMENT_STATUS_SEQ) 
 	FROM PAYMENT_STATUS_MST
 	WHERE USEFLAG = #{useflag}
-	AND CREATED_DATE BETWEEN DATE_FORMAT(#{frThisYear},'%y/%m/%d') and LAST_DAY(#{toThisYear})
+	AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	ORDER BY PAYMENT_STATUS_SEQ ASC
-	
+	 
 </select>
 
 <select id="selectPaymentStatusList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
@@ -489,8 +525,7 @@
 	            (
 	                SELECT FORMAT(IFNULL(CARRIED_FORWARD,0) + IFNULL(ENTER,0) - IFNULL(EXODUS,0),0) AS CARRIED_FORWARD
 		            FROM PAYMENT_STATUS_MST   
-		            WHERE CREATED_DATE BETWEEN DATE_FORMAT(#{frLastYear},'%y/%m/%d') 
-		                AND LAST_DAY(#{toLastYear})
+		            WHERE CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	                    AND B.PRODUCT_NAME = PRODUCT_NAME
 	                    AND B.PRODUCT_UNIT = PRODUCT_UNIT
 	                limit 1
@@ -503,7 +538,7 @@
 	        ,B.REMARK
 	    FROM PAYMENT_STATUS_MST B
 	    WHERE USEFLAG = #{useflag}
-		AND CREATED_DATE BETWEEN DATE_FORMAT(#{frThisYear},'%y/%m/%d') and LAST_DAY(#{toThisYear})
+		AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	) A
 	ORDER BY PAYMENT_STATUS_SEQ ASC
 	

@@ -108,36 +108,41 @@ public class ReportController {
 	*@return
 	*/
 	@RequestMapping(value = "/scheduleList", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView scheduleMst(HttpServletRequest request, Model model
+	public ModelAndView scheduleMst(HttpServletRequest request, Model model, HttpSession session
 			, @RequestParam(value="division", required =false,  defaultValue="AS01") String division
+			, @RequestParam(value="selectCalDate", required =false,  defaultValue="0000") String selectCalDate
 			, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 		
-		logger.info("================================ START ================================");						//scheduleList 시작
-													//상태 값 선언
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();											//리턴해주는 데이터를 담을 map
+		logger.info("================================ START ================================");	//scheduleList 시작
+													
+		Map<String, Object> resultMap = new HashMap<String, Object>();			//리턴해주는 데이터를 담을 map
 		
 		try{
 
-			List<ScheduleMstVO> scheduleList = new ArrayList<ScheduleMstVO>();										//연간스케쥴VO List		
+			selectCalDate = checkCalDate(selectCalDate);		//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(selectCalDate);	//기준년도 배열 만들기
+			 
+			resultMap = reportService.selectScheduleList(request, session, division, addList, selectCalDate);//연간스케쥴 조회
+			resultMap.put("resultCode", resultMap.get("resultCode"));			//응답코드	 0000:정상  / 9000:비정상
+			resultMap.put("scheduleList", resultMap.get("scheduleList"));		//테이블 리스트
+			resultMap.put("scheduleCnt", resultMap.get("selectScheduleCnt"));	//테이블 수 
+			resultMap.put("addList", addList);									//add:행추가 / normal:일반 출력
+			resultMap.put("division", division);								//업무구분	
+			resultMap.put("selectCalDate", selectCalDate);	//선택한 년도
+			resultMap.put("calDate", calDateStr);			//달력 배열
 			
+			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles",resultMap);//연간스케쥴 model
 			
-			scheduleList = reportService.selectScheduleList(request, division, addList);							//연간스케쥴 조회
-			resultMap.put("resultCode", "0000");																	//응답코드	 0000:정상  / 9000:비정상
-			resultMap.put("scheduleList", scheduleList);															//테이블 리스트
-			resultMap.put("scheduleCnt", scheduleList.size());														//테이블 수 
-			resultMap.put("addList", addList);																		//add:행추가 / normal:일반 출력
-			resultMap.put("division", division);																	//업무구분	
-			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles",resultMap);					//연간스케쥴 model
-			
-			logger.info("================================ E N D ================================");					//scheduleList 종료
+			logger.info("================================ E N D ================================");//scheduleList 종료
 			return mav;
 			
 		}catch(Exception e) {
 			
 			logger.error("java.lang.Exception : ReportController.scheduleMst()");
 			logger.error(e.toString());
-			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles");								//연간스케쥴 model
+			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles");	//연간스케쥴 model
 			return mav;
+			
 		}//try
 		
 	};//scheduleMst
@@ -150,7 +155,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertSchedule", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> InsertSchedule(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertSchedule(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");						//insertSchedule 시작
 		
@@ -160,7 +165,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.insertSchedule(request);						//연간스케쥴 저장/수정
+			reportService.insertSchedule(request, session);						//연간스케쥴 저장/수정
 			
 		}catch(Exception e) {
 
@@ -182,7 +187,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteSchedule", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> DeleteSchedule(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeleteSchedule(HttpServletRequest request, Model model, HttpSession session) {
 
 		logger.info("================================ START ================================");						//deleteSchedule 시작
 		
@@ -192,7 +197,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.deleteSchedule(request);						//연간스케쥴 삭제
+			reportService.deleteSchedule(request, session);						//연간스케쥴 삭제
 			
 		}catch(Exception e) {
 			
@@ -214,49 +219,42 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/detailedWorkList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView DetailedWorkMst(HttpServletRequest request, Model model
+	public ModelAndView DetailedWorkMst(HttpServletRequest request, HttpSession session
 								, @RequestParam(value="workDate", required =false, defaultValue="0000") String workDate
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 
-		logger.info("================================ START ================================");						//detailWork 시작
+		logger.info("================================ START ================================");	//detailWork 시작
 		
 		logger.info("param workDate : "+workDate);
 		logger.info("param addList : "+addList);
 		
-		List<DetailedWorkMstVO> detailWorkList = new ArrayList<DetailedWorkMstVO>();								//테이블 리스트
+		List<DetailedWorkMstVO> detailWorkList = new ArrayList<DetailedWorkMstVO>();			//테이블 리스트
 			
 		try {
-		
-			detailWorkList =  reportService.selectDetailedWorkList(request, workDate, addList);						//세부업무 리스트 조회
+
+			workDate = checkCalDate(workDate);//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(workDate);	//기준년도 배열 만들기
 			
-			//--------------------------------------- 
-			//기준년도의 default는 "0000"
-			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
-			//---------------------------------------
-			if("0000".equals(workDate)) {
-				
-				LocalDate now = LocalDate.now();																	//현재 날짜
-				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));									//년월일 파싱 2020.10.10 
-				workDate = workDate.substring(0,4);																	//년도 파싱 2020
-				
-			};//if
+			detailWorkList =  reportService.selectDetailedWorkList(request, session, workDate, addList);	//세부업무 리스트 조회
 			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("detailWorkList", detailWorkList);														//테이블 리스트
-			resultMap.put("detailWorkCnt", detailWorkList.size());													//테이블 수 
-			resultMap.put("addList", addList);																		//add:행추가 / normal:일반 출력
-			resultMap.put("workDate", workDate);																	//기준년도
+			resultMap.put("detailWorkList", detailWorkList);				//테이블 리스트
+			resultMap.put("detailWorkCnt", detailWorkList.size());			//테이블 수 
+			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
+			resultMap.put("workDate", workDate);							//선택한 년도
+			resultMap.put("calDate", calDateStr);//달력
+			//기준년도 달력 보내기. 금년 기준으로 +1년, -5년까지 ex. 금년 : 2020 | 보여줄 년도 : 2021 ~ 2015 
 			
-			ModelAndView  mav = new ModelAndView("contents/report/detailedWorkMst.tiles",resultMap);				//detailWork model 선언
-			logger.info("================================ E N D ================================");					//scheduleList 종료
-			return mav;																								//mav리턴
+			ModelAndView  mav = new ModelAndView("contents/report/detailedWorkMst.tiles",resultMap);//detailWork model 선언
+			logger.info("================================ E N D ================================");	//scheduleList 종료
+			return mav;																				//mav리턴
 			
 		}catch(Exception e) {
 			
-			ModelAndView  mav = new ModelAndView("DetailedWorkList");												//detailWork model 선언
+			ModelAndView  mav = new ModelAndView("DetailedWorkList");	//detailWork model 선언
 			mav.setViewName("contents/report/detailedWorkMst.tiles");			
-			logger.error(e.toString());																				//오류메시지
-			return mav;																								//mav리턴
+			logger.error(e.toString());									//오류메시지
+			return mav;													//mav리턴
 			
 		}//catch
 
@@ -270,7 +268,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertDetailedWork", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> InsertDetailedWork(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertDetailedWork(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//insertDetailedWork 시작
 
@@ -280,7 +278,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.insertDetailedWork(request);					//세부업무 실적 저장/수정
+			reportService.insertDetailedWork(request, session);					//세부업무 실적 저장/수정
 			
 		}catch(Exception e) {
 			
@@ -301,7 +299,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteDetailedWork", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> DeleteDetailedWork(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeleteDetailedWork(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//deleteDetailedWork 시작
 
@@ -311,7 +309,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.deleteDetailedWork(request);					//세부업무 삭제
+			reportService.deleteDetailedWork(request, session);					//세부업무 삭제
 			
 		}catch(Exception e) {
 			
@@ -356,8 +354,8 @@ public class ReportController {
 			resultMap.put("selectRepairCnt", repairList.size());			//테이블 수 
 			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
 			resultMap.put("mainPath", mainPath);							//파일경로 앞 부분 ex. C:/
-			resultMap.put("fr_cal", stringToDate(fr_cal));						//검색 시작일
-			resultMap.put("to_cal", stringToDate(to_cal));						//검색 종료일
+			resultMap.put("fr_cal", stringToDate(fr_cal));					//검색 시작일
+			resultMap.put("to_cal", stringToDate(to_cal));					//검색 종료일
 			
 			ModelAndView  mav = new ModelAndView("contents/report/repairMst.tiles",resultMap);		//repairList model 선언
 			logger.info("================================ E N D ================================");	//repairList 종료
@@ -1111,4 +1109,47 @@ public class ReportController {
 		
 	}//intToDate
 	
+	
+	/**
+	*기준년도 값 유무 체크
+	*@param calDate
+	*@return
+	*/
+	public String checkCalDate(String calDate) {
+		
+		//--------------------------------------- 
+		//기준년도의 default는 "0000"
+		//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
+		//---------------------------------------
+		if("0000".equals(calDate)) {
+			
+			LocalDate now = LocalDate.now();									//현재 날짜
+			calDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));	//년월일 파싱 2020.10.10 
+			calDate = calDate.substring(0,4);									//년도 파싱 2020
+			
+		};//if
+	
+		return calDate;
+		
+	}
+	
+	
+	/**
+	*기준년도 배열 만들기
+	*@param calDate
+	*@return
+	*/
+	public String[] createCalDate(String calDate) {
+		   
+		int calDateInt = Integer.parseInt(calDate) + 1;	//지금년도에 +1. 내년 일정을 정할 수 있어서. -> 추후 달력 기능 변경 예정
+		String[] calDateStr = new String[6];				//반환할 배열
+		
+		// 2021~2015 | 6년치 년도 | 추후 달력기능 변경예정
+		for(int i = 0; i < 6; ++i) {
+			calDateStr[i] = Integer.toString(calDateInt--); 
+		}//for
+		
+		return calDateStr;
+		
+	}
 }

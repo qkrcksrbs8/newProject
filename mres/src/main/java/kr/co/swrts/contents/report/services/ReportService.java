@@ -74,23 +74,38 @@ public class ReportService {
 	*@param addList
 	*@return
 	*/
-	public List<ScheduleMstVO> selectScheduleList(HttpServletRequest request, String division, String addList){
+	@SuppressWarnings("finally")
+	public Map<String, Object> selectScheduleList(HttpServletRequest request, HttpSession session, String division, String addList, String selectCalDate){
 		
 		logger.info("================================ START ================================");
 		
-		List<ScheduleMstVO> scheduleList = new ArrayList<ScheduleMstVO>();				//연간스케쥴VO List
+		List<ScheduleMstVO> scheduleList = new ArrayList<ScheduleMstVO>();	//연간스케쥴VO List
+		Map<String, Object> resultMap = new HashMap<String, Object>();		//최종적으로 반환할 map
 		
 		try {
 		
+			String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
+			//사업장번호 세션도 받아야함
+			
+			logger.info("selectCalDate : "+selectCalDate);
 			logger.info("division : "+division);
 			logger.info("addList : "+addList);
+
+			String frThisYear = selectCalDate+"0101";				//이번년도 01월 01일
+			String toThisYear = selectCalDate+"1201";				//이번년도 12월01일
 			
-			Map<String, Object> map = new HashMap<String, Object>();					//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");													//1:사용 / 0:미사용
-			map.put("division", division);												//업무구분
+			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");								//1:사용 / 0:미사용
+			map.put("division", division);							//업무구분
+			map.put("frThisYear", frThisYear);						//검색 시작일
+			map.put("toThisYear", toThisYear);						//검색 종료일
+			map.put("company_code", companyCode);					//사업장코드
 			
-			int selectScheduleCnt = 0;													//연간스케쥴 cnt 변수
-			selectScheduleCnt = reportDao.selectScheduleCnt(map);						//연간스케쥴 cnt 조회
+			int selectScheduleCnt = 0;								//연간스케쥴 cnt 변수
+			selectScheduleCnt = reportDao.selectScheduleCnt(map);	//연간스케쥴 cnt 조회
 			logger.info("selectScheduleCnt : "+selectScheduleCnt);
 			
 			//----------------
@@ -98,32 +113,44 @@ public class ReportService {
 			//----------------
 			if(selectScheduleCnt > 0 ) {
 
-				scheduleList = reportDao.selectScheduleList(map);						//연간스케쥴 리스트 조회
+				scheduleList = reportDao.selectScheduleList(map);	//연간스케쥴 리스트 조회
 				
-			};//if
+			}else { 
+				
+				map.remove("company_code");			//삭제 후 다시 넣기
+				map.put("company_code", "0000");	//사업장코드
+				scheduleList = reportDao.selectScheduleDefault(map);//기본값 반환
+				
+			}
 			
 			//-----------------------------
 			//addList의 값이 add일 경우 리스트 추가
 			//-----------------------------
 			if("add".equals(addList)) {
 			
-				ScheduleMstVO addScheduleVO = new ScheduleMstVO();						//연간스케쥴vo 선언
-				addScheduleVO.setDivision(division);									//업무 구분 값 고정
-				scheduleList.add(addScheduleVO);										//리스트에 추가
+				ScheduleMstVO addScheduleVO = new ScheduleMstVO();	//연간스케쥴vo 선언
+				addScheduleVO.setDivision(division);				//업무 구분 값 고정
+				scheduleList.add(addScheduleVO);					//리스트에 추가
 
 			};//if
 			
-			logger.info(scheduleList.toString());										//조회 결과 확인	
+			logger.info(scheduleList.toString());					//조회 결과 확인	
 			logger.info("================================ E N D ================================");
-			return scheduleList;
-		
+			resultMap.put("selectScheduleCnt", selectScheduleCnt);	//리스트 개수
+			resultMap.put("scheduleList", scheduleList);			//리스트
+			resultMap.put("resultCode", "0000");	//0000:정상 | 8000:서비스로직오류 | 9000:컨트롤러오류
+			
 		}catch(Exception e) {
 			
 			logger.error("java.lang.Exception : ", "ReportService.scheduleMst()");
 			logger.error(e.toString());
-			return scheduleList;
+			resultMap.put("resultCode", "8000");	//0000:정상 | 8000:서비스로직오류 | 9000:컨트롤러오류
 			
-		}//try
+		} finally { 
+			
+			return resultMap;
+			
+		}
 		
 		
 	};//selectScheduleList
@@ -133,11 +160,16 @@ public class ReportService {
 	*연간스케쥴 저장 메서드입니다.
 	*@param request
 	*/
-	public void insertSchedule(HttpServletRequest request) {
+	public void insertSchedule(HttpServletRequest request, HttpSession session) {
 		
 		logger.info("================================ START ================================");
 		
 		try {
+		
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
@@ -152,7 +184,9 @@ public class ReportService {
 			//-----------------------------------
 			for(int i = 0; i < scheduleList.size(); ++i) {
 				
-				scheduleVO = scheduleList.get(i);													//반복문으로 객체 가져오기
+				scheduleVO = scheduleList.get(i);		//반복문으로 객체 가져오기
+				scheduleVO.setCreated_by(userId);		//생성자,수정자
+				scheduleVO.setCompany_code(companyCode);//사업장아이디
 				if(reportDao.updateSchedule(scheduleVO) == 0) {reportDao.insertSchedule(scheduleVO);};//업데이트 할 내용이 없으면 저장
 				
 			};//for
@@ -173,11 +207,16 @@ public class ReportService {
 	*연간스케쥴 삭제 메서드입니다.
 	*@param request
 	*/
-	public void deleteSchedule(HttpServletRequest request) {
+	public void deleteSchedule(HttpServletRequest request, HttpSession session) {
 		
 		logger.info("================================ START ================================");
 		
 		try {
+			
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
@@ -193,6 +232,8 @@ public class ReportService {
 			for(int i = 0; i < scheduleList.size(); ++i) {
 				
 				scheduleVO = scheduleList.get(i);													//반복문으로 객체 가져오기
+				scheduleVO.setCreated_by(userId);		//생성자,수정자
+				scheduleVO.setCompany_code(companyCode);//사업장아이디
 				reportDao.deleteSchedule(scheduleVO);												//연간스케쥴 삭제 DAO
 				
 			};//for
@@ -216,39 +257,32 @@ public class ReportService {
 	*@param addList
 	*@return
 	*/
-	public List<DetailedWorkMstVO> selectDetailedWorkList(HttpServletRequest request, String workDate, String addList) {
+	public List<DetailedWorkMstVO> selectDetailedWorkList(HttpServletRequest request, HttpSession session, String workDate, String addList) {
 		
 		logger.info("================================ START ================================");
-		List<DetailedWorkMstVO> detailedWorkList = new ArrayList<DetailedWorkMstVO>();				//세부업무실적VO List
+		List<DetailedWorkMstVO> detailedWorkList = new ArrayList<DetailedWorkMstVO>();	//세부업무실적VO List
 		
 		try {
 			
-			//---------------------------------------
-			//기준년도의 default는 "0000"
-			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
-			//---------------------------------------
-			if("0000".equals(workDate)) {
-				
-				LocalDate now = LocalDate.now();													//현재 날짜
-				workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));					//년월일 파싱 2020.10.10 
-				workDate = workDate.substring(0,4);													//년도 파싱 2020
-				
-			};//if
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
 			
-			logger.info("work_date : "+workDate);													//기준년도 로그
-			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");																//1:사용 / 0:미사용
-			map.put("work_date", workDate);															//기준년도
+			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");								//1:사용 / 0:미사용
+			map.put("work_date", workDate);							//기준년도
+			map.put("company_code", companyCode);					//사업장코드
 			
-			int detailedWorkcnt = 0;																//세부업무실적 cnt 변수 선언
-			detailedWorkcnt = reportDao.selectDetailedWorkCnt(map);									//세부업무실적 cnt 조회
+			int detailedWorkcnt = 0;								//세부업무실적 cnt 변수 선언
+			detailedWorkcnt = reportDao.selectDetailedWorkCnt(map);	//세부업무실적 cnt 조회
 			logger.info("cnt : "+detailedWorkcnt);
 			
 			//------------------
 			//세무업무 실적 리스트 개수 
 			//------------------
 			if(detailedWorkcnt > 0 ) {
-				detailedWorkList = reportDao.selectDetailedWorkList(map);							//세부업무실적 리스트 조회
+				detailedWorkList = reportDao.selectDetailedWorkList(map);//세부업무실적 리스트 조회
 			};//if
 			
 			//-----------------------------
@@ -256,9 +290,9 @@ public class ReportService {
 			//-----------------------------
 			if("add".equals(addList)) {
 			
-				DetailedWorkMstVO detailedMstWorkVO = new DetailedWorkMstVO();						//vo 선언
-				detailedMstWorkVO.setWork_date(workDate);											//업무 구분 값 고정
-				detailedWorkList.add(detailedMstWorkVO);											//리스트에 추가
+				DetailedWorkMstVO detailedMstWorkVO = new DetailedWorkMstVO();//vo 선언
+				detailedMstWorkVO.setWork_date(workDate);	//업무 구분 값 고정
+				detailedWorkList.add(detailedMstWorkVO);	//리스트에 추가
 
 			};//if
 			
@@ -268,8 +302,8 @@ public class ReportService {
 			
 		}catch(Exception e) {
 			
-			logger.error("ReportServiceImpl.selectDetailedWorkList() : ");							//세무업무 실적 리스트 메서드
-			logger.error(e.toString());																//에러 내용
+			logger.error("ReportServiceImpl.selectDetailedWorkList() : ");	//세무업무 실적 리스트 메서드
+			logger.error(e.toString());										//에러 내용
 			return detailedWorkList;
 			
 		}//try
@@ -281,11 +315,16 @@ public class ReportService {
 	*@param request
 	*@throws Exception
 	*/
-	public void insertDetailedWork(HttpServletRequest request) throws Exception {
+	public void insertDetailedWork(HttpServletRequest request, HttpSession session) throws Exception {
 		
 		logger.info("================================ START ================================");
 		
 		try {
+
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
@@ -300,7 +339,9 @@ public class ReportService {
 			//-----------------------------------
 			for(int i = 0; i < detailedWorkList.size(); ++i) {
 				
-				detailedWorkVO = detailedWorkList.get(i);																//반복문으로 객체 가져오기
+				detailedWorkVO = detailedWorkList.get(i);	//반복문으로 객체 가져오기
+				detailedWorkVO.setCompany_code(companyCode);//사업장코드
+				detailedWorkVO.setCreated_by(userId);		//생성자, 수정자
 				if(reportDao.updateDetailedWork(detailedWorkVO) == 0) {reportDao.insertDetailedWork(detailedWorkVO);};	//업데이트 할 내용이 없으면 저장
 				
 			};//for
@@ -319,11 +360,16 @@ public class ReportService {
 	*세부업무 실적 삭제
 	*@param request
 	*/
-	public void deleteDetailedWork(HttpServletRequest request) {
+	public void deleteDetailedWork(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");
 		
 		try {
+
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");												//매개변수 string으로 받기
 			logger.info(str); 																			//매개변수 로그 츨략
@@ -339,6 +385,8 @@ public class ReportService {
 			for(int i = 0; i < detailedWorkList.size(); ++i) {
 				
 				detailed_WorkVO = detailedWorkList.get(i);												//반복문으로 객체 가져오기
+				detailed_WorkVO.setCompany_code(companyCode);
+				detailed_WorkVO.setCreated_by(userId);
 				reportDao.deleteDetailedWork(detailed_WorkVO);											//연간스케쥴 삭제 DAO
 				
 			};//for

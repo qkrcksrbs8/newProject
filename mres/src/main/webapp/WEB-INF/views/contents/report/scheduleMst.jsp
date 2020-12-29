@@ -7,8 +7,10 @@
  .rightBtn{
  	float: right;		/* 저장, 수정, 삭제, 행추가, 인쇄 버튼 우측 정렬 */
  }
- .marginLeft{
+ .defaultLabel{
+ 	width: 100px;
  }
+ 
 </style>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/mres10/scheduleMstDetails.js"></script>
@@ -16,11 +18,14 @@
 
 $(function(){
 
-	$(".sub_title").text("연간스케쥴");	//서브타이틀
-	var selectDivision = "${division}";			//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	$("#selectCode").val(selectDivision);		//페이지 진입 시 selectBox 선택
+	$(".sub_title").text("연간스케쥴");		//서브타이틀
+	var selectDivision = "${division}";		//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	$("#selectCode").val(selectDivision);	//페이지 진입 시 selectBox 선택
+
+	var selectCalDate = "${selectCalDate}";				//업무코드		기준년도
+	$("#selectCalDate").val(selectCalDate);		//페이지 진입 시 selectBox 선택
 	
-	var addList = "${addList}";					//add:행추가 / normal:일반 출력
+	var addList = "${addList}";				//add:행추가 / normal:일반 출력
 	
 	//-----
 	//행추가
@@ -34,15 +39,11 @@ $(function(){
 		
 	};//if
 	
-	
-	
 	function maxVauleCheck(str){
 		
 		var regExp = /[^(가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9)]/gi;
 		var result = str;
-		
-		
-
+	
 	}//최대 값 체크
 });
 
@@ -58,6 +59,13 @@ $(function(){
 	    <option value="AS04">시설 업무</option>
 	</select>
 	
+	<!-- 달력 -->
+	<select class="default_select w70" id="selectCalDate" name="selectCalDate">
+		<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
+			<option value="${calDate}">${calDate}</option>
+		</c:forEach>
+	</select>
+	
 	<!-- 버튼 모음입니다. -->
 	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
 	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
@@ -69,6 +77,7 @@ $(function(){
 	<form id="selectForm" name="selectForm"  action="<%=request.getContextPath()%>/scheduleList" autocomplete="off">
 		<input id="division" name="division" type="hidden" value ="">
 		<input id="addList" name ="addList" type="hidden" value	="">
+		<input id="selectDate" name ="selectDate" type="hidden" value	="">
 	</form>
 	
 	<table class="view_top_center_table marginLeft">
@@ -78,7 +87,7 @@ $(function(){
 			<td rowspan="2">점검주기</td>
 			<td colspan="12">년간 월별 업무 일정</td>
 			<td rowspan="2">관리주체</td>
-			<td colspan="2">파일첨부</td>
+			<td rowspan="2">파일첨부</td>
 		</tr>
 		<tr>
 			<td>1월</td>
@@ -93,8 +102,6 @@ $(function(){
 			<td>10월</td>
 			<td>11월</td>
 			<td>12월</td>
-			<td>계약서</td>
-			<td>그외</td>
 		</tr>
 		<c:set var="number" value="${scheduleCnt}" />
 		<c:forEach var="scheduleList" items="${scheduleList}" varStatus="scheduleNum">
@@ -116,8 +123,7 @@ $(function(){
 					<td class="tableCheck"><input id="schedule_nov" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_nov}" <c:if test="${scheduleList.schedule_nov ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_dec" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_dec}" <c:if test="${scheduleList.schedule_dec ne '0'}">checked</c:if>></td>
 					<td class=""><input class="default_input w120 maxVal" id="entity" type="text" value="${scheduleList.entity}" maxlength="10"></td>
-					<td class=""><input class="default_input w120" value="${scheduleList.contract}" readonly="readonly"></td> 
-					<td class=""><input class="default_input w120 filePopup" value="${scheduleList.file_name}"></td>
+					<td class=""><input class="default_input w120 uploadBtn" type="button"  value="${scheduleList.file_name}"></td>
 				</c:if>	
 				<c:if test = "${scheduleList.schedule_seq != 0}">
 					<td class="tableCount"><input type="checkbox" name="table_check" value="${scheduleList.schedule_seq}"></td>
@@ -136,29 +142,12 @@ $(function(){
 					<td class="tableCheck"><input id="schedule_nov" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_nov}" <c:if test="${scheduleList.schedule_nov ne '0'}">checked</c:if>></td>
 					<td class="tableCheck"><input id="schedule_dec" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_dec}" <c:if test="${scheduleList.schedule_dec ne '0'}">checked</c:if>></td>
 					<td class=""><input class="default_input w120 maxVal" id="entity" type="text" value="${scheduleList.entity}" readonly="readonly"></td>
-					<td class=""><input class="default_input w120" value="${scheduleList.contract}" readonly="readonly"></td>
-					<td class=""><input class="default_input w120 uploadPopup" value="${scheduleList.file_name}" readonly="readonly"></td>	
+					<td class=""><input class="default_input w120 uploadBtn" type="button"  value="${scheduleList.file_name}"></td>
 				</c:if>
 			</tr>
 		</c:forEach>
 	</table>
 	
-		
-	<!-- 게시글 없을 때. --> 
-	<c:if test="${scheduleCnt==0}"> 
-		<section id="content">
-			<div class="container">
-				<div class="">
-					<ul class="row">	
-						<li>게시판에 저장된 글이 없습니다.</li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</c:if>
-	
-<!-- 	<input type="button" id ="imgDown" value="다운로드"> -->
-
 
     
 <!-- 공지사항 등록 팝업 -->

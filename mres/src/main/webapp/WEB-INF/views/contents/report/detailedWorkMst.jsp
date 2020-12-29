@@ -52,6 +52,13 @@ $(function(){
 	    <option value="2017">2017</option>
 	</select>
 	
+	<!-- 달력 -->
+	<select class="default_select w70" id="selectCalDate" name="selectCalDate">
+		<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
+			<option value="${calDate}">${calDate}</option>
+		</c:forEach>
+	</select>
+	
 	<!-- 버튼 모음입니다. -->
 	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
 	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	

@@ -30,6 +30,14 @@ public interface ReportDao {
 	public int selectScheduleCnt(Map<String, Object> map) throws Exception;
 	
 	/**
+	* 연간스케쥴 기본값
+	*@param map
+	*@return
+	*@throws Exception
+	*/
+	public List<ScheduleMstVO> selectScheduleDefault(Map<String, Object> map) throws Exception;
+	
+	/**
 	 * 연간스케쥴 리스트
 	 * @param map
 	 * @return
