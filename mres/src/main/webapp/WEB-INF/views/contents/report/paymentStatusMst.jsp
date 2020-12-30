@@ -22,6 +22,9 @@ $(function(){
  
 	$(".sub_title").text("설비및수불현황");	//서브타이틀
 	var addList = "${addList}";		//add:행추가 / normal:일반 출력
+
+	var selectCalDate = "${selectDate}";	//업무코드		기준년도
+	$("#selectCalDate").val(selectCalDate);	//페이지 진입 시 selectBox 선택
 	
 	//-----
 	//행추가
@@ -41,12 +44,33 @@ $(function(){
 
 <body>
 		
-	<!-- 버튼 모음입니다. --> 
-	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
-	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
-	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
-	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+	<div class="search_wrap">
+	
+		<!-- 버튼 모음입니다. --> 
+		<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+		<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+		<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+		<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+		<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+		
+		<!-- 달력 -->
+	 	<div class="search_con">
+			<div class="search_title">기준년도</div>
+			<select class="default_select w70" id="selectCalDate" name="selectCalDate">
+				<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
+					<option value="${calDate}">${calDate}</option>
+				</c:forEach>
+			</select>
+		</div>
+	</div>
+	
+	
+	<!-- 셀렉트박스 조회용 히든 폼 -->
+	<form id="selectForm" name="selectForm"  action="paymentStatusList" autocomplete="off">
+		<input type="hidden" id="baseYear"	name="baseYear"	value ="">
+		<input type="hidden" id="addList" 	name ="addList" value ="">
+		<input type="hidden" id="selectDate" name ="selectDate" value ="">
+	</form>
 	
 <!-- 게시글 있을 때. --> 
 	<table class="view_top_center_table">
@@ -101,14 +125,6 @@ $(function(){
 			</div>
 		</section>
 	</c:if>
-
-	
-	<!-- 셀렉트박스 조회용 히든 폼 -->
-	<form id="selectForm" name="selectForm"  action="paymentStatusList" autocomplete="off">
-		<input type="hidden" id="baseYear"	name="baseYear"	value ="">
-		<input type="hidden" id="addList" 	name ="addList" value ="">
-	</form>
-	
 
 <div>
 </div>

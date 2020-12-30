@@ -19,8 +19,8 @@ $(function() {
 $(function(){
 
 	$(".sub_title").text("세부업무실적");		//서브타이틀
-	var selectWorkDate = "${workDate}";		//업무코드		2020, 2019, 2018 ...
-	$("#selectCode").val(selectWorkDate);	//페이지 진입 시 selectBox 선택
+	var selectDate = "${selectDate}";		//업무코드		2020, 2019, 2018 ...
+	$("#selectCalDate").val(selectDate);	//페이지 진입 시 selectBox 선택
 	
 	var addList = "${addList}";				//add:행추가 / normal:일반 출력
 	
@@ -33,6 +33,7 @@ $(function(){
 		$("#tableSave").attr("disabled", true);	//저장 버튼 비활성화	 수정 중일 때 
 		$("#tableDel").attr("disabled", true);	//삭제 버튼 비활성화	 수정 중일 때 
 		$("#tableAdd").attr("disabled", true);	//행추가 버튼 비활성화 수정 중일 때 
+		$("#addList").val("normal");			//
 		
 	};//if
    	
@@ -44,27 +45,32 @@ $(function(){
 
 <div class="container">
 
-	<!-- 기준년도 셀렉트박스 -->
-	<select class="default_select w70" id="selectCode" name="selectCode">
-	    <option value="2020">2020</option>
-	    <option value="2019">2019</option> 
-	    <option value="2018">2018</option>
-	    <option value="2017">2017</option>
-	</select>
+	<div class="search_wrap">
 	
-	<!-- 달력 -->
-	<select class="default_select w70" id="selectCalDate" name="selectCalDate">
-		<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
-			<option value="${calDate}">${calDate}</option>
-		</c:forEach>
-	</select>
-	
-	<!-- 버튼 모음입니다. -->
-	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
-	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
-	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
-	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+		<!-- 달력 -->
+		<div class="search_con">
+			<div class="search_title">기준년도</div>
+			<select class="default_select w70" id="selectCalDate" name="selectCalDate">
+				<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
+					<option value="${calDate}">${calDate}</option>
+				</c:forEach>
+			</select>
+		</div>
+		
+		<!-- 버튼 모음입니다. -->
+		<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+		<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+		<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+		<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+		<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+		
+	</div>
+	<!-- 셀렉트박스 조회용 히든 폼 -->
+	<form id="selectForm" name="selectForm"  action="detailedWorkList" autocomplete="off">
+		<input id="workDate" name="workDate" type="hidden" value ="">
+		<input id="addList" name ="addList" type="hidden" value	="">
+		<input id="selectDate" name ="selectDate" type="hidden" value ="">
+	</form>
 	
 <!-- 게시글 있을 때. --> 
 	<table class="view_top_center_table">
@@ -108,12 +114,6 @@ $(function(){
 			</div>
 		</section>
 	</c:if>
-	
-	<!-- 셀렉트박스 조회용 히든 폼 -->
-	<form id="selectForm" name="selectForm"  action="detailedWorkList" autocomplete="off">
-		<input id="workDate" name="workDate" type="hidden" value ="">
-		<input id="addList" name ="addList" type="hidden" value	="">
-	</form>
 	
 </div>
 

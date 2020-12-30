@@ -268,10 +268,13 @@ public class ReportService {
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
 			System.out.println("########################## userId : "+userId);
 			System.out.println("########################## companyCode : "+companyCode);
+			String frThisYear = workDate+"0101";								//이번년도 01월 01일
+			String toThisYear = workDate+"1201";								//이번년도 12월01일
 			
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");								//1:사용 / 0:미사용
-			map.put("work_date", workDate);							//기준년도
+			map.put("frThisYear", frThisYear);						//검색 시작일
+			map.put("toThisYear", toThisYear);						//검색 종료일
 			map.put("company_code", companyCode);					//사업장코드
 			
 			int detailedWorkcnt = 0;								//세부업무실적 cnt 변수 선언
@@ -286,7 +289,7 @@ public class ReportService {
 			};//if
 			
 			//-----------------------------
-			//addList의 값이 add일 경우 리스트 추가
+			//addList의 값이 add일 경우 리스트 추가 
 			//-----------------------------
 			if("add".equals(addList)) {
 			
@@ -410,7 +413,7 @@ public class ReportService {
 	*@param addList
 	*@return
 	*/
-	public List<RepairMstVO> selectRepairList(HttpServletRequest request, String addList, String fr_cal, String to_cal, HttpSession session) {
+	public List<RepairMstVO> selectRepairList(HttpServletRequest request, String addList, String frThisYear, String toThisYear, HttpSession session) {
 		
 		logger.info("================================ START ================================");
 		List<RepairMstVO> selectRepairList = new ArrayList<RepairMstVO>();	//하자보수VO Listㅋ
@@ -420,12 +423,13 @@ public class ReportService {
 		System.out.println("########################## userId : "+userId);
 		System.out.println("########################## companyCode : "+companyCode);
 		
+		
 		try {
 													
 			Map<String, Object> map = new HashMap<String, Object>();	//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");				//1:사용 / 0:미사용
-			map.put("fr_cal", fr_cal);				//날짜 검색 시작일
-			map.put("to_cal", to_cal);				//날짝 검색 종료일
+			map.put("frThisYear", frThisYear);		//날짜 검색 시작일
+			map.put("toThisYear", toThisYear);		//날짝 검색 종료일
 			map.put("created_by", userId);			//생성자
 			map.put("company_code", companyCode);	//사업장아이디
 			
@@ -517,27 +521,34 @@ public class ReportService {
 	*하자보수현황 삭제
 	*@param request
 	*/
-	public void deleteRepair(HttpServletRequest request) {
+	public void deleteRepair(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
 		
 		try {
 			
-			String str = request.getParameter("totalJson");									//매개변수 string으로 받기
-			logger.info(str); 																//매개변수 로그 츨략
-			JSONArray jsonArray = new JSONArray(str);										//json배열 선언
-			Gson gson = new Gson();															//gson 선언
+			String str = request.getParameter("totalJson");	//매개변수 string으로 받기
+			logger.info(str); 								//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);		//json배열 선언
+			Gson gson = new Gson();							//gson 선언
 			Type listType = new TypeToken<ArrayList<RepairMstVO>>(){}.getType();			//하자보수현황VO의 List.class 
 			List<RepairMstVO> repairList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
-			RepairMstVO repairVO = new RepairMstVO();										//하자보수현황 VO
+			RepairMstVO repairVO = new RepairMstVO();		//하자보수현황 VO
 			
 			//-----------------------------------
 			//파싱된 VOList 출력
 			//-----------------------------------
 			for(int i = 0; i < repairList.size(); ++i) {
 				
-				repairVO = repairList.get(i);												//반복문으로 객체 가져오기
-				reportDao.deleteRepair(repairVO);											//하자보수현황 삭제 DAO
+				repairVO = repairList.get(i);			//반복문으로 객체 가져오기
+				repairVO.setCompany_code(companyCode);	//사업장코드
+				repairVO.setCreated_by(userId);			//생성자,수정자
+				reportDao.deleteRepair(repairVO);		//하자보수현황 삭제 DAO
 				
 			};//for
 		
@@ -559,24 +570,31 @@ public class ReportService {
 	*@param addList
 	*@return
 	*/
-	public List<ContractMstVO> selectContractList(HttpServletRequest request, String addList) {
+	public List<ContractMstVO> selectContractList(HttpServletRequest request, String addList, HttpSession session) {
 		
 		logger.info("================================ START ================================");
-		List<ContractMstVO> contractVOList = new ArrayList<ContractMstVO>();						//주요계약현황VO List
+		
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
+		
+		List<ContractMstVO> contractVOList = new ArrayList<ContractMstVO>();//주요계약현황VO List
 		
 		try {
 													
-			Map<String, Object> map = new HashMap<String, Object>();								//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");																//1:사용 / 0:미사용
+			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
+			map.put("useflag", "1");								//1:사용 / 0:미사용
+			map.put("company_code", companyCode);					//사업장코드
 			
-			int contractCnt = 0;																	//주요계약현황 개수 변수
-			contractCnt = reportDao.selectContractCnt(map);											//주요계역현황 개수 조회
+			int contractCnt = 0;							//주요계약현황 개수 변수
+			contractCnt = reportDao.selectContractCnt(map);	//주요계역현황 개수 조회
 			
 			//------------------
 			//세무업무 실적 리스트 개수 
 			//------------------
 			if(contractCnt > 0 ) {
-				contractVOList = reportDao.selectContractList(map);									//주요계약현황 리스트 조회
+				contractVOList = reportDao.selectContractList(map);	//주요계약현황 리스트 조회
 			};//if
 
  
@@ -585,8 +603,8 @@ public class ReportService {
 			//-----------------------------
 			if("add".equals(addList)) {
 			
-				ContractMstVO contractVO = new ContractMstVO();										//vo 선언
-				contractVOList.add(contractVO);														//리스트에 추가
+				ContractMstVO contractVO = new ContractMstVO();	//vo 선언
+				contractVOList.add(contractVO);					//리스트에 추가
 
 			};//if
 
@@ -597,8 +615,8 @@ public class ReportService {
 			
 		}catch(Exception e) {
 			
-			logger.error("ReportServiceImpl.selectContractList() : ");								//주요계약현황 리스트 메서드
-			logger.error(e.toString());																//에러 내용
+			logger.error("ReportServiceImpl.selectContractList() : ");	//주요계약현황 리스트 메서드
+			logger.error(e.toString());									//에러 내용
 			return contractVOList;
 			
 		}//try
@@ -610,18 +628,23 @@ public class ReportService {
 	*@param request
 	*@throws Exception
 	*/
-	public void insertContract(HttpServletRequest request) throws Exception {
+	public void insertContract(HttpServletRequest request, HttpSession session) throws Exception {
 		
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
 		
 		try {
 			
-			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
-			logger.info(str); 																		//매개변수 로그 츨략
-			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
-			Gson gson = new Gson();																	//gson 선언
-			Type listType = new TypeToken<ArrayList<ContractMstVO>>(){}.getType();						//주요계약현황 실적VO의 List.class 
-			List<ContractMstVO> contractList = gson.fromJson(jsonArray.toString(), listType);			//jsonArray -> VO로 파싱
+			String str = request.getParameter("totalJson");	//매개변수 string으로 받기
+			logger.info(str); 								//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);		//json배열 선언
+			Gson gson = new Gson();							//gson 선언
+			Type listType = new TypeToken<ArrayList<ContractMstVO>>(){}.getType();				//주요계약현황 실적VO의 List.class 
+			List<ContractMstVO> contractList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
 			
 			//-----------------------------------
 			//파싱된 VOList 출력
@@ -629,9 +652,10 @@ public class ReportService {
 			//-----------------------------------
 			for(int i = 0; i < contractList.size(); ++i) {
 
-				ContractMstVO contractVO = new ContractMstVO();								//주요계약현황 VO			
-				contractVO = contractList.get(i);											//반복문으로 객체 가져오기		
-				contractVO.setCreated_by("박주임");											//생성자 박주임
+				ContractMstVO contractVO = new ContractMstVO();	//주요계약현황 VO			
+				contractVO = contractList.get(i);				//반복문으로 객체 가져오기		
+				contractVO.setCreated_by(userId);				//생성자 박주임
+				contractVO.setCompany_code(companyCode); 		//사업장코드
 				
 				logger.info("######"+contractVO.toString());
 				
@@ -655,27 +679,34 @@ public class ReportService {
 	*주요계약현황 삭제
 	*@param request
 	*/
-	public void deleteContract(HttpServletRequest request) {
+	public void deleteContract(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
 		
 		try {
 			
-			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
-			logger.info(str); 																		//매개변수 로그 츨략
-			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
-			Gson gson = new Gson();																	//gson 선언
-			Type listType = new TypeToken<ArrayList<ContractMstVO>>(){}.getType();					//주요계약현황VO의 List.class 
-			List<ContractMstVO> contractList = gson.fromJson(jsonArray.toString(), listType);		//jsonArray -> VO로 파싱
-			ContractMstVO contractVO = new ContractMstVO();											//주요계약현황 VO
+			String str = request.getParameter("totalJson");	//매개변수 string으로 받기
+			logger.info(str); 								//매개변수 로그 츨략
+			JSONArray jsonArray = new JSONArray(str);		//json배열 선언
+			Gson gson = new Gson();							//gson 선언
+			Type listType = new TypeToken<ArrayList<ContractMstVO>>(){}.getType();				//주요계약현황VO의 List.class 
+			List<ContractMstVO> contractList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
+			ContractMstVO contractVO = new ContractMstVO();	//주요계약현황 VO
 			
 			//-----------------------------------
 			//파싱된 VOList 출력
 			//-----------------------------------
 			for(int i = 0; i < contractList.size(); ++i) {
 				
-				contractVO = contractList.get(i);													//반복문으로 객체 가져오기
-				reportDao.deleteContract(contractVO);												//주요계약현황 DAO
+				contractVO = contractList.get(i);			//반복문으로 객체 가져오기
+				contractVO.setCompany_code(companyCode);	//사업장코드
+				contractVO.setCreated_by(userId);			//생성자, 수정자
+				reportDao.deleteContract(contractVO);		//주요계약현황 DAO
 				
 			};//for
 		
@@ -697,29 +728,32 @@ public class ReportService {
 	*@param addList
 	*@return
 	*/
-	public List<PaymentStatusMstVO> selectPaymentStatusList(HttpServletRequest request, String addList) {
+	public List<PaymentStatusMstVO> selectPaymentStatusList(HttpServletRequest request, HttpSession session, String addList, String selectDate) {
 		
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
+		
 		List<PaymentStatusMstVO> paymentStatusVOList = new ArrayList<PaymentStatusMstVO>();	//설비 및 수불 현황VO List
 		
 		try {
-										
-			LocalDate now = LocalDate.now();									//현재 날짜
-			String workDate = "";												//날짜를 담을 변수
-			workDate = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));	//년월일 파싱 2020.10.10 
-			workDate = workDate.substring(0,4);									//년도 파싱 2020
 			
-			String frThisYear = workDate+"0101";								//이번년도 01월 01일
-			String toThisYear = workDate+"1201";								//이번년도 12월01일
-			String frLastYear = (Integer.parseInt(workDate)-1)+"0101";			//전년도 01월 01일
-			String toLastYear = (Integer.parseInt(workDate)-1)+"1201";			//전년도 12월01일
+			String frThisYear = selectDate+"0101";								//이번년도 01월 01일
+			String toThisYear = selectDate+"1201";								//이번년도 12월01일
+			String frLastYear = (Integer.parseInt(selectDate)-1)+"0101";		//전년도 01월 01일
+			String toLastYear = (Integer.parseInt(selectDate)-1)+"1201";		//전년도 12월01일
 			
 			Map<String, Object> map = new HashMap<String, Object>();			//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");											//1:사용 / 0:미사용
-			map.put("frThisYear", frThisYear);
-			map.put("toThisYear", toThisYear);
-			map.put("frLastYear", frLastYear);
-			map.put("toLastYear", toLastYear);
+			map.put("created_by", userId);			//생성자, 수정자
+			map.put("company_code", companyCode);	//사업장코드
+			map.put("frThisYear", frThisYear);		//금년 검색시작일
+			map.put("toThisYear", toThisYear);		//금년 검색종료일
+			map.put("frLastYear", frLastYear);		//작년 검색시작일
+			map.put("toLastYear", toLastYear);		//작년 검색종료일
 			
 			int paymentStatusCnt = 0;											//설비 및 수불 현황 개수 변수
 			paymentStatusCnt = reportDao.selectPaymentStatusCnt(map);			//설비 및 수불 현황 개수 조회
@@ -766,9 +800,15 @@ public class ReportService {
 	*@throws Exception
 	*/
 	@SuppressWarnings("finally")
-	public Map<String, Object> insertPaymentStatus(HttpServletRequest request) throws Exception {
+	public Map<String, Object> insertPaymentStatus(HttpServletRequest request, HttpSession session) throws Exception {
 		
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();//최종적으로 반환할 map
 		
 		try {
@@ -786,9 +826,10 @@ public class ReportService {
 			//-----------------------------------
 			for(int i = 0; i < paymentStatusList.size(); ++i) {
 
-				PaymentStatusMstVO paymentStatusMstVO = new PaymentStatusMstVO();		//설비 및 수불현황 VO			
-				paymentStatusMstVO = paymentStatusList.get(i);							//반복문으로 객체 가져오기		
-				paymentStatusMstVO.setCreated_by("박주임");								//생성자 박주임
+				PaymentStatusMstVO paymentStatusMstVO = new PaymentStatusMstVO();//설비 및 수불현황 VO			
+				paymentStatusMstVO = paymentStatusList.get(i);	//반복문으로 객체 가져오기		
+				paymentStatusMstVO.setCreated_by(userId);		//생성자 박주임
+				paymentStatusMstVO.setCompany_code(companyCode);//사업장코드
 				
 				logger.info("######"+paymentStatusMstVO.toString());
 				
@@ -818,9 +859,15 @@ public class ReportService {
 	*@param request
 	*/
 	@SuppressWarnings("finally")
-	public Map<String, Object> deletePaymentStatus(HttpServletRequest request) {
+	public Map<String, Object> deletePaymentStatus(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();				//최종적으로 반환할 map
 		
 		try {
@@ -829,7 +876,7 @@ public class ReportService {
 			logger.info(str); 														//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);								//json배열 선언
 			Gson gson = new Gson();													//gson 선언
-			Type listType = new TypeToken<ArrayList<PaymentStatusMstVO>>(){}.getType();						//설비 및 수불 현황VO의 List.class 
+			Type listType = new TypeToken<ArrayList<PaymentStatusMstVO>>(){}.getType();	//설비 및 수불 현황VO의 List.class 
 			List<PaymentStatusMstVO> PaymentStatusMstList = gson.fromJson(jsonArray.toString(), listType);//jsonArray -> VO로 파싱
 			
 			//-----------------------------------
@@ -837,9 +884,11 @@ public class ReportService {
 			//-----------------------------------
 			for(int i = 0; i < PaymentStatusMstList.size(); ++i) {
 
-				PaymentStatusMstVO paymentStatusMstVO = new PaymentStatusMstVO();	//설비 및 수불 현황 VO
-				paymentStatusMstVO = PaymentStatusMstList.get(i);					//반복문으로 객체 가져오기
-				reportDao.deletePaymentStatus(paymentStatusMstVO);					//설비 및 수불 현황 DAO
+				PaymentStatusMstVO paymentStatusMstVO = new PaymentStatusMstVO();//설비 및 수불 현황 VO
+				paymentStatusMstVO = PaymentStatusMstList.get(i);	//반복문으로 객체 가져오기
+				paymentStatusMstVO.setCompany_code(companyCode);	//사업장코드
+				paymentStatusMstVO.setCreated_by(userId);			//생성자, 수정자
+				reportDao.deletePaymentStatus(paymentStatusMstVO);	//설비 및 수불 현황 DAO
 				
 			};//for
 		
@@ -868,19 +917,32 @@ public class ReportService {
 	*@return
 	*/
 	@SuppressWarnings("finally")
-	public Map<String, Object> selectLiftList(HttpServletRequest request, String inspection_division) {
+	public Map<String, Object> selectLiftList(HttpServletRequest request, HttpSession session,  String inspection_division, String selectDate) {
 		
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();	//최종적으로 반환할 map
 		List<LiftMstVO> selectLiftVOList = new ArrayList<LiftMstVO>();	//승강기VO List
 		int liftCnt = 0;												//승강기 개수 변수
 		
 		try {
-										
+
+			String frThisYear = selectDate+"0101";						//이번년도 01월 01일
+			String toThisYear = selectDate+"1201";						//이번년도 12월01일
+			
 			Map<String, Object> map = new HashMap<String, Object>();	//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");									//1:사용 / 0:미사용
 			map.put("inspection_division", inspection_division);		//1:승강기 2:화재예방
+			map.put("company_code", companyCode);						//사업장코드
+			map.put("created_by", userId);								//생성자, 수정자
+			map.put("frThisYear", frThisYear);							//검색 시작일
+			map.put("toThisYear", toThisYear);							//검색 종료일
+			
 			liftCnt = reportDao.selectLiftCnt(map);						//승강기 개수 조회
 			
 			//------------------
@@ -918,9 +980,14 @@ public class ReportService {
 	*@return
 	*/
 	@SuppressWarnings("finally")
-	public Map<String, Object> selectLiftContentList(HttpServletRequest request, String addList, int lift_seq) {
+	public Map<String, Object> selectLiftContentList(HttpServletRequest request, HttpSession session, String addList, int lift_seq) {
 		
 		logger.info("================================ START ================================");
+
+		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		System.out.println("########################## userId : "+userId);
+		System.out.println("########################## companyCode : "+companyCode);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();	//최종적으로 반환할 map
 		LiftMstVO selectLiftVO = new LiftMstVO();	//승강기VO List
@@ -933,13 +1000,15 @@ public class ReportService {
 		try {
 										
 			Map<String, Object> map = new HashMap<String, Object>();	//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");									//1:사용 / 0:미사용
+			map.put("useflag", "1");									//사용구분
+			map.put("created_by", userId);								//생성자, 수정자
+			map.put("company_code", companyCode);						//사업장코드
 			
 			if(0 != lift_seq) {
 				System.out.println("########################## seq : "+lift_seq);
-				map.put("lift_seq", lift_seq);								//승강기 목록 번호 - lift_mst
-				selectLiftVO = reportDao.selectLift(map);					//승강기 목록 조회
-				liftContentCnt = reportDao.selectLiftContentCnt(map);		//승강기 상세내용 개수 조회
+				map.put("lift_seq", lift_seq);							//승강기 목록 번호 - lift_mst
+				selectLiftVO = reportDao.selectLift(map);				//승강기 목록 조회
+				liftContentCnt = reportDao.selectLiftContentCnt(map);	//승강기 상세내용 개수 조회
 				
 				//------------------
 				//승강기 리스트 개수 
@@ -952,6 +1021,8 @@ public class ReportService {
 				
 			}else {
 				
+				map.remove("company_code");//키 제거 -> 하단 로직에서 다시 넣어줌
+				
 				if("1".equals(inspection_division)){
 				
 					System.out.println("####################division :"+inspection_division);
@@ -961,7 +1032,7 @@ public class ReportService {
 				}else if("2".equals(inspection_division)) {
 
 					System.out.println("####################division :"+inspection_division);
-					map.put("company_code","00000");										//00000:기본 설정 값
+					map.put("company_code","00000");									//00000:기본 설정 값
 					selectLiftContentList = reportDao.selectLiftDefaultList(map);		//default 화재예방 호출
 					
 				}//if - else if
@@ -1007,7 +1078,7 @@ public class ReportService {
 	*@throws Exception
 	*/
 	@SuppressWarnings("finally")
-	public Map<String, Object> insertLift(HttpServletRequest request, int lift_seq, String sub_manager) throws Exception {
+	public Map<String, Object> insertLift(HttpServletRequest request, HttpSession session, int lift_seq, String sub_manager) throws Exception {
 		
 		logger.info("================================ START ================================");
 		Map<String, Object> resultMap = new HashMap<String, Object>();//최종적으로 반환할 map
@@ -1017,6 +1088,11 @@ public class ReportService {
 		//2. lift_content_mst 저장/수정 (승강기 상세내용)	
 		//-----------------------------------------
 		try {
+
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
+			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			System.out.println("########################## userId : "+userId);
+			System.out.println("########################## companyCode : "+companyCode);
 			
 			System.out.println("#####################"+request.getParameter("lift_seq"));
 			System.out.println("#####################"+request.getParameter("inspection_field"));
@@ -1025,7 +1101,6 @@ public class ReportService {
 			System.out.println("#####################"+request.getParameter("building_name"));
 			System.out.println("#####################"+request.getParameter("main_manager"));
 			System.out.println("#####################"+request.getParameter("inspection_division"));
-//			System.out.println("#####################"+request.getParameter("sub_manager"));
 			
 			LiftMstVO liftMstVO = new LiftMstVO();											//시설물관리VO
 			liftMstVO.setInspection_field(request.getParameter("inspection_field"));		//점검분약
@@ -1036,6 +1111,8 @@ public class ReportService {
 			liftMstVO.setSub_manager(sub_manager);											//서브 확인자
 			liftMstVO.setLift_seq(lift_seq);												//시퀀스
 			liftMstVO.setInspection_division(request.getParameter("inspection_division"));	//1:승강기 2:화재예방
+			liftMstVO.setCompany_code(companyCode);											//사업장코드
+			liftMstVO.setCreated_by(userId);												//생성자, 수정자
 			if(reportDao.updateLift(liftMstVO) == 0) {reportDao.insertLift(liftMstVO);}		//수정/저장
 			lift_seq = reportDao.selectLiftSeq(liftMstVO);									//시퀀스 조회
 			
@@ -1060,12 +1137,12 @@ public class ReportService {
 
 					LiftContentMstVO liftContentMstVO = new LiftContentMstVO();		//승강기 VO			
 					liftContentMstVO = liftContentList.get(i);						//반복문으로 객체 가져오기		
-					liftContentMstVO.setCreated_by("박주임");							//@@@@세션에 있는 유저 아이디로 바꿔야함
-//					liftContentMstVO.setCompany_code(company_code);					//@@@@사업장 식별 값이 들어가야 함
+					liftContentMstVO.setCreated_by(userId);							//@@@@세션에 있는 유저 아이디로 바꿔야함
+					liftContentMstVO.setCompany_code(companyCode);					//@@@@사업장 식별 값이 들어가야 함
 					
 					logger.info("######"+liftContentMstVO.toString());
 					
-					if(reportDao.updateLiftContent(liftContentMstVO) == 0) {reportDao.insertLiftContent(liftContentMstVO); };	//업데이트 할 내용이 없으면 저장
+					reportDao.insertLiftContent(liftContentMstVO);	//업데이트 할 내용이 없으면 저장
 					
 				};//for
 			}else {
@@ -1074,7 +1151,8 @@ public class ReportService {
 					LiftContentMstVO liftContentMstVO = new LiftContentMstVO();		//승강기 화재예방 VO			
 					liftContentMstVO = liftContentList.get(i);						//반복문으로 객체 가져오기	
 					liftContentMstVO.setLift_seq(lift_seq); 						//lift_seq 셋팅
-					liftContentMstVO.setCreated_by("박주임");							//생성자 박주임
+					liftContentMstVO.setCreated_by(userId);							//생성자 박주임
+					liftContentMstVO.setCompany_code(companyCode);					//사업장코드
 					
 					logger.info("######"+liftContentMstVO.toString());
 					
@@ -1549,13 +1627,14 @@ public class ReportService {
 						resultMap.put("resultCode", "2100");// | 2100:pdf파일이 아님
 						return resultMap; 
 					}
-				}else if("repairMst".equals(fileMstVO.getTable_name()) && !"".equals(file_name)){
+				}else if("toRepairMst".equals(fileMstVO.getTable_name()) || "frRepairMst".equals(fileMstVO.getTable_name()) && !"".equals(file_name)){
 						if(!"PNG".equals(file_name.substring(file_name.lastIndexOf(".")+1)) && !"png".equals(file_name.substring(file_name.lastIndexOf(".")+1))
 						&& !"JPG".equals(file_name.substring(file_name.lastIndexOf(".")+1)) && !"jpg".equals(file_name.substring(file_name.lastIndexOf(".")+1))
 						&& !"JPEG".equals(file_name.substring(file_name.lastIndexOf(".")+1)) && !"jpeg".equals(file_name.substring(file_name.lastIndexOf(".")+1))) {
 							resultMap.put("resultCode", "2200");// | 2200:png파일이 아님
 							return resultMap; 
-						}
+						}//if
+						
 					}//if
 				
 				String mainPath = "";	//초기 경로 ex - C:/

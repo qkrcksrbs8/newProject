@@ -50,14 +50,16 @@ $(function(){
 
 <div class="container">
 		
-	<!-- 버튼 모음입니다. --> 
-	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
-	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
-	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
-	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+	<div class="search_wrap">
+		<!-- 버튼 모음입니다. --> 
+		<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+		<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+		<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+		<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+		<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+	</div>
 	
-<table class="view_top_center_table">
+	<table class="view_top_center_table">
 		<tr>
 			<td>체크</td>
 			<td>계약내용</td>

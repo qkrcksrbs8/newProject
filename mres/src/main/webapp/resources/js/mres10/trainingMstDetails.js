@@ -214,7 +214,7 @@ $(function() {
    						$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
    					};//if
    					
-	   				if(resultMsg < 0){ 
+	   				if(resultCnt == 0){ 
 		
 		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
 		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 

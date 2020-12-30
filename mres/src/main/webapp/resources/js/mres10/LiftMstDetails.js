@@ -1,5 +1,16 @@
 $(function() {
 	
+	//------------------
+	//기준년도 조회
+	//------------------
+	$('#selectCalDate').change(function() {
+		
+		var selectCalDate = $(this).val();				//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
+		$("#selectForm").submit();						//서브밋 
+		
+	}); 
+	
 	//---------------------
 	//테이블을 저장하는 로직입니다.
 	//---------------------

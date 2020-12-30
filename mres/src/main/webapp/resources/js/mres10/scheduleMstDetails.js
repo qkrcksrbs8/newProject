@@ -17,14 +17,14 @@ $(function() {
 	//------------------
 	//기준년도 조회
 	//------------------
-	$('#selectDate').change(function() {
+	$('#selectCalDate').change(function() {
 		
 		var selectCalDate = $(this).val();				//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
 		var selectCode = $("selectCode").val();			//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
 	    $("#division").val(selectCode);					//업무구분
-		$("#selectCalDate").val(selectCalDate);			//업무구분
 	    $("#addList").val("");							//행추가 변수 값 초기화
-		$("#selectForm").submit();						//서브밋
+		$("#selectForm").submit();						//서브밋 
 		
 	});
 	
@@ -139,10 +139,12 @@ $(function() {
 			if("0000" == data.resultCode){
 				
 				alert("저장이 완료되었습니다.");
-				var division = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-			    $("#division").val(division);							//업무구분
-			    $("#addList").val("normal");							//행추가 변수 값 add
-				$("#selectForm").submit();								//서브밋
+				var division = $("#selectCode").val();	//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+			    $("#division").val(division);			//업무구분
+			    $("#addList").val("normal");			//행추가 변수 값 add
+				var selectCalDate = $(this).val();		//기준년도
+				$("#selectDate").val(selectCalDate);	//업무구분
+				$("#selectForm").submit();				//서브밋
 					
 			} else if ("9000" == data.resultCode){
 				
@@ -244,7 +246,7 @@ $(function() {
 					};//if
 					
 	   				
-					if(resultMsg < 0){
+					if(resultCnt == 0){
 						
 		   				$("#tableUp").text("수정");					//수정 버튼의 글자를 수정 완료로 변경
 		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화 -수정 중일 때 
@@ -333,11 +335,13 @@ $(function() {
 			if("0000" == data.resultCode){
 				
 				alert("삭제되었습니다.");
-				var division = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-			    $("#division").val(division);							//업무구분
-			    $("#addList").val("normal");							//행추가 변수 값 add
-				$("#selectForm").submit();								//서브밋
-					
+				var division = $("#selectCode").val();	//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+			    $("#division").val(division);			//업무구분
+			    $("#addList").val("normal");			//행추가 변수 값 add
+				var selectCalDate = $(this).val();		//기준년도
+				$("#selectDate").val(selectCalDate);	//업무구분
+				$("#selectForm").submit();				//서브밋
+					              
 			};//if
 			
 		}).fail(function(data){//통신 실패
@@ -361,6 +365,8 @@ $(function() {
    		var selectcDivision = $("#selectCode").val();						//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
 	    $("#division").val(selectcDivision);								//업무구분
 	    $("#addList").val("add");											//행추가 변수 값 add
+		var selectCalDate = $(this).val();				//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
 		$("#selectForm").submit();											//서브밋
 		$("#addList").val("");												//행추가 변수 공백
    		

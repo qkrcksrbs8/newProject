@@ -56,32 +56,46 @@ $(function(){
 
 <div class="container">
 	
-	<!-- 달력 -->
-	<div class="search_con clear">
-		<div class="search_title">검색일자</div>
-		<div>
-			<div class="cal_wrap">
-				<input type="date" class="date_input select_cal" id="frCal" name="frCal">
-			</div>
-			<p class="cal_to">~</p>
-			<div class="cal_wrap">
-				<input type="date" class="date_input select_cal" id="toCal" name="toCal">
+	<div class="search_wrap">
+	
+		<!-- 달력 -->
+		<div class="search_con">
+			<div class="search_con clear">
+				<div class="search_title">검색일자</div>
+				<div>
+					<div class="cal_wrap">
+						<input type="date" class="date_input select_cal" id="frCal" name="frCal">
+					</div>
+					<p class="cal_to">~</p>
+					<div class="cal_wrap">
+						<input type="date" class="date_input select_cal" id="toCal" name="toCal">
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 		
-	<!-- 버튼 모음입니다. --> 
-	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
-	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
-	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
-	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+		<!-- 버튼 모음입니다. --> 
+		<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+		<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+		<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+		<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+		<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+	
+	</div>
+	
+	<!-- 셀렉트박스 조회용 히든 폼 -->
+	<form id="selectForm" name="selectForm"  action="repairList" autocomplete="off">
+		<input type="hidden" id="baseYear"	name="baseYear"	value ="">
+		<input type="hidden" id="addList" 	name ="addList" value ="">
+		<input type="hidden" id="fr_cal" 	name ="fr_cal"	value ="">
+		<input type="hidden" id="to_cal" 	name ="to_cal"	value ="">
+	</form>
 	
 <!-- 게시글 있을 때. --> 
 	<table class="view_top_center_table">
 		<tr> 
 			<td >체크</td>
-			<td >부문</td>
+			<td >일자</td>
 			<td >예정업무</td>
 			<td >실시업무</td>
 			<td >REMARK</td>
@@ -140,14 +154,6 @@ $(function(){
 			</div>
 		</section>
 	</c:if>
-	
-	<!-- 셀렉트박스 조회용 히든 폼 -->
-	<form id="selectForm" name="selectForm"  action="repairList" autocomplete="off">
-		<input type="hidden" id="baseYear"	name="baseYear"	value ="">
-		<input type="hidden" id="addList" 	name ="addList" value ="">
-		<input type="hidden" id="fr_cal" 	name ="fr_cal"	value ="">
-		<input type="hidden" id="to_cal" 	name ="to_cal"	value ="">
-	</form>
 	
 </div>
 

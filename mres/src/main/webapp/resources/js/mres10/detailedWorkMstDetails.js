@@ -1,17 +1,16 @@
 $(function() {
 
 	//------------------
-	//셀렉트박스 조회
+	//기준년도 조회
 	//------------------
-	$('#selectCode').change(function() {
+	$('#selectCalDate').change(function() {
 		
-		var workDate = $(this).val();		//셀렉트박스  2020, 2019, 2018 ...
-		$("#workDate").val(workDate);		//업무구분
-	    $("#addList").val("");				//행추가 변수 값 초기화
-		$("#selectForm").submit();			//서브밋
+		var selectCalDate = $(this).val();				//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
+	    $("#addList").val("");							//행추가 변수 값 초기화
+		$("#selectForm").submit();						//서브밋 
 		
 	});
-	
 	
    	//-----------------------------
    	//파일이름을 누르면 호출되는 팝업창 입니다.
@@ -42,7 +41,6 @@ $(function() {
 		
 		var jsonArr = new Array();						//JsonArray를 위한 배열생성
         var totalJson = new Object();					//JsonObject의 합
-		var work_date = $("#selectCode").val();			//업무구분
 		
 		//-----------------
 		//체크박스 반복문입니다.
@@ -54,10 +52,10 @@ $(function() {
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
 			var work_seq 	= td.eq(0).children().val();	//세부업무 실적 시퀀스
-			var sector 		= td.eq(1).text();				//부문
-			var fr_work		= td.eq(2).text();				//예정업무
-			var to_work 	= td.eq(3).text();				//실시업무
-			var remark 		= td.eq(4).text();				//remark
+			var sector 		= td.eq(1).children().val();	//부문
+			var fr_work		= td.eq(2).children().val();	//예정업무
+			var to_work		= td.eq(3).children().val();	//실시업무
+			var remark 		= td.eq(4).children().val();	//remark
 
 			if(work_seq == 'on'){work_seq = 0;};			//세부업무 실적 시퀀스가 on일경우 0으로 변환
 			
@@ -68,7 +66,6 @@ $(function() {
 			jsonObj.fr_work	= fr_work;		//예정업무 
 			jsonObj.to_work = to_work;		//실시업무
 			jsonObj.remark= remark;			//비고
-			jsonObj.work_date = work_date	//기준년도
 
 			jsonArr[i] = jsonObj;			//Array 배열 push
 
@@ -89,9 +86,9 @@ $(function() {
 			if("0000" == data.resultCode){				//0000:정상 | 9000:오류
 				
 				alert("저장이 완료되었습니다.");
-			    var workDate = $("#selectCode").val();	//셀렉트박스  2020, 2019, 2018 ...
-			    $("#workDate").val(workDate);			//업무구분
 			    $("#addList").val("normal");			//행추가 변수 값 add
+				var selectCalDate = $(this).val();		//기준년도
+				$("#selectDate").val(selectCalDate);	//업무구분
 				$("#selectForm").submit();				//서브밋
 				
 			} else if ("9000" == data.resultCode){		//0000:정상 | 9000:오류
@@ -165,9 +162,9 @@ $(function() {
 	   	   				seq				= td.eq(0).children().val();		//시퀀스 - 0:신규
 
 						sector			= td.eq(1).children().val();
-						fr_work			= td.eq(2).text();
-						to_work			= td.eq(3).text();
-						
+						var fr_work		= td.eq(2).children().val();
+						var to_work		= td.eq(3).children().val();
+						 
 						if(''==sector || null == sector ){
 							resultMsg = checkMsg(resultMsg, '부문');
 							resultCnt++;
@@ -201,7 +198,7 @@ $(function() {
    					};//if
    					
 		
-	   				if(resultMsg < 0){
+	   				if(resultCnt == 0){
 		
 		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
 		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
@@ -324,11 +321,11 @@ $(function() {
    			return; 
    		};
    		
-	    var workDate = $("#selectCode").val();					//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	    $("#workDate").val(workDate);							//업무구분
-	    $("#addList").val("add");								//행추가 변수 값 add
-		$("#selectForm").submit();								//서브밋
-		$("#addList").val("");									//행추가 변수 공백
+	    $("#addList").val("add");				//행추가 변수 값 add
+		$("#selectForm").submit();				//서브밋
+		var selectCalDate = $(this).val();		//기준년도
+		$("#selectDate").val(selectCalDate);	//업무구분
+		$("#addList").val("");					//행추가 변수 공백
 
    	});
    	
@@ -339,8 +336,7 @@ $(function() {
 		var x = $(this).val();						//현재 입력된 값
 	  	x = x.replace( /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi,'');   				// 입력값이 숫자가 아니면 공백
 	  	$(this).val(x); 							//현재 필드에 파싱된 값 리턴
-
-		maxVal(x, 5);	
+	
 	 });//동적 이벤트 부여
 
 	//예정업무, 실시업무, remark 150자 제한

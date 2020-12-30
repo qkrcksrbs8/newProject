@@ -14,7 +14,7 @@
 	<if test='division != null  and division != ""'>
 		and DIVISION	=	#{division}
  	</if>
- 	AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+ 	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	AND COMPANY_CODE = #{company_code}
  	ORDER BY SCHEDULE_SEQ ASC
 	
@@ -83,7 +83,7 @@
 	<if test='division != null  and division != ""'>
 		and DIVISION	=	#{division}
  	</if>
- 	AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+ 	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	AND COMPANY_CODE = #{company_code}
  	ORDER BY SCHEDULE_SEQ ASC
 	
@@ -203,8 +203,8 @@
 		last_update_date = NOW()
 		,last_update_by = #{created_by} 
 		,USEFLAG = 0
-	WHERE SCHEDULE_SEQ = #{schedule_seq}
-	AND COMPANY_CODE = #{company_code}
+	WHERE SCHEDULE_SEQ 	= #{schedule_seq}
+	AND COMPANY_CODE 	= #{company_code}
 	
 </update> 
 
@@ -213,9 +213,9 @@
 	SELECT
 		COUNT(1)
 	FROM DETAILED_WORK_MST
-	WHERE USEFLAG = #{useflag}
-	AND WORK_DATE = #{work_date}
-	AND COMPANY_CODE = #{company_code}
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE 	= #{company_code}
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	ORDER BY WORK_SEQ ASC
 	
 </select>
@@ -233,9 +233,9 @@
         , COMPANY_CODE
     FROM DETAILED_WORK_MST
 	WHERE USEFLAG = #{useflag}
-	AND WORK_DATE = #{work_date}
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	AND COMPANY_CODE = #{company_code}
- 	ORDER BY WORK_SEQ ASC
+ 	ORDER BY WORK_SEQ ASC 
 	
 </select>
 
@@ -305,6 +305,7 @@
 	FROM REPAIR_MST
 	WHERE USEFLAG 		= #{useflag}
 	AND COMPANY_CODE	= #{company_code}
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	ORDER BY REPAIR_SEQ ASC
 	
 </select>
@@ -327,9 +328,7 @@
 	FROM REPAIR_MST
 	WHERE USEFLAG		= #{useflag}
 	AND COMPANY_CODE	= #{company_code}
-	<if test='fr_cal != null  and fr_cal != "" and to_cal != null  and to_cal != ""'>
-		AND CREATED_DATE BETWEEN #{fr_cal} AND #{to_cal}
- 	</if>
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	ORDER BY REPAIR_SEQ ASC
 	
 </select>
@@ -356,7 +355,7 @@
 <update id="updateRepair" parameterType="kr.co.swrts.contents.report.domains.RepairMstVO">
 /* updateRepair */
 	UPDATE REPAIR_MST SET
-	    LAST_UPDATE_BY		= #{last_update_by}
+	    LAST_UPDATE_BY		= #{created_by}
 	    ,LAST_UPDATE_DATE 	= NOW()
 	<if test='company_code != null  and company_code != ""'>
 		,COMPANY_CODE	= #{company_code}
@@ -377,6 +376,7 @@
 		,REMARK			=	#{remark}
  	</if>
 	WHERE REPAIR_SEQ 	=	#{repair_seq}
+	AND COMPANY_CODE	= #{company_code}
 	
 </update>
 
@@ -384,9 +384,10 @@
 	/* deleteRepair */
 	UPDATE REPAIR_MST SET
 		last_update_date = NOW()
-		,last_update_by = '박주임' 
+		,last_update_by = #{created_by}
 		,USEFLAG = 0
 	WHERE REPAIR_SEQ = #{repair_seq}
+	AND COMPANY_CODE	= #{company_code}
 	
 </update> 
 
@@ -396,6 +397,7 @@
 		COUNT(1)
     FROM CONTRACT_MST
 	WHERE USEFLAG = #{useflag}
+	AND COMPANY_CODE	= #{company_code}
  	ORDER BY TO_DAY ASC
 	
 </select>
@@ -414,6 +416,7 @@
 	    , REMARK
     FROM CONTRACT_MST
 	WHERE USEFLAG = #{useflag}
+	AND COMPANY_CODE	= #{company_code}
  	ORDER BY TO_DAY ASC
 	
 </select>
@@ -423,9 +426,6 @@
 	UPDATE CONTRACT_MST SET
 	    LAST_UPDATE_BY	=	#{created_by}
 	    ,LAST_UPDATE_DATE = NOW()
-	<if test='company_code != null  and company_code != ""'>
-		,COMPANY_CODE	=	#{company_code}
- 	</if>
  	<if test='contract_details != null  and contract_details != ""'>
 		,CONTRACT_DETAILS			=	#{contract_details}
  	</if>
@@ -451,6 +451,7 @@
 		,REMARK			=	#{remark}
  	</if>
 	WHERE CONTRACT_SEQ 	=	#{contract_seq}
+	AND COMPANY_CODE	= #{company_code}
 	
 </update>
 
@@ -487,9 +488,10 @@
 	/* deleteContract */
 	UPDATE CONTRACT_MST SET
 		last_update_date = NOW()
-		,last_update_by = '박주임' 
+		,last_update_by = #{created_by}
 		,USEFLAG = 0
-	WHERE CONTRACT_SEQ = #{contract_seq}
+	WHERE CONTRACT_SEQ	= #{contract_seq}
+	AND COMPANY_CODE	= #{company_code}
 	
 </update> 
 
@@ -499,7 +501,8 @@
 	    COUNT(PAYMENT_STATUS_SEQ) 
 	FROM PAYMENT_STATUS_MST
 	WHERE USEFLAG = #{useflag}
-	AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND COMPANY_CODE	= #{company_code}
  	ORDER BY PAYMENT_STATUS_SEQ ASC
 	 
 </select>
@@ -525,7 +528,7 @@
 	            (
 	                SELECT FORMAT(IFNULL(CARRIED_FORWARD,0) + IFNULL(ENTER,0) - IFNULL(EXODUS,0),0) AS CARRIED_FORWARD
 		            FROM PAYMENT_STATUS_MST   
-		            WHERE CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		            AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	                    AND B.PRODUCT_NAME = PRODUCT_NAME
 	                    AND B.PRODUCT_UNIT = PRODUCT_UNIT
 	                limit 1
@@ -538,7 +541,8 @@
 	        ,B.REMARK
 	    FROM PAYMENT_STATUS_MST B
 	    WHERE USEFLAG = #{useflag}
-		AND CREATED_DATE BETWEEN DATE_FORMAT(CONCAT(LAST_DAY(#{frThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		AND COMPANY_CODE	= #{company_code}
+		AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	) A
 	ORDER BY PAYMENT_STATUS_SEQ ASC
 	
@@ -548,30 +552,31 @@
 <update id="updatePaymentStatus" parameterType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
 /* updatePaymentStatus */
 	UPDATE PAYMENT_STATUS_MST SET
-	    LAST_UPDATE_BY	=	#{created_by}
-	    ,LAST_UPDATE_DATE = NOW()
+	    LAST_UPDATE_BY		= #{created_by}
+	    ,LAST_UPDATE_DATE 	= NOW()
  	<if test='product_name != null  and product_name != ""'>
-		,PRODUCT_NAME		=	#{product_name}
+		,PRODUCT_NAME		= #{product_name}
  	</if>
  	<if test='product_unit != null  and product_unit != ""'>
-		,PRODUCT_UNIT		=	#{product_unit}
+		,PRODUCT_UNIT		= #{product_unit}
  	</if>
  	<if test='carried_forward != null  and carried_forward != ""'>
-		,CARRIED_FORWARD				=	#{carried_forward}
+		,CARRIED_FORWARD	= #{carried_forward}
  	</if>
  	<if test='enter != null  and enter != ""'>
-		,ENTER				=	#{enter}
+		,ENTER				= #{enter}
  	</if>
  	<if test='exodus != null  and exodus != ""'>
-		,EXODUS				=	#{exodus}
+		,EXODUS				= #{exodus}
  	</if>
  	<if test='this_month != null  and this_month != ""'>
-		,THIS_MONTH			=	#{this_month}
+		,THIS_MONTH			= #{this_month}
  	</if>
  	<if test='remark != null  and remark != ""'>
-		,REMARK				=	#{remark}
+		,REMARK				= #{remark}
  	</if>
 	WHERE PAYMENT_STATUS_SEQ =	#{payment_status_seq}
+	AND COMPANY_CODE		= #{company_code}
 	
 </update>
 
@@ -603,10 +608,11 @@
 <update id="deletePaymentStatus" parameterType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO"> 
 	/* deletePaymentStatus */
 	UPDATE PAYMENT_STATUS_MST SET
-		last_update_date = NOW()
-		,last_update_by = '박주임' 
+		last_update_date	= NOW()
+		,last_update_by		= #{created_by}
 		,USEFLAG = 0
 	WHERE PAYMENT_STATUS_SEQ = #{payment_status_seq}
+	AND COMPANY_CODE		= #{company_code}
 	
 </update> 
 
@@ -615,11 +621,13 @@
 	SELECT
 		COUNT(1)
     FROM LIFT_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG 			= #{useflag}
+	AND COMPANY_CODE		= #{company_code}
 	AND INSPECTION_DIVISION = #{inspection_division}
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	<if test='lift_seq != null  and lift_seq != 0'>
-		,LIFT_SEQ				=	#{lift_seq}
- 	</if>
+		,LIFT_SEQ			=	#{lift_seq}
+ 	</if> 
 </select>
 
 
@@ -635,8 +643,10 @@
 		, SUB_MANAGER
 		, DATE_FORMAT(INSPECTION_DATE,'%Y-%m-%d') AS INSPECTION_DATE
     FROM LIFT_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG 			= #{useflag}
+	AND COMPANY_CODE		= #{company_code}
 	AND INSPECTION_DIVISION = #{inspection_division}
+	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	ORDER BY LIFT_SEQ ASC
 	
 </select>
@@ -653,8 +663,9 @@
 		, SUB_MANAGER
 		, DATE_FORMAT(INSPECTION_DATE,'%Y-%m-%d') AS INSPECTION_DATE
     FROM LIFT_MST
-	WHERE USEFLAG = #{useflag}
-	AND LIFT_SEQ = #{lift_seq}
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
+	AND LIFT_SEQ 		= #{lift_seq}
  	ORDER BY LIFT_SEQ ASC
 	
 </select>
@@ -664,20 +675,21 @@
 	SELECT 
 		LIFT_SEQ
     FROM LIFT_MST
-	WHERE USEFLAG = #{useflag}
-	and INSPECTION_DIVISION = #{inspection_division}
-	AND INSPECTION_FIELD = #{inspection_field}
-	AND BUILDING_NAME = #{building_name}
-	AND INSPECTION_COMPANY = #{inspection_company}
-	AND MAIN_MANAGER = #{main_manager}
+	WHERE USEFLAG 			= #{useflag}
+	AND INSPECTION_DIVISION = #{inspection_division}
+	AND INSPECTION_FIELD 	= #{inspection_field}
+	AND BUILDING_NAME 		= #{building_name}
+	AND INSPECTION_COMPANY 	= #{inspection_company}
+	AND COMPANY_CODE		= #{company_code}
+	ORDER BY LIFT_SEQ DESC
 	
 </select>
 
 <update id="updateLift" parameterType="kr.co.swrts.contents.report.domains.LiftMstVO">
 /* updateLift */
 	UPDATE LIFT_MST SET
-	    LAST_UPDATE_BY	=	#{created_by}
-	    ,LAST_UPDATE_DATE = NOW()
+	    LAST_UPDATE_BY		= #{created_by}
+	    ,LAST_UPDATE_DATE 	= NOW()
  	<if test='inspection_division != null  and inspection_division != ""'>
 		,INSPECTION_DIVISION	=	#{inspection_division}
  	</if>
@@ -685,21 +697,22 @@
 		,INSPECTION_FIELD		=	#{inspection_field}
  	</if>
  	<if test='building_name != null  and building_name != ""'>
-		,BUILDING_NAME		=	#{building_name}
+		,BUILDING_NAME			=	#{building_name}
  	</if>
  	<if test='inspection_company != null  and inspection_company != ""'>
-		,INSPECTION_COMPANY	=	#{inspection_company}
+		,INSPECTION_COMPANY		=	#{inspection_company}
  	</if>
  	<if test='main_manager != null  and main_manager != ""'>
-		,MAIN_MANAGER		=	#{main_manager}
+		,MAIN_MANAGER			=	#{main_manager}
  	</if>
  	<if test='sub_manager != null  and sub_manager != ""'>
-		,SUB_MANAGER		=	#{sub_manager}
+		,SUB_MANAGER			=	#{sub_manager}
  	</if>
  	<if test='inspection_date != null  and inspection_date != ""'> 
-		,INSPECTION_DATE	=	#{inspection_date}
+		,INSPECTION_DATE		=	#{inspection_date}
  	</if>
-	WHERE LIFT_SEQ =	#{lift_seq}
+	WHERE LIFT_SEQ 		= #{lift_seq}
+	AND COMPANY_CODE	= #{company_code}
 	
 </update>
 
@@ -713,6 +726,7 @@
 		,MAIN_MANAGER
 		,SUB_MANAGER
 		,INSPECTION_DATE
+		,COMPANY_CODE
 		,CREATED_BY
 		,LAST_UPDATE_BY
 	) values (
@@ -723,6 +737,7 @@
 	    ,#{main_manager}
 	    ,#{sub_manager}
 	    ,#{inspection_date}
+	    ,#{company_code}
 	    ,#{created_by}
 	    ,#{created_by}
 	)
@@ -733,7 +748,8 @@
 	SELECT
 		COUNT(1)
     FROM LIFT_CONTENT_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
 	
 </select>
 
@@ -749,7 +765,8 @@
 		,TO_WORK
 		, DATE_FORMAT(SCHEDULE_DATE,'%Y-%m-%d') AS SCHEDULE_DATE
     FROM LIFT_CONTENT_MST
-	WHERE USEFLAG = #{useflag}
+	WHERE USEFLAG		= #{useflag}
+	AND COMPANY_CODE	= #{company_code}
 	<if test='lift_seq != null  and lift_seq != ""'>
 		AND LIFT_SEQ = #{lift_seq}
  	</if>
@@ -769,8 +786,8 @@
 		,TO_WORK
 		, DATE_FORMAT(SCHEDULE_DATE,'%Y-%m-%d') AS SCHEDULE_DATE
     FROM LIFT_CONTENT_MST
-	WHERE USEFLAG = #{useflag}
-	AND COMPANY_CODE = #{company_code}
+	WHERE USEFLAG 		= #{useflag}
+	AND COMPANY_CODE 	= #{company_code}
  	ORDER BY LIFT_CONTENT_SEQ ASC
 	
 </select> 
@@ -801,7 +818,8 @@
  	<if test='remark != null  and remark != ""'>   
 		,REMARK			=	#{remark}
  	</if>
-	WHERE LIFT_CONTENT_SEQ =	#{lift_content_seq}
+	WHERE LIFT_CONTENT_SEQ 	=	#{lift_content_seq}
+	AND COMPANY_CODE		= #{company_code}
 	<if test='lift_content_seq != null  and lift_content_seq != ""'>
 		AND LIFT_SEQ		=	#{lift_seq}
  	</if>
@@ -817,6 +835,7 @@
 		,FR_WORK
 		,TO_WORK
 		,SCHEDULE_DATE
+		,COMPANY_CODE
 		,CREATED_BY
 		,LAST_UPDATE_BY
 	) values (
@@ -827,6 +846,7 @@
 	    ,#{fr_work}
 	    ,#{to_work}
 	    ,#{schedule_date}
+	    ,#{company_code}
 	    ,#{created_by}
 	    ,#{created_by}
 	)
@@ -840,6 +860,7 @@
 	WHERE USEFLAG		= #{useflag}
 	AND COMPANY_CODE	= #{company_code}
 	AND DATE_FORMAT(TRAINING_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(#{fr_training_date},'%Y%m%d') AND DATE_FORMAT(#{to_training_date},'%Y%m%d')
+	AND COMPANY_CODE	= #{company_code}
  	ORDER BY TRAINING_SEQ ASC
 	
 </select>
@@ -869,7 +890,7 @@
 	    LAST_UPDATE_BY	=	#{created_by}
 	    ,LAST_UPDATE_DATE = NOW()
  	<if test='division != null  and division != ""'>
-		,DIVISION		=	#{division}
+		,DIVISION			=	#{division}
  	</if>
  	<if test='training_date != null  and training_date != ""'>
 		,TRAINING_DATE		=	#{training_date}
@@ -883,7 +904,7 @@
  	<if test='training_content != null  and training_content != ""'>
 		,TRAINING_CONTENT	=	#{training_content}
  	</if>
-	WHERE TRAINING_SEQ =	#{training_seq}
+	WHERE TRAINING_SEQ	=	#{training_seq}
 	AND COMPANY_CODE	=	#{company_code}
  	
 </update>

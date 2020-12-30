@@ -110,7 +110,7 @@ public class ReportController {
 	@RequestMapping(value = "/scheduleList", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView scheduleMst(HttpServletRequest request, Model model, HttpSession session
 			, @RequestParam(value="division", required =false,  defaultValue="AS01") String division
-			, @RequestParam(value="selectCalDate", required =false,  defaultValue="0000") String selectCalDate
+			, @RequestParam(value="selectDate", required =false,  defaultValue="0000") String selectDate
 			, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 		
 		logger.info("================================ START ================================");	//scheduleList 시작
@@ -119,17 +119,17 @@ public class ReportController {
 		
 		try{
 
-			selectCalDate = checkCalDate(selectCalDate);		//기준년도 있는지 체크 -> 2020
-			String[] calDateStr = createCalDate(selectCalDate);	//기준년도 배열 만들기
+			selectDate = checkCalDate(selectDate);		//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(selectDate);	//기준년도 배열 만들기
 			 
-			resultMap = reportService.selectScheduleList(request, session, division, addList, selectCalDate);//연간스케쥴 조회
+			resultMap = reportService.selectScheduleList(request, session, division, addList, selectDate);//연간스케쥴 조회
 			resultMap.put("resultCode", resultMap.get("resultCode"));			//응답코드	 0000:정상  / 9000:비정상
 			resultMap.put("scheduleList", resultMap.get("scheduleList"));		//테이블 리스트
 			resultMap.put("scheduleCnt", resultMap.get("selectScheduleCnt"));	//테이블 수 
 			resultMap.put("addList", addList);									//add:행추가 / normal:일반 출력
 			resultMap.put("division", division);								//업무구분	
-			resultMap.put("selectCalDate", selectCalDate);	//선택한 년도
-			resultMap.put("calDate", calDateStr);			//달력 배열
+			resultMap.put("selectCalDate", selectDate);	//선택한 년도
+			resultMap.put("calDate", calDateStr);		//달력 배열
 			
 			ModelAndView  mav = new ModelAndView("contents/report/scheduleMst.tiles",resultMap);//연간스케쥴 model
 			
@@ -220,28 +220,28 @@ public class ReportController {
 	 */
 	@RequestMapping(value="/detailedWorkList", method = {RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView DetailedWorkMst(HttpServletRequest request, HttpSession session
-								, @RequestParam(value="workDate", required =false, defaultValue="0000") String workDate
+								, @RequestParam(value="selectDate", required =false, defaultValue="0000") String selectDate
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 
 		logger.info("================================ START ================================");	//detailWork 시작
 		
-		logger.info("param workDate : "+workDate);
+		logger.info("param workDate : "+selectDate); 
 		logger.info("param addList : "+addList);
 		
 		List<DetailedWorkMstVO> detailWorkList = new ArrayList<DetailedWorkMstVO>();			//테이블 리스트
 			
 		try {
 
-			workDate = checkCalDate(workDate);//기준년도 있는지 체크 -> 2020
-			String[] calDateStr = createCalDate(workDate);	//기준년도 배열 만들기
+			selectDate = checkCalDate(selectDate);//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(selectDate);	//기준년도 배열 만들기
 			
-			detailWorkList =  reportService.selectDetailedWorkList(request, session, workDate, addList);	//세부업무 리스트 조회
+			detailWorkList =  reportService.selectDetailedWorkList(request, session, selectDate, addList);	//세부업무 리스트 조회
 			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("detailWorkList", detailWorkList);				//테이블 리스트
 			resultMap.put("detailWorkCnt", detailWorkList.size());			//테이블 수 
 			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
-			resultMap.put("workDate", workDate);							//선택한 년도
+			resultMap.put("selectDate", selectDate);						//선택한 년도
 			resultMap.put("calDate", calDateStr);//달력
 			//기준년도 달력 보내기. 금년 기준으로 +1년, -5년까지 ex. 금년 : 2020 | 보여줄 년도 : 2021 ~ 2015 
 			
@@ -332,20 +332,20 @@ public class ReportController {
 	@RequestMapping(value="/repairList", method = {RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView RepairList(HttpServletRequest request, Model model, HttpSession session
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList
-								, @RequestParam(value="fr_cal", required =false,  defaultValue="") String fr_cal
-								, @RequestParam(value="to_cal", required =false,  defaultValue="") String to_cal) {
+								, @RequestParam(value="fr_cal", required =false,  defaultValue="20200101") String frThisYear
+								, @RequestParam(value="to_cal", required =false,  defaultValue="20201231") String toThisYear) {
 
 		logger.info("================================ START ================================");		//repairList 시작
 		
 		logger.info("param addList : "+addList);
-		logger.info("param fr_cal : "+fr_cal);
-		logger.info("param to_cal : "+to_cal);
+		logger.info("param fr_cal : "+frThisYear);
+		logger.info("param to_cal : "+toThisYear);
 		
 		List<RepairMstVO> repairList = new ArrayList<RepairMstVO>();		//테이블 리스트
 			
 		try {
 		
-			repairList =  reportService.selectRepairList(request, addList, fr_cal, to_cal, session);	//하자보수 리스트 조회
+			repairList =  reportService.selectRepairList(request, addList, frThisYear, toThisYear, session);	//하자보수 리스트 조회
 			
 			String mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
 			
@@ -354,8 +354,8 @@ public class ReportController {
 			resultMap.put("selectRepairCnt", repairList.size());			//테이블 수 
 			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
 			resultMap.put("mainPath", mainPath);							//파일경로 앞 부분 ex. C:/
-			resultMap.put("fr_cal", stringToDate(fr_cal));					//검색 시작일
-			resultMap.put("to_cal", stringToDate(to_cal));					//검색 종료일
+			resultMap.put("fr_cal", stringToDate(frThisYear));				//검색 시작일
+			resultMap.put("to_cal", stringToDate(toThisYear));				//검색 종료일
 			
 			ModelAndView  mav = new ModelAndView("contents/report/repairMst.tiles",resultMap);		//repairList model 선언
 			logger.info("================================ E N D ================================");	//repairList 종료
@@ -411,7 +411,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteRepair", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> deleteRepair(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> deleteRepair(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//deleteRepair 시작
 
@@ -421,7 +421,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.deleteRepair(request);						//하자보수현황 삭제
+			reportService.deleteRepair(request, session);						//하자보수현황 삭제
 			
 		}catch(Exception e) {
 			
@@ -442,7 +442,7 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/contractList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView ContractList(HttpServletRequest request, Model model
+	public ModelAndView ContractList(HttpServletRequest request, HttpSession session
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
 
 		logger.info("================================ START ================================");						//contractList 시작
@@ -453,7 +453,7 @@ public class ReportController {
 			
 		try {
 		
-			contractList =  reportService.selectContractList(request, addList);										//주요계약현황 목록
+			contractList =  reportService.selectContractList(request, addList, session);							//주요계약현황 목록
 	
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("contractList", contractList);															//테이블 리스트
@@ -483,7 +483,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertContract", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> InsertContract(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertContract(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//insertContract 시작
 
@@ -493,7 +493,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.insertContract(request);						//주요계약현황 저장/수정
+			reportService.insertContract(request, session);				//주요계약현황 저장/수정
 			
 		}catch(Exception e) {
 			
@@ -514,7 +514,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deleteContract", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> DeleteContract(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeleteContract(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//deleteContract 시작
 		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
@@ -523,7 +523,7 @@ public class ReportController {
 		try {
 			
 			resultMap.put("resultCode", "0000");						//0000:정상  / 9000:오류
-			reportService.deleteContract(request);						//주요계약현황 삭제
+			reportService.deleteContract(request, session);				//주요계약현황 삭제
 			
 		}catch(Exception e) {
 			
@@ -544,8 +544,9 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/paymentStatusList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView PaymentStatusList(HttpServletRequest request, Model model
-								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList) {
+	public ModelAndView PaymentStatusList(HttpServletRequest request, HttpSession session
+								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList
+								, @RequestParam(value="selectDate", required =false,  defaultValue="0000") String selectDate) {
 
 		logger.info("================================ START ================================");	//paymentStatusList 시작
 		
@@ -554,13 +555,18 @@ public class ReportController {
 		List<PaymentStatusMstVO> paymentStatusList = new ArrayList<PaymentStatusMstVO>();	//테이블 리스트
 			
 		try {
-		
-			paymentStatusList =  reportService.selectPaymentStatusList(request, addList);	//설비 및 수불 현황 목록
+
+			selectDate = checkCalDate(selectDate);		//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(selectDate);	//기준년도 배열 만들기
+			
+			paymentStatusList =  reportService.selectPaymentStatusList(request, session, addList, selectDate);	//설비 및 수불 현황 목록
 	
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("paymentStatusList", paymentStatusList);							//테이블 리스트
-			resultMap.put("paymentStatusCnt", paymentStatusList.size());					//테이블 수 
-			resultMap.put("addList", addList);												//add:행추가 / normal:일반 출력
+			resultMap.put("paymentStatusList", paymentStatusList);			//테이블 리스트
+			resultMap.put("paymentStatusCnt", paymentStatusList.size());	//테이블 수 
+			resultMap.put("addList", addList);								//add:행추가 / normal:일반 출력
+			resultMap.put("selectDate", selectDate);						//기준년도
+			resultMap.put("calDate", calDateStr);							//달력 -> 추후 변경예정 
 			
 			ModelAndView  mav = new ModelAndView("contents/report/paymentStatusMst.tiles",resultMap);	//paymentStatusList model 선언
 			logger.info("================================ E N D ================================");		//paymentStatusList 종료
@@ -585,7 +591,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertPaymentStatus", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> InsertPaymentStatus(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> InsertPaymentStatus(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//insertPaymentStatus 시작
 
@@ -595,7 +601,7 @@ public class ReportController {
 		
 		try {
 			
-			statusMap = reportService.insertPaymentStatus(request);			//설비 및 수불현황 저장/수정
+			statusMap = reportService.insertPaymentStatus(request, session);			//설비 및 수불현황 저장/수정
 			resultMap.put("resultCode", statusMap.get("resultCode"));		//0000:정상 | 8000:디비오류 | 9000:비정상
 			
 		}catch(Exception e) {
@@ -618,7 +624,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/deletePaymentStatus", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> DeletePaymentStatus(HttpServletRequest request, Model model) {
+	public ResponseEntity<Map> DeletePaymentStatus(HttpServletRequest request, HttpSession session) {
 
 		logger.info("================================ START ================================");	//deletePaymentStatus 시작
 		HttpStatus statusCode = HttpStatus.OK;							//통신 상태 값
@@ -627,7 +633,7 @@ public class ReportController {
 		
 		try {
 			
-			statusMap = reportService.deletePaymentStatus(request);		//설비 및 수불 현황 삭제
+			statusMap = reportService.deletePaymentStatus(request, session);		//설비 및 수불 현황 삭제
 			resultMap.put("resultCode", statusMap.get("resultCode"));	//0000:정상 | 8000:디비오류 | 9000:비정상
 			
 		}catch(Exception e) {
@@ -648,21 +654,27 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/liftList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView LiftList(HttpServletRequest request, Model model
-								, @RequestParam(value="inspection_division", required =false,  defaultValue="1") String inspection_division) {
+	public ModelAndView LiftList(HttpServletRequest request, HttpSession session
+								, @RequestParam(value="inspection_division", required =false,  defaultValue="1") String inspection_division
+								, @RequestParam(value="selectDate", required =false,  defaultValue="0000") String selectDate) {
 
 		logger.info("================================ START ================================");	//lift 시작
 		
 		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
 			
 		try {
-		
-			statusMap = reportService.selectLiftList(request, inspection_division);	//승강기 목록
+
+			selectDate = checkCalDate(selectDate);				//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(selectDate);	//기준년도 배열 만들기
+			
+			statusMap = reportService.selectLiftList(request, session, inspection_division, selectDate);	//승강기 목록
 	
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("liftList", statusMap.get("selectLiftVOList"));//테이블 리스트
 			resultMap.put("liftCnt", statusMap.get("liftCnt"));			//테이블 수 
 			resultMap.put("inspection_division", statusMap.get("inspection_division"));	//1:승강기 2:화재예방
+			resultMap.put("selectCalDate", selectDate);
+			resultMap.put("calDate", calDateStr);
 			
 			ModelAndView  mav = new ModelAndView("contents/report/liftMst.tiles",resultMap);	//lift model 선언
 			logger.info("================================ E N D ================================");	//lift 종료
@@ -686,7 +698,7 @@ public class ReportController {
 	 * @return
 	 */
 	@RequestMapping(value="/liftContnet", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView LiftContent(HttpServletRequest request, Model model
+	public ModelAndView LiftContent(HttpServletRequest request, HttpSession session
 								, @RequestParam(value="addList", required =false,  defaultValue="normal") String addList
 								, @RequestParam(value="inspection_division", required =false,  defaultValue="") String inspection_division
 								, @RequestParam(value="lift_seq", required =false,  defaultValue="0") int lift_seq) {
@@ -702,7 +714,7 @@ public class ReportController {
 		
 		try {
 		 
-			statusMap =  reportService.selectLiftContentList(request, addList, lift_seq);	//승강기 목록
+			statusMap =  reportService.selectLiftContentList(request, session, addList, lift_seq);	//승강기 목록
 			resultMap.put("addList", addList);												//add:행추가 / normal:일반 출력
 			resultMap.put("LiftVO", statusMap.get("selectLiftVO"));							//승강기 내용
 			resultMap.put("liftContentCnt", statusMap.get("liftContentCnt"));	 			//승강기 상세내용 개수
@@ -733,7 +745,7 @@ public class ReportController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/insertLift", method = {RequestMethod.POST}) 
-	public ResponseEntity<Map> InsertLift(HttpServletRequest request, Model model
+	public ResponseEntity<Map> InsertLift(HttpServletRequest request, HttpSession session
 			, @RequestParam(value="lift_seq", required =false,  defaultValue="0") int lift_seq
 			, @RequestParam(value="sub_manager", required =false,  defaultValue="") String sub_manager) {
 
@@ -745,7 +757,7 @@ public class ReportController {
 		
 		try {
 			
-			statusMap = reportService.insertLift(request, lift_seq, sub_manager);						//주요계약현황 저장/수정
+			statusMap = reportService.insertLift(request, session, lift_seq, sub_manager);						//주요계약현황 저장/수정
 			resultMap.put("resultCode", statusMap.get("resultCode"));						//0000:정상  / 9000:오류
 			if(0 == lift_seq) {
 				resultMap.put("lift_seq", statusMap.get("lift_seq"));						//승강기 목록 번호가 없으면 조회 후 리턴
@@ -1141,11 +1153,11 @@ public class ReportController {
 	*/
 	public String[] createCalDate(String calDate) {
 		   
-		int calDateInt = Integer.parseInt(calDate) + 1;	//지금년도에 +1. 내년 일정을 정할 수 있어서. -> 추후 달력 기능 변경 예정
-		String[] calDateStr = new String[6];				//반환할 배열
+		int calDateInt = Integer.parseInt(calDate) + 5;	//지금년도에 +5. 내년 일정을 정할 수 있어서. -> 추후 달력 기능 변경 예정
+		String[] calDateStr = new String[11];			//반환할 배열
 		
 		// 2021~2015 | 6년치 년도 | 추후 달력기능 변경예정
-		for(int i = 0; i < 6; ++i) {
+		for(int i = 0; i < 11; ++i) {
 			calDateStr[i] = Integer.toString(calDateInt--); 
 		}//for
 		

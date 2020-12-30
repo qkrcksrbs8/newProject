@@ -113,6 +113,10 @@ $(function() {
 			    var baseYear = $("#selectCode").val();	//셀렉트박스  2020, 2019, 2018 ...
 			    $("#baseYear").val(baseYear);			//업무구분
 			    $("#addList").val("normal");			//행추가 변수 값 add
+				var fr_cal = $("#frCal").val();	//검색 후 시작일 추출
+				var to_cal = $("#toCal").val();	//걸색 후 종료일 추출
+				$("#fr_cal").val(fr_cal);		//검색 시작일 셋팅
+				$("#to_cal").val(to_cal);		//검색 종료일 셋팅
 				$("#selectForm").submit();				//서브밋
 				
 			} else if ("9000" == data.resultCode){		//0000:정상 | 9000:오류
@@ -213,7 +217,7 @@ $(function() {
    						$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
    					};//if
    					
-	   				if(resultMsg < 0){ 
+	   				if(resultCnt == 0){ 
 		
 		   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
 		   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
@@ -357,8 +361,6 @@ $(function() {
 		var td = tr.children();					//클릭한 테이블의 td
 		var table_seq	= td.eq(0).children().val();//시퀀스
 		var table_name = "frRepairMst";			//테이블 이름
-	
-		alert(table_seq); 
 	
 		$("#table_seq").val(table_seq);				//테이블 시퀀스 필드에 값 셋팅
 		$("#table_name").val(table_name);			//테이블 이름 필드에 값 셋팅

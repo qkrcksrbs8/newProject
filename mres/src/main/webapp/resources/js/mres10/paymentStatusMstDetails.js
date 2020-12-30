@@ -1,5 +1,17 @@
 $(function() {
 	
+	//------------------
+	//기준년도 조회
+	//------------------
+	$('#selectCalDate').change(function() {
+		
+		var selectCalDate = $(this).val();				//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
+	    $("#addList").val("");							//행추가 변수 값 초기화
+		$("#selectForm").submit();						//서브밋 
+		
+	});
+	
 	//---------------------
 	//테이블을 저장하는 로직입니다.
 	//---------------------
@@ -72,6 +84,8 @@ $(function() {
 				
 				alert("저장이 완료되었습니다.");
 			    $("#addList").val("normal");			//행추가 변수 값 add
+				var selectCalDate = $(this).val();				//기준년도
+				$("#selectDate").val(selectCalDate);			//업무구분
 				$("#selectForm").submit();				//서브밋
 				
 			} else if ("8000" == data.resultCode){		//8000:디비오류
@@ -189,11 +203,14 @@ $(function() {
 					$("#tableAdd").attr("disabled", false);	//행추가 버튼 비활성화 수정 중일 때 
 				};//if
 				
-   				$("#tableUp").text("수정");					//수정 완료 버튼의 글자를 수정으로 변경
-   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화  	 수정 중일 때 
-   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 	 수정 중일 때 
-   				
-   				alert("저장 버튼을 눌러주세요.");					//수정 완료
+   				if(resultCnt == 0){
+						
+	   				$("#tableUp").text("수정");					//수정 버튼의 글자를 수정 완료로 변경
+	   				$("#tableSave").attr("disabled", false);	//저장 버튼 비활성화 -수정 중일 때 
+	   				$("#tableDel").attr("disabled", false);		//삭제 버튼 비활성화 -수정 중일 때 
+					alert("저장 버튼을 눌러주세요.");	//수정 완료	
+						
+				}//if
    				
 			} else {return;};								//수정 완료 버튼을 누르지 않으면 리턴
 			
@@ -308,9 +325,11 @@ $(function() {
    			return; 
    		};
 
-	    $("#addList").val("add");								//행추가 변수 값 add
-		$("#selectForm").submit();								//서브밋
-		$("#addList").val("");									//행추가 변수 공백
+	    $("#addList").val("add");				//행추가 변수 값 add
+		var selectCalDate = $(this).val();		//기준년도
+		$("#selectDate").val(selectCalDate);	//업무구분
+		$("#selectForm").submit();				//서브밋
+		$("#addList").val("");					//행추가 변수 공백
 
    	});
 

@@ -22,8 +22,8 @@ $(function(){
 	var selectDivision = "${division}";		//업무코드		AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
 	$("#selectCode").val(selectDivision);	//페이지 진입 시 selectBox 선택
 
-	var selectCalDate = "${selectCalDate}";				//업무코드		기준년도
-	$("#selectCalDate").val(selectCalDate);		//페이지 진입 시 selectBox 선택
+	var selectCalDate = "${selectCalDate}";	//업무코드		기준년도
+	$("#selectCalDate").val(selectCalDate);	//페이지 진입 시 selectBox 선택
 	
 	var addList = "${addList}";				//add:행추가 / normal:일반 출력
 	
@@ -51,29 +51,39 @@ $(function(){
 
 <body>
 	
-	<!-- 조회용 콤보박스입니다. -->
-	<select class="default_select w70" id="selectCode" name="selectCode">
-	    <option value="AS01">행정 업무</option>
-	    <option value="AS02">회계 업무</option> 
-	    <option value="AS03">조경 업무</option>
-	    <option value="AS04">시설 업무</option>
-	</select>
-	
-	<!-- 달력 -->
-	<select class="default_select w70" id="selectCalDate" name="selectCalDate">
-		<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
-			<option value="${calDate}">${calDate}</option>
-		</c:forEach>
-	</select>
-	
-	<!-- 버튼 모음입니다. -->
-	<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
-	<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
-	<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
-	<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
-	<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+	<div class="search_wrap">
 
+		<!-- 조회용 콤보박스입니다. -->
+		<div class="search_con">
+			<div class="search_title">업무구분</div>
+			<select class="default_select w70" id="selectCode" name="selectCode">
+			    <option value="AS01">행정 업무</option>
+			    <option value="AS02">회계 업무</option> 
+			    <option value="AS03">조경 업무</option>
+			    <option value="AS04">시설 업무</option>
+			</select>
+		</div>
+		
+		<!-- 달력 -->
+	 	<div class="search_con">
+			<div class="search_title">기준년도</div>
+			<select class="default_select w70" id="selectCalDate" name="selectCalDate">
+				<c:forEach var="calDate" items="${calDate}" varStatus="calDateNum">
+					<option value="${calDate}">${calDate}</option>
+				</c:forEach>
+			</select>
+		</div>
+		
+		<!-- 버튼 모음입니다. -->
+		<button id="tablePrint"	class="basin_btn rightBtn" onclick="window.print()">인쇄</button>
+		<button id="tableAdd"	class="basin_btn rightBtn">행추가</button>	
+		<button id="tableDel"	class="basin_btn rightBtn">삭제</button>	
+		<button id="tableUp"	class="basin_btn rightBtn">수정</button>	
+		<button id="tableSave"	class="basin_btn rightBtn">저장</button>	
+
+	</div>
 	
+	<!-- 전송할 폼 -->
 	<form id="selectForm" name="selectForm"  action="<%=request.getContextPath()%>/scheduleList" autocomplete="off">
 		<input id="division" name="division" type="hidden" value ="">
 		<input id="addList" name ="addList" type="hidden" value	="">
@@ -107,7 +117,7 @@ $(function(){
 		<c:forEach var="scheduleList" items="${scheduleList}" varStatus="scheduleNum">
 			<tr>
 				<c:if test = "${scheduleList.schedule_seq == 0}">
-					<td class="tableCount">		<input name="table_check" type="checkbox"	value="${scheduleList.schedule_seq}" disabled="true" checked></td>
+					<td class="tableCount">	<input name="table_check" type="checkbox"	value="${scheduleList.schedule_seq}" disabled="true" checked></td>
 					<td class="" id="">	<input class="default_input w250 maxVal" id="workInfo" 		type="text"		value="${scheduleList.work_info}" maxlength="25"></td>
 					<td class=""><input class="default_input w120 check_sycle${scheduleNum.count-1}" value="${scheduleList.check_cycle}" readonly="readonly"></td>
 					<td class="tableCheck"><input id="schedule_jan" name="checkMonth${scheduleNum.count-1}" type="checkbox" value="${scheduleList.schedule_jan}" <c:if test="${scheduleList.schedule_jan ne '0'}">checked</c:if>></td>
