@@ -48,6 +48,7 @@ $(function(){
 	<label>조회기간 </label>
 	<!-- 기준년도 셀렉트박스 -->
 	<select class="default_select w70" id="selectCode" name="selectCode">
+	    <option value="2021">2021</option>
 	    <option value="2020">2020</option>
 	    <option value="2019">2019</option> 
 	    <option value="2018">2018</option>

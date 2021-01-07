@@ -84,8 +84,8 @@ $(function() {
 				
 				alert("저장이 완료되었습니다.");
 			    $("#addList").val("normal");			//행추가 변수 값 add
-				var selectCalDate = $(this).val();				//기준년도
-				$("#selectDate").val(selectCalDate);			//업무구분
+				var selectCalDate = $("#selectCalDate").val();	//기준년도
+				$("#selectDate").val(selectCalDate);	//업무구분
 				$("#selectForm").submit();				//서브밋
 				
 			} else if ("8000" == data.resultCode){		//8000:디비오류

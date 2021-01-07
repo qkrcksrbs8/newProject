@@ -142,7 +142,7 @@ $(function() {
 				var division = $("#selectCode").val();	//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
 			    $("#division").val(division);			//업무구분
 			    $("#addList").val("normal");			//행추가 변수 값 add
-				var selectCalDate = $(this).val();		//기준년도
+				var selectCalDate = $("#selectCalDate").val();	//기준년도
 				$("#selectDate").val(selectCalDate);	//업무구분
 				$("#selectForm").submit();				//서브밋
 					

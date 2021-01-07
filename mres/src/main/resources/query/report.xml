@@ -528,7 +528,8 @@
 	            (
 	                SELECT FORMAT(IFNULL(CARRIED_FORWARD,0) + IFNULL(ENTER,0) - IFNULL(EXODUS,0),0) AS CARRIED_FORWARD
 		            FROM PAYMENT_STATUS_MST   
-		            AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	  				WHERE USEFLAG = #{useflag}
+		            	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	                    AND B.PRODUCT_NAME = PRODUCT_NAME
 	                    AND B.PRODUCT_UNIT = PRODUCT_UNIT
 	                limit 1
