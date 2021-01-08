@@ -131,19 +131,6 @@ $(function(){
 		</c:forEach>
 	</table>
 	
-	<!-- 게시글 없을 때. --> 
-	<c:if test="${contractCnt==0}"> 
-		<section id="content">
-			<div class="container">
-				<div class="board-list-wrap board-list-header">
-					<ul class="row">	
-						<li>게시판에 저장된 글이 없습니다.</li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</c:if>
-	
 	<!-- 셀렉트박스 조회용 히든 폼 -->
 	<form id="selectForm" name="selectForm"  action="contractList" autocomplete="off">
 		<input id="workDate" name="workDate" type="hidden" value ="">

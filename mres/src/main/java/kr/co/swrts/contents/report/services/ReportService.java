@@ -98,11 +98,12 @@ public class ReportService {
 			String toThisYear = selectCalDate+"1201";				//이번년도 12월01일
 			
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");								//1:사용 / 0:미사용
-			map.put("division", division);							//업무구분
-			map.put("frThisYear", frThisYear);						//검색 시작일
-			map.put("toThisYear", toThisYear);						//검색 종료일
-			map.put("company_code", companyCode);					//사업장코드
+			map.put("useflag", "1");				//1:사용 / 0:미사용
+			map.put("division", division);			//업무구분
+			map.put("frThisYear", frThisYear);		//검색 시작일
+			map.put("toThisYear", toThisYear);		//검색 종료일
+			map.put("company_code", companyCode);	//사업장코드
+			map.put("base_date", selectCalDate);	//기준년도
 			
 			int selectScheduleCnt = 0;								//연간스케쥴 cnt 변수
 			selectScheduleCnt = reportDao.selectScheduleCnt(map);	//연간스케쥴 cnt 조회
@@ -168,8 +169,13 @@ public class ReportService {
 		
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			String selectCalDate = request.getParameter("selectCalDate");		//기준년도
+			
+			
 			System.out.println("########################## userId : "+userId);
 			System.out.println("########################## companyCode : "+companyCode);
+			System.out.println("########################## selectCalDate : "+selectCalDate);
+			
 			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
@@ -183,10 +189,11 @@ public class ReportService {
 			//파싱된 VOList 출력
 			//-----------------------------------
 			for(int i = 0; i < scheduleList.size(); ++i) {
-				
+				 
 				scheduleVO = scheduleList.get(i);		//반복문으로 객체 가져오기
 				scheduleVO.setCreated_by(userId);		//생성자,수정자
 				scheduleVO.setCompany_code(companyCode);//사업장아이디
+				scheduleVO.setBase_date(selectCalDate); //기준년도
 				if(reportDao.updateSchedule(scheduleVO) == 0) {reportDao.insertSchedule(scheduleVO);};//업데이트 할 내용이 없으면 저장
 				
 			};//for
@@ -272,10 +279,11 @@ public class ReportService {
 			String toThisYear = workDate+"1201";								//이번년도 12월01일
 			
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
-			map.put("useflag", "1");								//1:사용 / 0:미사용
-			map.put("frThisYear", frThisYear);						//검색 시작일
-			map.put("toThisYear", toThisYear);						//검색 종료일
-			map.put("company_code", companyCode);					//사업장코드
+			map.put("useflag", "1");				//1:사용 / 0:미사용
+			map.put("frThisYear", frThisYear);		//검색 시작일
+			map.put("toThisYear", toThisYear);		//검색 종료일
+			map.put("company_code", companyCode);	//사업장코드
+			map.put("base_date", workDate);			//기준년도
 			
 			int detailedWorkcnt = 0;								//세부업무실적 cnt 변수 선언
 			detailedWorkcnt = reportDao.selectDetailedWorkCnt(map);	//세부업무실적 cnt 조회
@@ -326,8 +334,11 @@ public class ReportService {
 
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+			String selectCalDate = request.getParameter("selectCalDate");		//기준년도
+			
 			System.out.println("########################## userId : "+userId);
 			System.out.println("########################## companyCode : "+companyCode);
+			System.out.println("########################## selectCalDate : "+selectCalDate);
 			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
@@ -345,6 +356,7 @@ public class ReportService {
 				detailedWorkVO = detailedWorkList.get(i);	//반복문으로 객체 가져오기
 				detailedWorkVO.setCompany_code(companyCode);//사업장코드
 				detailedWorkVO.setCreated_by(userId);		//생성자, 수정자
+				detailedWorkVO.setBase_date(selectCalDate);	//기준년도
 				if(reportDao.updateDetailedWork(detailedWorkVO) == 0) {reportDao.insertDetailedWork(detailedWorkVO);};	//업데이트 할 내용이 없으면 저장
 				
 			};//for
@@ -634,6 +646,7 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		
 		System.out.println("########################## userId : "+userId);
 		System.out.println("########################## companyCode : "+companyCode);
 		
@@ -754,6 +767,8 @@ public class ReportService {
 			map.put("toThisYear", toThisYear);		//금년 검색종료일
 			map.put("frLastYear", frLastYear);		//작년 검색시작일
 			map.put("toLastYear", toLastYear);		//작년 검색종료일
+			map.put("base_date", selectDate);		//금년 기준년도
+			map.put("last_base_date", Integer.parseInt(selectDate)-1);
 			
 			int paymentStatusCnt = 0;											//설비 및 수불 현황 개수 변수
 			paymentStatusCnt = reportDao.selectPaymentStatusCnt(map);			//설비 및 수불 현황 개수 조회
@@ -806,6 +821,8 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
+		String selectCalDate = request.getParameter("selectCalDate");		//기준년도
+		
 		System.out.println("########################## userId : "+userId);
 		System.out.println("########################## companyCode : "+companyCode);
 		
@@ -830,8 +847,7 @@ public class ReportService {
 				paymentStatusMstVO = paymentStatusList.get(i);	//반복문으로 객체 가져오기		
 				paymentStatusMstVO.setCreated_by(userId);		//생성자 박주임
 				paymentStatusMstVO.setCompany_code(companyCode);//사업장코드
-				
-				logger.info("######"+paymentStatusMstVO.toString());
+				paymentStatusMstVO.setBase_date(selectCalDate);//기준년도
 				
 				if(reportDao.updatePaymentStatus(paymentStatusMstVO) == 0) {reportDao.insertPaymentStatus(paymentStatusMstVO); };	//업데이트 할 내용이 없으면 저장
 				
@@ -942,6 +958,7 @@ public class ReportService {
 			map.put("created_by", userId);								//생성자, 수정자
 			map.put("frThisYear", frThisYear);							//검색 시작일
 			map.put("toThisYear", toThisYear);							//검색 종료일
+			map.put("base_date", selectDate);							//기준년도
 			
 			liftCnt = reportDao.selectLiftCnt(map);						//승강기 개수 조회
 			
@@ -1281,7 +1298,7 @@ public class ReportService {
 		
 		try {
 			
-			String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
+			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
 			System.out.println("########################## userId : "+userId);
 			System.out.println("########################## companyCode : "+companyCode);
@@ -1301,10 +1318,10 @@ public class ReportService {
 			for(int i = 0; i < trainingList.size(); ++i) {
 
 				TrainingMstVO trainingMstVO = new TrainingMstVO();	//교육현황 VO			
-				trainingMstVO = trainingList.get(i);				//반복문으로 객체 가져오기		
-				trainingMstVO.setCreated_by(userId);				//생성자 
-				trainingMstVO.setLast_update_by(userId);			//최종수정자
-				trainingMstVO.setCompany_code(companyCode);
+				trainingMstVO = trainingList.get(i);			//반복문으로 객체 가져오기		
+				trainingMstVO.setCreated_by(userId);			//생성자 
+				trainingMstVO.setLast_update_by(userId);		//최종수정자
+				trainingMstVO.setCompany_code(companyCode);		//사업장코드
 				
 				logger.info("######"+trainingMstVO.toString());
 				
@@ -1424,7 +1441,7 @@ public class ReportService {
 			map.put("useflag", "1");							//1:사용 / 0:미사용
 			map.put("fr_training_date", selectDate+"0101");		//기준년도 시작일
 			map.put("to_training_date", selectDate+"1231");		//기준년도 종료일
-			map.put("company_code", companyCode);					//사업장번호
+			map.put("company_code", companyCode);				//사업장번호
 			
 			int meetingLogCnt = 0;									//관리단회의록 cnt 변수 선언
 			meetingLogCnt = reportDao.selectMeetingLogCnt(map);		//관리단회의록 cnt 조회
@@ -1504,10 +1521,10 @@ public class ReportService {
 			for(int i = 0; i < meetingLogList.size(); ++i) {
 
 				MeetingLogMstVO meetingLogMstVO = new MeetingLogMstVO();//관리단회의록 VO			
-				meetingLogMstVO = meetingLogList.get(i);				//반복문으로 객체 가져오기		
-				meetingLogMstVO.setCreated_by(userId);					//생성자 
-				meetingLogMstVO.setLast_update_by(userId);				//최종수정자
-				meetingLogMstVO.setCompany_code(companyCode);			//사업장아이디
+				meetingLogMstVO = meetingLogList.get(i);		//반복문으로 객체 가져오기		
+				meetingLogMstVO.setCreated_by(userId);			//생성자 
+				meetingLogMstVO.setLast_update_by(userId);		//최종수정자
+				meetingLogMstVO.setCompany_code(companyCode);	//사업장아이디
 				
 				logger.info("######"+meetingLogMstVO.toString());
 				

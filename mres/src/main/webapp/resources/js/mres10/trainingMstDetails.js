@@ -1,9 +1,9 @@
 $(function() {
 
 	//------------------
-	//셀렉트박스 조회
+	//기준년도 조회
 	//------------------
-	$('#selectCode').change(function() {
+	$('#selectCalDate').change(function() {
 		
 		var trainingDate = $(this).val();		//셀렉트박스  2020, 2019, 2018 ...
 		$("#trainingDate").val(trainingDate);	//업무구분
@@ -41,20 +41,20 @@ $(function() {
 		
 		var jsonArr = new Array();						//JsonArray를 위한 배열생성
         var totalJson = new Object();					//JsonObject의 합
-		var work_date = $("#selectCode").val();			//업무구분
+		var work_date = $("#selectCalDate").val();		//업무구분
 		
 		//-----------------
 		//체크박스 반복문입니다.
 		//-----------------
 		checkbox.each(function(i) {
 
-  			var tr = checkbox.parent().parent().eq(i);		// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
-	   		var td = tr.children();							// checkbox.parent() : checkbox의 부모는 <td>이다.
+  			var tr = checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
+	   		var td = tr.children();						// checkbox.parent() : checkbox의 부모는 <td>이다.
 			
 			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
 			var training_seq 		= td.eq(0).children().val();	//교육현황 시퀀스
 			var division 			= td.eq(1).children().val();	//구분
-			var training_date 		= td.eq(2).children().val();	//일자
+			var training_date 		= td.eq(2).children().children().children().children().val();	//일자
 			var training_progress	= td.eq(3).children().val();	//교육진행
 			var attend_count 		= td.eq(4).children().val();	//참석인원
 			var training_content 	= td.eq(5).children().val();	//교육내용
@@ -74,8 +74,9 @@ $(function() {
 
 		});
 		
-		var stringJson = JSON.stringify(jsonArr); 	//메서드에 들어온 매개변수를 문자열로 변환
-		var url = "./insertTraining";				//url 테이블 데이터 저장
+		var stringJson = JSON.stringify(jsonArr); 		//메서드에 들어온 매개변수를 문자열로 변환
+		var url = "./insertTraining";					//url 테이블 데이터 저장
+		var trainingDate = $("#selectCalDate").val();	//셀렉트박스 2020 / 2019 / 2018
 		
 		$.ajax({
 			 method: "POST"
@@ -83,16 +84,17 @@ $(function() {
 			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
+				,base_date:trainingDate
 			}
 		}).done(function(data){//통신 성공
 
 			if("0000" == data.resultCode){
 				
 				alert("저장에 성공했습니다.");
-			    var training_date = $("#selectCode").val();				//셀렉트박스  2020, 2019, 2018 ...
-			    $("#training_date").val(training_date);					//업무구분
-			    $("#addList").val("normal");							//행추가 변수 값 add
-				$("#selectForm").submit();								//서브밋
+			    var training_date = $("#selectCalDate").val();	//셀렉트박스  2020, 2019, 2018 ...
+			    $("#training_date").val(training_date);			//업무구분
+			    $("#addList").val("normal");					//행추가 변수 값 add
+				$("#selectForm").submit();						//서브밋
 				
 			} else if ("9000" == data.resultCode){
 				
@@ -133,7 +135,6 @@ $(function() {
    			//-------------------------
    			//체크박스 반복문입니다.
    			//-------------------------
-
    			if("수정" == $("#tableUp").text()){
    				
    				checkbox.each(function(i) {
@@ -143,7 +144,7 @@ $(function() {
    	   				
    	   				td.eq(0).attr("disabled", true);
 					td.eq(1).children().removeAttr('readonly');			//구분	수정 가능한 필드로 변경
-	   				td.eq(2).children().removeAttr('readonly');			//일자	수정 가능한 필드로 변경
+	   				td.eq(2).children().children().children().children().removeAttr('readonly');			//일자	수정 가능한 필드로 변경
 	   				td.eq(3).children().removeAttr('readonly');			//교육진행	수정 가능한 필드로 변경
 	   				td.eq(4).children().removeAttr('readonly');			//참석인원	수정 가능한 필드로 변경
 	   				td.eq(5).children().removeAttr('readonly');			//교육내용	수정 가능한 필드로 변경
@@ -170,9 +171,9 @@ $(function() {
 					//----------------------
    					checkbox.each(function(i) {
 	
-	   	   				var tr			= checkbox.parent().parent().eq(i);			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
-	   	   				var td			= tr.children();							// checkbox.parent() : checkbox의 부모는 <td>이다.
-	   	   				seq				= td.eq(0).children().val();				//시퀀스 - 0:신규
+	   	   				var tr			= checkbox.parent().parent().eq(i);	// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.	
+	   	   				var td			= tr.children();					// checkbox.parent() : checkbox의 부모는 <td>이다.
+	   	   				seq				= td.eq(0).children().val();		//시퀀스 - 0:신규
 	   	   				division		= td.eq(1).children().val();
 						training_progress	= td.eq(3).children().val();
 						attend_count	= td.eq(4).children().val();
@@ -200,7 +201,7 @@ $(function() {
 						}
 
 	   	   				td.eq(1).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
-	   	   				td.eq(2).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
+	   	   				td.eq(2).children().children().children().children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
 	   	   				td.eq(3).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
 	   	   				td.eq(4).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
 	   	   				td.eq(5).children().attr('readonly','readonly');		//수정 완료되면 readonly 적용
@@ -338,17 +339,17 @@ $(function() {
    			return; 
    		};
    		
-	    var trainingDate = $("#selectCode").val();				//셀렉트박스 2020 / 2019 / 2018
-	    $("#trainingDate").val(trainingDate);					//업무구분
-	    $("#addList").val("add");								//행추가 변수 값 add
-		$("#selectForm").submit();								//서브밋
-		$("#addList").val("");									//행추가 변수 공백
+	    var trainingDate = $("#selectCalDate").val();	//셀렉트박스 2020 / 2019 / 2018
+	    $("#trainingDate").val(trainingDate);			//업무구분
+	    $("#addList").val("add");						//행추가 변수 값 add
+		$("#selectForm").submit();						//서브밋
+		$("#addList").val("");							//행추가 변수 공백
 
    	});
 
 	//저장 시 공백 문자열체크
 	//항목1, 항목2, 항목3  처럼 , 구분자 생성하는 메서드
-	function checkMsg(oldStr, newStr){
+	function checkMsg(oldStr, newStr){ 
 		
 		if(''==oldStr || null == oldStr){
 			return newStr;
@@ -357,5 +358,17 @@ $(function() {
 		}//if - else
 		
 	}//checkMsg
+	
+	
+	//생성된 태그에 동적 이벤트 추가
+	$(document).on("keyup","#attend_count",function(){ 
+	   	
+		var x = $(this).val();						//현재 입력된 값
+	  	x = x.replace(/[^0-9]/g,'');   				// 입력값이 숫자가 아니면 공백
+	 	x = x.replace(/,/g,'');          			// ,값 공백처리
+		x = x.replace(/(^0+)/, "");					//첫 자리 0 제거
+	  	$(this).val(x); 							//현재 필드에 파싱된 값 리턴
+
+	});
    	
 });

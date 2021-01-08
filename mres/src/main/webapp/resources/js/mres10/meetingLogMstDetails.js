@@ -1,14 +1,13 @@
 $(function() {
 
 	//------------------
-	//셀렉트박스 조회
+	//기준년도 조회
 	//------------------
-	$('#selectCode').change(function() {
-		
-		var selectDate = $(this).val();
-	    $("#selectDate").val(selectDate);	//업무구분
-	    $("#addList").val("");				//행추가 변수 값 초기화
-		$("#selectForm").submit();			//서브밋
+	$('#selectCalDate').change(function() {
+		var selectCalDate = $(this).val();				//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
+	    $("#addList").val("");							//행추가 변수 값 초기화
+		$("#selectForm").submit();						//서브밋 
 		
 	});
 
@@ -82,10 +81,10 @@ $(function() {
 			if("0000" == data.resultCode){
 				
 				alert("저장이 완료되었습니다.");
-				var selectDate = $("#selectCode").val();				//달력
-			    $("#selectDate").val(selectDate);						//업무구분
-			    $("#addList").val("normal");							//행추가 변수 값 add
-				$("#selectForm").submit();								//서브밋
+				var selectCalDate = $("#selectCalDate").val();	//기준년도
+				$("#selectDate").val(selectCalDate);			//기준년도
+			    $("#addList").val("normal");					//행추가 변수 값 add
+				$("#selectForm").submit();						//서브밋
 					
 			} else if ("9000" == data.resultCode){
 				
@@ -276,10 +275,10 @@ $(function() {
 			if("0000" == data.resultCode){
 				
 				alert("삭제되었습니다.");
-				var selectDate = $("#selectCode").val();				//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-			    $("#selectDate").val(selectDate);						//업무구분
-			    $("#addList").val("normal");							//행추가 변수 값 add
-				$("#selectForm").submit();								//서브밋
+				var selectCalDate = $("#selectCalDate").val();	//기준년도
+				$("#selectDate").val(selectCalDate);			//기준년도
+			    $("#addList").val("normal");					//행추가 변수 값 add
+				$("#selectForm").submit();						//서브밋
 					
 			};//if
 			
@@ -301,8 +300,8 @@ $(function() {
    			return; 
    		};
    		
-   		var selectcDivision = $("#selectCode").val();						//셀렉트박스  날짜
-	    $("#division").val(selectcDivision);								//업무구분
+   		var selectCalDate = $("#selectCalDate").val();	//기준년도
+		$("#selectDate").val(selectCalDate);	//기준년도
 	    $("#addList").val("add");											//행추가 변수 값 add
 		$("#selectForm").submit();											//서브밋
 		$("#addList").val("");												//행추가 변수 공백
@@ -402,8 +401,8 @@ $(function() {
 				if("0000" == data.resultCode){
 					alert("업로드 되었습니다.");
 			
-			   		var selectcDivision = $("#selectCode").val();	//셀렉트박스  날짜
-				    $("#division").val(selectcDivision);			//업무구분
+			   		var selectCalDate = $("#selectCalDate").val();	//기준년도
+					$("#selectDate").val(selectCalDate);	//기준년도
 				    $("#addList").val("add");						//행추가 변수 값 add
 					$("#addList").val("");							//행추가 변수 공백
 					$("#selectForm").submit();						//서브밋

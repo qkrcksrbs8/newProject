@@ -34,116 +34,198 @@ public class PaymentStatusMstVO {
 	private String toThisYear		= new String(); //이번년도 종료일
 	private String frLastYear		= new String(); //전년도 시작일
 	private String toLastYear		= new String(); //전년도 종료일
+	private String base_date		= new String();	//기준년도
 	
 	public int getPayment_status_seq() {
 		return payment_status_seq;
 	}
+
+
 	public void setPayment_status_seq(int payment_status_seq) {
 		this.payment_status_seq = payment_status_seq;
 	}
+
+
 	public String getProduct_name() {
 		return product_name;
 	}
+
+
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
 	}
+
+
 	public String getProduct_unit() {
 		return product_unit;
 	}
+
+
 	public void setProduct_unit(String product_unit) {
 		this.product_unit = product_unit;
 	}
+
+
 	public String getCarried_forward() {
 		return carried_forward;
 	}
+
+
 	public void setCarried_forward(String carried_forward) {
 		this.carried_forward = carried_forward;
 	}
+
+
 	public String getEnter() {
 		return enter;
 	}
+
+
 	public void setEnter(String enter) {
 		this.enter = enter;
 	}
+
+
 	public String getExodus() {
 		return exodus;
 	}
+
+
 	public void setExodus(String exodus) {
 		this.exodus = exodus;
 	}
+
+
 	public String getThis_month() {
 		return this_month;
 	}
+
+
 	public void setThis_month(String this_month) {
 		this.this_month = this_month;
 	}
+
+
 	public String getRemark() {
 		return remark;
 	}
+
+
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+
 	public String getUseflag() {
 		return useflag;
 	}
+
+
 	public void setUseflag(String useflag) {
 		this.useflag = useflag;
 	}
+
+
 	public String getCompany_code() {
 		return company_code;
 	}
+
+
 	public void setCompany_code(String company_code) {
 		this.company_code = company_code;
 	}
+
+
 	public String getCreated_by() {
 		return created_by;
 	}
+
+
 	public void setCreated_by(String created_by) {
 		this.created_by = created_by;
 	}
+
+
 	public String getCreated_date() {
 		return created_date;
 	}
+
+
 	public void setCreated_date(String created_date) {
 		this.created_date = created_date;
 	}
+
+
 	public String getLast_update_by() {
 		return last_update_by;
 	}
+
+
 	public void setLast_update_by(String last_update_by) {
 		this.last_update_by = last_update_by;
 	}
+
+
 	public String getLast_update_date() {
 		return last_update_date;
 	}
+
+
 	public void setLast_update_date(String last_update_date) {
 		this.last_update_date = last_update_date;
 	}
+
+
 	public String getFrThisYear() {
 		return frThisYear;
 	}
+
+
 	public void setFrThisYear(String frThisYear) {
 		this.frThisYear = frThisYear;
 	}
+
+
 	public String getToThisYear() {
 		return toThisYear;
 	}
+
+
 	public void setToThisYear(String toThisYear) {
 		this.toThisYear = toThisYear;
 	}
+
+
 	public String getFrLastYear() {
 		return frLastYear;
 	}
+
+
 	public void setFrLastYear(String frLastYear) {
 		this.frLastYear = frLastYear;
 	}
+
+
 	public String getToLastYear() {
 		return toLastYear;
 	}
+
+
 	public void setToLastYear(String toLastYear) {
 		this.toLastYear = toLastYear;
 	}
-	
+
+
+	public String getBase_date() {
+		return base_date;
+	}
+
+
+	public void setBase_date(String base_date) {
+		this.base_date = base_date;
+	}
+
+
 	@Override
 	public String toString() {
 		return "PaymentStatusMstVO [payment_status_seq=" + payment_status_seq + ", product_name=" + product_name
@@ -152,7 +234,8 @@ public class PaymentStatusMstVO {
 				+ ", company_code=" + company_code + ", created_by=" + created_by + ", created_date=" + created_date
 				+ ", last_update_by=" + last_update_by + ", last_update_date=" + last_update_date + ", frThisYear="
 				+ frThisYear + ", toThisYear=" + toThisYear + ", frLastYear=" + frLastYear + ", toLastYear="
-				+ toLastYear + "]";
+				+ toLastYear + ", base_date=" + base_date + "]";
 	}
 	
+		
 }

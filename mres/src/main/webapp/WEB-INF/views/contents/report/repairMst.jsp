@@ -142,19 +142,6 @@ $(function(){
 			</c:forEach>
 	</table>
 	
-	<!-- 게시글 없을 때. -->
-	<c:if test="${selectRepairCnt==0}">
-		<section id="content">
-			<div class="container">
-				<div class="board-list-wrap board-list-header">
-					<ul class="row">	
-						<li>게시판에 저장된 글이 없습니다.</li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</c:if>
-	
 </div>
 
 <!-- 관리단회의록 등록 팝업 -->

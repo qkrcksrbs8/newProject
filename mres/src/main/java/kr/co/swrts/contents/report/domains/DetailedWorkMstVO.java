@@ -27,6 +27,7 @@ public class DetailedWorkMstVO {
 	private String created_date 	= new String();	//최초생성일
 	private String last_update_by	= new String();	//마지막수정자
 	private String last_update_date = new String();	//마지막수정일
+	private String base_date	= 		new String();	//기준년도
 	
 	public int getWork_seq() {
 		return work_seq;
@@ -100,13 +101,26 @@ public class DetailedWorkMstVO {
 	public void setLast_update_date(String last_update_date) {
 		this.last_update_date = last_update_date;
 	}
+	public String getBase_date() {
+		return base_date;
+	}
+	public void setBase_date(String base_date) {
+		this.base_date = base_date;
+	}
 	
 	@Override
 	public String toString() {
 		return "DetailedWorkMstVO [work_seq=" + work_seq + ", sector=" + sector + ", work_date=" + work_date
 				+ ", fr_work=" + fr_work + ", to_work=" + to_work + ", remark=" + remark + ", useflag=" + useflag
 				+ ", company_code=" + company_code + ", created_by=" + created_by + ", created_date=" + created_date
-				+ ", last_update_by=" + last_update_by + ", last_update_date=" + last_update_date + "]";
+				+ ", last_update_by=" + last_update_by + ", last_update_date=" + last_update_date + ", base_date="
+				+ base_date + ", getWork_seq()=" + getWork_seq() + ", getSector()=" + getSector() + ", getWork_date()="
+				+ getWork_date() + ", getFr_work()=" + getFr_work() + ", getTo_work()=" + getTo_work()
+				+ ", getRemark()=" + getRemark() + ", getUseflag()=" + getUseflag() + ", getCompany_code()="
+				+ getCompany_code() + ", getCreated_by()=" + getCreated_by() + ", getCreated_date()="
+				+ getCreated_date() + ", getLast_update_by()=" + getLast_update_by() + ", getLast_update_date()="
+				+ getLast_update_date() + ", getBase_date()=" + getBase_date() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
 	
 }

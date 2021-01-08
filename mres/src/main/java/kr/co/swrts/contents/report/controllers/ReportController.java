@@ -795,14 +795,19 @@ public class ReportController {
 		Map<String, Object> statusMap 	= new  HashMap<String, Object>();//상태 값을 담은 map
 			
 		try {
-		
+	
+			trainingDate = checkCalDate(trainingDate);			//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(trainingDate);	//기준년도 배열 만들기
+			
 			statusMap =  reportService.selectTrainingList(request, session, trainingDate, addList);	//교육현황 목록
 	
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("trainingList", statusMap.get("trainingList"));		//테이블 리스트
-			resultMap.put("trainingCnt", statusMap.get("trainingCnt"));	//테이블 수 
-			resultMap.put("trainingDate", statusMap.get("trainingDate"));		//교육일자
-			resultMap.put("addList", addList);					//add:행추가 / normal:일반 출력
+			resultMap.put("trainingList", statusMap.get("trainingList"));	//테이블 리스트
+			resultMap.put("trainingCnt", statusMap.get("trainingCnt"));		//테이블 수 
+			resultMap.put("trainingDate", statusMap.get("trainingDate"));	//교육일자
+			resultMap.put("addList", addList);			//add:행추가 / normal:일반 출력
+			resultMap.put("trainingDate", trainingDate);	//선택한 년도
+			resultMap.put("calDate", calDateStr);		//달력
 			
 			ModelAndView  mav = new ModelAndView("contents/report/trainingMst.tiles",resultMap);//trainingList model 선언
 			logger.info("================================ E N D ================================");	//trainingList 종료
@@ -854,7 +859,7 @@ public class ReportController {
 	
 	
 	/**
-	 * 설비 및 수불 현황 삭제
+	 * 교육현황 삭제
 	 * @return
 	 * @throws ParseException 
 	 */
@@ -901,13 +906,16 @@ public class ReportController {
 		Map<String, Object> statusMap 	= new  HashMap<String, Object>();	//상태 값을 담은 map
 		
 		try{
-
+			
+			selectDate = checkCalDate(selectDate);		//기준년도 있는지 체크 -> 2020
+			String[] calDateStr = createCalDate(selectDate);	//기준년도 배열 만들기
 			 
 			statusMap = reportService.selectMeetingLog(request, session, selectDate, addList);		//meetingLogList 조회
-			resultMap.put("meetingLogCnt", statusMap.get("meetingLogCnt"));							//테이블 리스트
-			resultMap.put("meetingLogList", statusMap.get("meetingLogList"));						//테이블 수 
-			resultMap.put("addList", addList);														//add:행추가 / normal:일반 출력
-			resultMap.put("selectDate", statusMap.get("selectDate"));								//기준년도	
+			resultMap.put("meetingLogCnt", statusMap.get("meetingLogCnt"));		//테이블 리스트
+			resultMap.put("meetingLogList", statusMap.get("meetingLogList"));	//테이블 수 
+			resultMap.put("addList", addList);									//add:행추가 / normal:일반 출력
+			resultMap.put("selectDate", selectDate);							//선택한 년도
+			resultMap.put("calDate", calDateStr);								//달력
 			ModelAndView  mav = new ModelAndView("contents/report/meetingLogMst.tiles",resultMap);	//meetingLogList model
 			
 			System.out.println("#########################"+statusMap.get("meetingLogList").toString());

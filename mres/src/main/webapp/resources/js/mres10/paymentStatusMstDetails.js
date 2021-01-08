@@ -69,6 +69,7 @@ $(function() {
 		
 		var stringJson = JSON.stringify(jsonArr); 				//메서드에 들어온 매개변수를 문자열로 변환
 		var url = "./insertPaymentStatus";						//url 테이블 데이터 저장
+		var baseDate = $("#selectCalDate").val();			//기준년도
 		
 		$.ajax({
 			 method: "POST"
@@ -76,6 +77,7 @@ $(function() {
 			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
+				,selectCalDate:baseDate
 			}
 		}).done(function(data){//통신 성공
 
@@ -326,8 +328,8 @@ $(function() {
    		};
 
 	    $("#addList").val("add");				//행추가 변수 값 add
-		var selectCalDate = $(this).val();		//기준년도
-		$("#selectDate").val(selectCalDate);	//업무구분
+		var selectCalDate = $("#selectCalDate").val();	//기준년도
+		$("#selectDate").val(selectCalDate);			//업무구분
 		$("#selectForm").submit();				//서브밋
 		$("#addList").val("");					//행추가 변수 공백
 

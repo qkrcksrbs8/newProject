@@ -73,6 +73,7 @@ $(function() {
 		
 		var stringJson = JSON.stringify(jsonArr); 	//메서드에 들어온 매개변수를 문자열로 변환
 		var url = "./insertDetailedWork";			//url 테이블 데이터 저장
+		var selectCalDate = $("#selectCalDate").val();	//기준년도
 		
 		$.ajax({
 			 method: "POST"
@@ -80,6 +81,7 @@ $(function() {
 			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
+				,selectCalDate:selectCalDate
 			}
 		}).done(function(data){//통신 성공
 
@@ -88,7 +90,7 @@ $(function() {
 				alert("저장이 완료되었습니다.");
 			    $("#addList").val("normal");			//행추가 변수 값 add
 				var selectCalDate = $("#selectCalDate").val();	//기준년도
-				$("#selectDate").val(selectCalDate);	//업무구분
+				$("#selectDate").val(selectCalDate);	//기준년도
 				$("#selectForm").submit();				//서브밋
 				
 			} else if ("9000" == data.resultCode){		//0000:정상 | 9000:오류
@@ -323,7 +325,7 @@ $(function() {
    		
 	    $("#addList").val("add");				//행추가 변수 값 add
 		$("#selectForm").submit();				//서브밋
-		var selectCalDate = $(this).val();		//기준년도
+		var selectCalDate = $("#selectCalDate").val();	//기준년도
 		$("#selectDate").val(selectCalDate);	//업무구분
 		$("#addList").val("");					//행추가 변수 공백
 

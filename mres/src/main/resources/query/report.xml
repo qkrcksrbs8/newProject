@@ -83,7 +83,7 @@
 	<if test='division != null  and division != ""'>
 		and DIVISION	=	#{division}
  	</if>
- 	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+ 	AND BASE_DATE =  #{base_date}
  	AND COMPANY_CODE = #{company_code}
  	ORDER BY SCHEDULE_SEQ ASC
 	
@@ -112,6 +112,7 @@
 	    ,CONTRACT
 	    ,CREATED_BY
 	    ,LAST_UPDATE_BY
+	    ,BASE_DATE
 	) values (
 	    #{division}
 	    ,#{company_code}
@@ -133,6 +134,7 @@
 	    ,#{contract}
 	    ,#{created_by}
 	    ,#{created_by}
+	    ,#{base_date}
 	)
 </insert>
 
@@ -215,7 +217,7 @@
 	FROM DETAILED_WORK_MST
 	WHERE USEFLAG 		= #{useflag}
 	AND COMPANY_CODE 	= #{company_code}
-	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND BASE_DATE = #{base_date}
  	ORDER BY WORK_SEQ ASC
 	
 </select>
@@ -233,7 +235,7 @@
         , COMPANY_CODE
     FROM DETAILED_WORK_MST
 	WHERE USEFLAG = #{useflag}
-	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND BASE_DATE = #{base_date}
 	AND COMPANY_CODE = #{company_code}
  	ORDER BY WORK_SEQ ASC 
 	
@@ -251,6 +253,7 @@
 	    , COMPANY_CODE
 		, CREATED_BY
 	    , LAST_UPDATE_BY
+	    , BASE_DATE
 	) values (
 	    #{sector}
 	    ,#{work_date}
@@ -260,6 +263,7 @@
 	    ,#{company_code}
 	    ,#{created_by}
 	    ,#{created_by}
+	    ,#{base_date}
 	)
 </insert>
 
@@ -501,10 +505,9 @@
 	    COUNT(PAYMENT_STATUS_SEQ) 
 	FROM PAYMENT_STATUS_MST
 	WHERE USEFLAG = #{useflag}
-	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND BASE_DATE = #{base_date}
 	AND COMPANY_CODE	= #{company_code}
  	ORDER BY PAYMENT_STATUS_SEQ ASC
-	 
 </select>
 
 <select id="selectPaymentStatusList" parameterType="map" resultType="kr.co.swrts.contents.report.domains.PaymentStatusMstVO">
@@ -529,7 +532,7 @@
 	                SELECT FORMAT(IFNULL(CARRIED_FORWARD,0) + IFNULL(ENTER,0) - IFNULL(EXODUS,0),0) AS CARRIED_FORWARD
 		            FROM PAYMENT_STATUS_MST   
 	  				WHERE USEFLAG = #{useflag}
-		            	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toLastYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+						AND BASE_DATE = #{last_base_date}
 	                    AND B.PRODUCT_NAME = PRODUCT_NAME
 	                    AND B.PRODUCT_UNIT = PRODUCT_UNIT
 	                limit 1
@@ -543,7 +546,7 @@
 	    FROM PAYMENT_STATUS_MST B
 	    WHERE USEFLAG = #{useflag}
 		AND COMPANY_CODE	= #{company_code}
-		AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		AND BASE_DATE = #{base_date}
 	) A
 	ORDER BY PAYMENT_STATUS_SEQ ASC
 	
@@ -593,6 +596,7 @@
 		,COMPANY_CODE
 		,CREATED_BY
 		,LAST_UPDATE_BY
+		,BASE_DATE
 	) values (
 	    #{product_name}
 	    ,#{product_unit}
@@ -603,6 +607,7 @@
 	    ,#{company_code}
 	    ,#{created_by}
 	    ,#{created_by}
+	    ,#{base_date}
 	)
 </insert>
 
@@ -625,7 +630,7 @@
 	WHERE USEFLAG 			= #{useflag}
 	AND COMPANY_CODE		= #{company_code}
 	AND INSPECTION_DIVISION = #{inspection_division}
-	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND BASE_DATE 			= #{base_date}
 	<if test='lift_seq != null  and lift_seq != 0'>
 		,LIFT_SEQ			=	#{lift_seq}
  	</if> 
@@ -647,7 +652,7 @@
 	WHERE USEFLAG 			= #{useflag}
 	AND COMPANY_CODE		= #{company_code}
 	AND INSPECTION_DIVISION = #{inspection_division}
-	AND CREATED_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	AND BASE_DATE 			= #{base_date}
  	ORDER BY LIFT_SEQ ASC
 	
 </select>
@@ -667,6 +672,7 @@
 	WHERE USEFLAG 		= #{useflag}
 	AND COMPANY_CODE	= #{company_code}
 	AND LIFT_SEQ 		= #{lift_seq}
+	AND BASE_DATE 			= #{base_date}
  	ORDER BY LIFT_SEQ ASC
 	
 </select>
@@ -785,7 +791,7 @@
 		,RESULT_CHECK
 		,FR_WORK
 		,TO_WORK
-		, DATE_FORMAT(SCHEDULE_DATE,'%Y-%m-%d') AS SCHEDULE_DATE
+		, DATE_FORMAT(NOW(),'%Y-%m-%d') AS SCHEDULE_DATE
     FROM LIFT_CONTENT_MST
 	WHERE USEFLAG 		= #{useflag}
 	AND COMPANY_CODE 	= #{company_code}
@@ -859,7 +865,6 @@
 		COUNT(1)
     FROM TRAINING_MST
 	WHERE USEFLAG		= #{useflag}
-	AND COMPANY_CODE	= #{company_code}
 	AND DATE_FORMAT(TRAINING_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(#{fr_training_date},'%Y%m%d') AND DATE_FORMAT(#{to_training_date},'%Y%m%d')
 	AND COMPANY_CODE	= #{company_code}
  	ORDER BY TRAINING_SEQ ASC
@@ -970,6 +975,7 @@
 	    , (SELECT FILE_PATH FROM FILE_MST WHERE TABLE_SEQ = MEETING_LOG_SEQ AND TABLE_NAME ='meetingLogMst' ORDER BY MEETING_LOG_SEQ DESC) AS FILE_PATH
     FROM MEETING_LOG_MST
 	WHERE USEFLAG 		= #{useflag}
+	AND DATE_FORMAT(MEETING_LOG_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(#{fr_training_date},'%Y%m%d') AND DATE_FORMAT(#{to_training_date},'%Y%m%d')
 	AND COMPANY_CODE	= #{company_code}
 	
 </select>

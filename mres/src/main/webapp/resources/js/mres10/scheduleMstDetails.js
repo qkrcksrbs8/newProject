@@ -123,6 +123,7 @@ $(function() {
 		
 		var stringJson = JSON.stringify(jsonArr); 	//메서드에 들어온 매개변수를 문자열로 변환
 		var url = "./insertSchedule";			//url 테이블 데이터 저장
+		var selectCalDate = $("#selectCalDate").val();	//기준년도
 		
 		$.ajax({
 			 method: "POST"
@@ -130,6 +131,7 @@ $(function() {
 			,dataType : 'json'
 			,data: {
 				totalJson:stringJson
+				,selectCalDate:selectCalDate
 			}
 		}).done(function(data){//통신 성공
 			
@@ -362,13 +364,13 @@ $(function() {
    			return; 
    		};
    		
-   		var selectcDivision = $("#selectCode").val();						//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
-	    $("#division").val(selectcDivision);								//업무구분
-	    $("#addList").val("add");											//행추가 변수 값 add
-		var selectCalDate = $(this).val();				//기준년도
+   		var selectcDivision = $("#selectCode").val();	//셀렉트박스  AS01:행정업무 / AS02:회계업무 / AS03:조경업무 / AS04:시설업무
+	    $("#division").val(selectcDivision);			//업무구분
+	    $("#addList").val("add");						//행추가 변수 값 add
+		var selectCalDate = $("#selectCalDate").val();	//기준년도
 		$("#selectDate").val(selectCalDate);			//업무구분
-		$("#selectForm").submit();											//서브밋
-		$("#addList").val("");												//행추가 변수 공백
+		$("#selectForm").submit();						//서브밋
+		$("#addList").val("");							//행추가 변수 공백
    		
    	});
 
