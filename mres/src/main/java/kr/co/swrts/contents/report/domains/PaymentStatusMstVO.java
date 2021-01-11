@@ -237,5 +237,4 @@ public class PaymentStatusMstVO {
 				+ toLastYear + ", base_date=" + base_date + "]";
 	}
 	
-		
 }

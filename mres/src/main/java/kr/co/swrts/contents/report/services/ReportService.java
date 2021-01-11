@@ -84,10 +84,7 @@ public class ReportService {
 		
 		try {
 		
-			String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
 			//사업장번호 세션도 받아야함
 			
 			logger.info("selectCalDate : "+selectCalDate);
@@ -171,12 +168,6 @@ public class ReportService {
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
 			String selectCalDate = request.getParameter("selectCalDate");		//기준년도
 			
-			
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
-			System.out.println("########################## selectCalDate : "+selectCalDate);
-			
-			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
@@ -222,8 +213,6 @@ public class ReportService {
 			
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
@@ -271,10 +260,8 @@ public class ReportService {
 		
 		try {
 			
-			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
+			
 			String frThisYear = workDate+"0101";								//이번년도 01월 01일
 			String toThisYear = workDate+"1201";								//이번년도 12월01일
 			
@@ -336,10 +323,6 @@ public class ReportService {
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
 			String selectCalDate = request.getParameter("selectCalDate");		//기준년도
 			
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
-			System.out.println("########################## selectCalDate : "+selectCalDate);
-			
 			String str = request.getParameter("totalJson");											//매개변수 string으로 받기
 			logger.info(str); 																		//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);												//json배열 선언
@@ -383,8 +366,6 @@ public class ReportService {
 
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");												//매개변수 string으로 받기
 			logger.info(str); 																			//매개변수 로그 츨략
@@ -432,9 +413,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
-		
 		
 		try {
 													
@@ -492,8 +470,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		try {
 			
@@ -539,8 +515,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		try {
 			
@@ -586,10 +560,7 @@ public class ReportService {
 		
 		logger.info("================================ START ================================");
 		
-		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		List<ContractMstVO> contractVOList = new ArrayList<ContractMstVO>();//주요계약현황VO List
 		
@@ -647,9 +618,6 @@ public class ReportService {
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
 		
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
-		
 		try {
 			
 			String str = request.getParameter("totalJson");	//매개변수 string으로 받기
@@ -698,8 +666,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		try {
 			
@@ -747,8 +713,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		List<PaymentStatusMstVO> paymentStatusVOList = new ArrayList<PaymentStatusMstVO>();	//설비 및 수불 현황VO List
 		
@@ -823,9 +787,6 @@ public class ReportService {
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
 		String selectCalDate = request.getParameter("selectCalDate");		//기준년도
 		
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
-		
 		Map<String, Object> resultMap = new HashMap<String, Object>();//최종적으로 반환할 map
 		
 		try {
@@ -881,8 +842,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();				//최종적으로 반환할 map
 		
@@ -939,8 +898,6 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();	//최종적으로 반환할 map
 		List<LiftMstVO> selectLiftVOList = new ArrayList<LiftMstVO>();	//승강기VO List
@@ -1003,16 +960,12 @@ public class ReportService {
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();	//최종적으로 반환할 map
 		LiftMstVO selectLiftVO = new LiftMstVO();	//승강기VO List
 		List<LiftContentMstVO> selectLiftContentList = new ArrayList<LiftContentMstVO>();	//승강기VO List
 		int liftContentCnt = 0;																//승강기 개수 변수
 		String inspection_division = request.getParameter("inspection_division");			//1:승강기 2:화재예방
-//		map.put("company_code","");	//@@@@@@@사업장 아이디 또는 사업장 코드
-		System.out.println("##############################inspection_division : "+inspection_division);
 		
 		try {
 										
@@ -1022,7 +975,7 @@ public class ReportService {
 			map.put("company_code", companyCode);						//사업장코드
 			
 			if(0 != lift_seq) {
-				System.out.println("########################## seq : "+lift_seq);
+				
 				map.put("lift_seq", lift_seq);							//승강기 목록 번호 - lift_mst
 				selectLiftVO = reportDao.selectLift(map);				//승강기 목록 조회
 				liftContentCnt = reportDao.selectLiftContentCnt(map);	//승강기 상세내용 개수 조회
@@ -1032,7 +985,6 @@ public class ReportService {
 				//------------------
 				if(liftContentCnt > 0 ) {
 					
-					System.out.println("######################### 여기 진입");
 					selectLiftContentList = reportDao.selectLiftContentList(map);	//승강기 상세내용 리스트 조회
 				};//if
 				
@@ -1042,13 +994,11 @@ public class ReportService {
 				
 				if("1".equals(inspection_division)){
 				
-					System.out.println("####################division :"+inspection_division);
 					map.put("company_code","0000");										//0000:기본 설정 값
 					selectLiftContentList = reportDao.selectLiftDefaultList(map);		//default 리스트 호출
 					
 				}else if("2".equals(inspection_division)) {
 
-					System.out.println("####################division :"+inspection_division);
 					map.put("company_code","00000");									//00000:기본 설정 값
 					selectLiftContentList = reportDao.selectLiftDefaultList(map);		//default 화재예방 호출
 					
@@ -1056,7 +1006,6 @@ public class ReportService {
 				
 			}//if - else
 			
-			System.out.println("############################ 중간 지점");
 			
 			//-----------------------------
 			//addList의 값이 add일 경우 리스트 추가
@@ -1108,16 +1057,6 @@ public class ReportService {
 
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
-			
-			System.out.println("#####################"+request.getParameter("lift_seq"));
-			System.out.println("#####################"+request.getParameter("inspection_field"));
-			System.out.println("#####################"+request.getParameter("inspection_company"));
-			System.out.println("#####################"+request.getParameter("inspection_date"));
-			System.out.println("#####################"+request.getParameter("building_name"));
-			System.out.println("#####################"+request.getParameter("main_manager"));
-			System.out.println("#####################"+request.getParameter("inspection_division"));
 			
 			LiftMstVO liftMstVO = new LiftMstVO();											//시설물관리VO
 			liftMstVO.setInspection_field(request.getParameter("inspection_field"));		//점검분약
@@ -1133,7 +1072,6 @@ public class ReportService {
 			if(reportDao.updateLift(liftMstVO) == 0) {reportDao.insertLift(liftMstVO);}		//수정/저장
 			lift_seq = reportDao.selectLiftSeq(liftMstVO);									//시퀀스 조회
 			
-			System.out.println("##################### selectLiftSeq : "+lift_seq);
 			//승강기 시퀀스 및 정보
 			//저장/수정 
 			//실패 시 리턴
@@ -1144,7 +1082,7 @@ public class ReportService {
 			Gson gson = new Gson();																	//gson 선언
 			Type listType = new TypeToken<ArrayList<LiftContentMstVO>>(){}.getType();				//설비 및 수불 현황 실적VO의 List.class 
 			List<LiftContentMstVO> liftContentList = gson.fromJson(jsonArray.toString(), listType);	//jsonArray -> VO로 파싱
-			System.out.println("################여기 나옴?");
+			
 			//----------------------------------- 
 			//파싱된 VOList 출력
 			//저장 및 수정
@@ -1156,8 +1094,6 @@ public class ReportService {
 					liftContentMstVO = liftContentList.get(i);						//반복문으로 객체 가져오기		
 					liftContentMstVO.setCreated_by(userId);							//@@@@세션에 있는 유저 아이디로 바꿔야함
 					liftContentMstVO.setCompany_code(companyCode);					//@@@@사업장 식별 값이 들어가야 함
-					
-					logger.info("######"+liftContentMstVO.toString());
 					
 					reportDao.insertLiftContent(liftContentMstVO);	//업데이트 할 내용이 없으면 저장
 					
@@ -1171,14 +1107,11 @@ public class ReportService {
 					liftContentMstVO.setCreated_by(userId);							//생성자 박주임
 					liftContentMstVO.setCompany_code(companyCode);					//사업장코드
 					
-					logger.info("######"+liftContentMstVO.toString());
-					
 					if(reportDao.updateLiftContent(liftContentMstVO) == 0) {reportDao.insertLiftContent(liftContentMstVO); };	//업데이트 할 내용이 없으면 저장
 					
 				};//for
 			}
 
-			System.out.println("##################### put 전 lift_seq : "+lift_seq);
 			resultMap.put("lift_seq", lift_seq); //승강기 목록 시퀀스
 			resultMap.put("resultCode", "0000"); //0000:정상 | 8000:디비오류 | 9000:비정상
 			logger.info("================================ E N D ================================");
@@ -1214,12 +1147,8 @@ public class ReportService {
 		
 		try {
 
-			String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
-			//사업장번호 세션도 받아야함
-			
+
 			//---------------------------------------
 			//기준년도의 default는 "0000"
 			//"0000"으로 값이 들어오면 현재 일자 기준으로 년도 추출
@@ -1232,7 +1161,6 @@ public class ReportService {
 				
 			};//if
 			
-			logger.info("trainingDate : "+trainingDate);			//기준년도 로그
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");								//1:사용 / 0:미사용
 			map.put("fr_training_date", trainingDate+"0101");		//기준년도 시작일
@@ -1241,7 +1169,6 @@ public class ReportService {
 			
 			int trainingCnt = 0;									//교육내용 cnt 변수 선언
 			trainingCnt = reportDao.selectTrainingCnt(map);			//교육내용 cnt 조회
-			logger.info("cnt : "+trainingCnt);
 			
 			//------------------
 			//세무업무 실적 리스트 개수 
@@ -1255,19 +1182,16 @@ public class ReportService {
 			//-----------------------------
 			if("add".equals(addList)) {
 
-				System.out.println("################################################## addList");
 				TrainingMstVO trainingMstVO = new TrainingMstVO();	//vo 선언
 				trainingMstVO.setTraining_date(trainingDate);		//업무 구분 값 고정
 				trainingList.add(trainingMstVO);					//리스트에 추가
 
 			};//if
 			
-			System.out.println("################################################## map put");
 			resultMap.put("trainingDate", trainingDate);
 			resultMap.put("trainingCnt", trainingCnt);				//교육현황 리스트 개수
 			resultMap.put("trainingList", trainingList);			//교육현황 리스트
 //			resultMap.put("resultCode", "0000");					//0000:정상 9000:비정상
-			logger.info(trainingList.toString());
 			logger.info("================================ E N D ================================");	//리스트 로그 
 			
 		}catch(Exception e) {
@@ -1300,12 +1224,8 @@ public class ReportService {
 			
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
-			
 			
 			String str = request.getParameter("totalJson");		//매개변수 string으로 받기
-			logger.info(str); 									//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);			//json배열 선언
 			Gson gson = new Gson();								//gson 선언
 			Type listType = new TypeToken<ArrayList<TrainingMstVO>>(){}.getType();				//교육현황 VO의 List.class 
@@ -1322,8 +1242,6 @@ public class ReportService {
 				trainingMstVO.setCreated_by(userId);			//생성자 
 				trainingMstVO.setLast_update_by(userId);		//최종수정자
 				trainingMstVO.setCompany_code(companyCode);		//사업장코드
-				
-				logger.info("######"+trainingMstVO.toString());
 				
 				if(reportDao.updateTraining(trainingMstVO) == 0) {reportDao.insertTraining(trainingMstVO); };	//업데이트 할 내용이 없으면 저장
 				
@@ -1360,12 +1278,8 @@ public class ReportService {
 		try {
 
 			String userId = (String) session.getAttribute("userId");	//null처리 추가해야함
-			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");							//매개변수 string으로 받기
-			logger.info(str); 														//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);								//json배열 선언
 			Gson gson = new Gson();													//gson 선언
 			Type listType = new TypeToken<ArrayList<TrainingMstVO>>(){}.getType();						//교육현황VO의 List.class 
@@ -1420,9 +1334,6 @@ public class ReportService {
 
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);//사업장번호 세션도 받아야함
-			
 			
 			//---------------------------------------
 			//기준년도의 default는 "0000"
@@ -1436,7 +1347,6 @@ public class ReportService {
 				
 			};//if
 			
-			logger.info("selectDate : "+selectDate);			//기준년도 로그
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
 			map.put("useflag", "1");							//1:사용 / 0:미사용
 			map.put("fr_training_date", selectDate+"0101");		//기준년도 시작일
@@ -1445,7 +1355,6 @@ public class ReportService {
 			
 			int meetingLogCnt = 0;									//관리단회의록 cnt 변수 선언
 			meetingLogCnt = reportDao.selectMeetingLogCnt(map);		//관리단회의록 cnt 조회
-			logger.info("cnt : "+meetingLogCnt);
 			
 			//------------------
 			//세무업무 실적 리스트 개수 
@@ -1459,18 +1368,15 @@ public class ReportService {
 			//-----------------------------
 			if("add".equals(addList)) {
 
-				System.out.println("################################################## addList");
 				MeetingLogMstVO meetingLogMstVO = new MeetingLogMstVO();	//vo 선언
 				meetingLogList.add(meetingLogMstVO);						//리스트에 추가
 
 			};//if
 			
-			System.out.println("################################################## map put");
 			resultMap.put("selectDate", selectDate);
 			resultMap.put("meetingLogCnt", meetingLogCnt);				//관리단회의록 리스트 개수
 			resultMap.put("meetingLogList", meetingLogList);			//관리단회의록 리스트
 //			resultMap.put("resultCode", "0000");						//0000:정상 9000:비정상
-			logger.info(meetingLogList.toString());
 			logger.info("================================ E N D ================================");	//리스트 로그 
 			
 		}catch(Exception e) {
@@ -1503,12 +1409,9 @@ public class ReportService {
 			
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
 			
 			
 			String str = request.getParameter("totalJson");		//매개변수 string으로 받기
-			logger.info(str); 									//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);			//json배열 선언
 			Gson gson = new Gson();								//gson 선언
 			Type listType = new TypeToken<ArrayList<MeetingLogMstVO>>(){}.getType();				//관리단회의록 VO의 List.class 
@@ -1525,8 +1428,6 @@ public class ReportService {
 				meetingLogMstVO.setCreated_by(userId);			//생성자 
 				meetingLogMstVO.setLast_update_by(userId);		//최종수정자
 				meetingLogMstVO.setCompany_code(companyCode);	//사업장아이디
-				
-				logger.info("######"+meetingLogMstVO.toString());
 				
 				if(reportDao.updateMeetingLog(meetingLogMstVO) == 0) {reportDao.insertMeetingLog(meetingLogMstVO); };	//업데이트 할 내용이 없으면 저장
 				
@@ -1563,12 +1464,8 @@ public class ReportService {
 		try {
 
 			String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
-			String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-			System.out.println("########################## userId : "+userId);
-			System.out.println("########################## companyCode : "+companyCode);
 			
 			String str = request.getParameter("totalJson");							//매개변수 string으로 받기
-			logger.info(str); 														//매개변수 로그 츨략
 			JSONArray jsonArray = new JSONArray(str);								//json배열 선언
 			Gson gson = new Gson();													//gson 선언
 			Type listType = new TypeToken<ArrayList<MeetingLogMstVO>>(){}.getType();			//관리단회의록VO의 List.class 
@@ -1629,13 +1526,7 @@ public class ReportService {
 
 				String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
 				String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-				System.out.println("########################## userId : "+userId);
-				System.out.println("########################## companyCode : "+companyCode);
-				System.out.println("########################## fileMstVO.getTable_name() : "+fileMstVO.getTable_name());
-				System.out.println("########################## table_seq : "+table_seq);
-				System.out.println("########################## fileMstVO.getFile_name() : "+fileMstVO.getFile_name());
-
-				String file_name = fileMstVO.getFile_name();
+				String file_name = fileMstVO.getFile_name();						//파일이름
 				
 				//관리단 회의록 파일 업로드는 PDF 파일만 저장 가능
 				//PDF파일이 아니면 리턴
@@ -1665,10 +1556,6 @@ public class ReportService {
 				fileMstVO.setFile_path(subPath);		//파일 경로
 				fileMstVO.setFile_size(file_size);		//파일 용량
 				fileMstVO.setTable_seq(table_seq);		//각 테이블의 시퀀스 번호 ex. schedule_seq 정보 등...
-				logger.info(" path : "+mainPath);
-				logger.info("file_path : "+subPath);
-				logger.info("file_size : "+file_size);
-				logger.info(fileMstVO.toString());
 				
 				//----------------------------------
 				//해당 디렉토리가 없을경우 디렉토리를 생성합니다.
@@ -1685,9 +1572,6 @@ public class ReportService {
 						reportDao.insertFile(fileMstVO);						//파일 정보 저장  
 						int file_seq = reportDao.selectFileSeq(fileMstVO);		//파일 시퀀스
 						
-						logger.info("###################### table_seq :"+table_seq);
-						logger.info("###################### file_seq : "+file_seq);
-						logger.info("table_name : "+fileMstVO.getTable_name());
 						//----------------------
 						//스케쥴 데이터에 파일 시퀀스 저장
 						//----------------------
@@ -1725,8 +1609,6 @@ public class ReportService {
 							reportDao.updateRepair(repairMstVO);			//업데이트
 							
 						};
-						
-						System.out.println("######################## 파일저장 테이블 : "+fileMstVO.getTable_name());
 						
 						resultMap.put("resultCode", "0000");//0000:파일 업로드 성공|2000:파일 업로드 중 실패|2100:pdf파일이 아님|3000:서비스 로직 진입 후 실패 |4000:파일 null|9000:fileUpload()컨트롤러 오류
 						
@@ -1775,8 +1657,6 @@ public class ReportService {
 	    	FileMstVO fileMstVO = new FileMstVO();		//파일 VO	
 			Map<String, Object> map = new HashMap<String, Object>();//쿼리에 보낼 매개변수 map
 			
-			logger.info("file_seq : "+file_seq);
-			
 			map.put("file_seq", file_seq);				//파일 시퀀스
 			fileMstVO = reportDao.selectFile(map);		//파일 단건 조회
 			
@@ -1785,15 +1665,9 @@ public class ReportService {
 			mainPath =request.getSession().getServletContext().getRealPath("/");//초기 경로 ex - C:/
 			subPath = fileMstVO.getFile_path();			//상세 경로
 	    	 
-			logger.info("mainPath : "+mainPath);	
-			logger.info("subPath : "+subPath);	
-			
 			String path = mainPath+subPath; 			//파일 전체 경로 
 		    String fileName = fileMstVO.getFile_name();	//파일명
 
-			logger.info("path : "+path);	
-			logger.info("fileName : "+fileName);	
-			
 		    File file = new File(path);					//파일 생성
 		    
 	    	
@@ -1884,9 +1758,6 @@ public class ReportService {
 		List<FileMstVO> fileList = new ArrayList<FileMstVO>();				//파일VO List
 
 		String userId = (String) session.getAttribute("userId");			//null처리 추가해야함
-		String companyCode = (String) session.getAttribute("companyCode");	//임시 사업장 코드
-		System.out.println("########################## userId : "+userId);
-		System.out.println("########################## companyCode : "+companyCode);
 		  
 		try {
 			
@@ -1894,6 +1765,7 @@ public class ReportService {
 			if("none".equals(table_name)) {
 				table_name = "";
 			}
+			
 			map.put("table_name", table_name);		//테이블 이름 ex. schedule_mst
 			map.put("table_seq", table_seq);		//테이블 시퀀스 ex. schdeule_seq
 			map.put("useflag", 1);					//사용구분
@@ -1902,7 +1774,6 @@ public class ReportService {
 			
 			int fileCnt = 0;						//테이블 cnt 변수 선언
 			fileCnt = reportDao.selectFileCnt(map);	//테이블 cnt 조회
-			logger.info("cnt : "+fileCnt);
 			
 			//------------------
 			//세무업무 실적 리스트 개수 

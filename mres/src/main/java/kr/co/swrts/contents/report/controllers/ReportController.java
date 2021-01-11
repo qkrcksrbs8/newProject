@@ -918,8 +918,6 @@ public class ReportController {
 			resultMap.put("calDate", calDateStr);								//달력
 			ModelAndView  mav = new ModelAndView("contents/report/meetingLogMst.tiles",resultMap);	//meetingLogList model
 			
-			System.out.println("#########################"+statusMap.get("meetingLogList").toString());
-			
 			logger.info("================================ E N D ================================");	//meetingLogList 종료
 			return mav;
 			

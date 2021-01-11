@@ -23,7 +23,7 @@ import kr.co.swrts.contents.report.domains.TrainingMstVO;
  *연간데이터 DAO 상속 클레스.
  *</pre>
  *
- *@ClassName : ReportDaoImle.java 
+ *@ClassName : ReportDaoImple.java 
  *@Description : 연간데이터 DAO의 상세 로직입니다. 
  *@author 박찬균 주임연구원
  *@since 2020. 12. 4
@@ -32,7 +32,7 @@ import kr.co.swrts.contents.report.domains.TrainingMstVO;
  *@Modification Information
  */
 @Repository("reportDao")
-public class ReportDaoImle implements ReportDao {
+public class ReportDaoImple implements ReportDao {
 
 	/**
 	 * sql 세션 연동 선언
@@ -603,8 +603,5 @@ public class ReportDaoImle implements ReportDao {
 	public List<FileMstVO> selectFileList(Map<String, Object> map) throws Exception {
 		return sql.getSqlSession().selectList("selectFileList", map);
 	}
-	
-	
-	
-	
+
 }
