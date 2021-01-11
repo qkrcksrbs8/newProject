@@ -89,8 +89,8 @@ $(function(){
 		<input id="addList" name ="addList" type="hidden" value	="">
 		<input id="selectDate" name ="selectDate" type="hidden" value	="">
 	</form>
-	
-	<table class="view_top_center_table marginLeft">
+
+	<table class="jq_table"> 
 		<tr> 
 			<td rowspan="2">체크</td>
 			<td rowspan="2">업무내용</td>
@@ -157,8 +157,7 @@ $(function(){
 			</tr>
 		</c:forEach>
 	</table>
-	
-
+ 
     
 <!-- 공지사항 등록 팝업 -->
 <div id="schedule_reg_popup" class="mres_popup">

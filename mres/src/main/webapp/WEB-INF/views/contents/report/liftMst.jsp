@@ -29,6 +29,8 @@ $(function(){
 		
 		var inspection_division = $(this).val();			//셀렉트박스	1:승강기 점검표 2:화재예방 점검표
 	    $("#inspection_division").val(inspection_division);	//업무구분
+	    var selectCalDate = $("#selectCalDate").val();		//기준년도
+		$("#selectDate").val(selectCalDate);				//기준년도 FORM
 		$("#selectForm").submit();							//서브밋
 		
 	});
@@ -38,9 +40,11 @@ $(function(){
 	//------------------
 	$('#selectCalDate').change(function() {
 		
-		var selectCalDate = $(this).val();				//기준년도
-		$("#selectDate").val(selectCalDate);			//업무구분
-		$("#selectForm").submit();						//서브밋 
+		var selectCalDate = $(this).val();					//기준년도
+		$("#selectDate").val(selectCalDate);				//기준년도 FORM
+		var inspection_division = $("#selectCode").val();	//셀렉트박스	1:승강기 점검표 2:화재예방 점검표
+	    $("#inspection_division").val(inspection_division);	//업무구분
+		$("#selectForm").submit();							//서브밋  
 		
 	}); 
 	

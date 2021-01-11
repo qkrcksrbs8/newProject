@@ -630,7 +630,7 @@
 	WHERE USEFLAG 			= #{useflag}
 	AND COMPANY_CODE		= #{company_code}
 	AND INSPECTION_DIVISION = #{inspection_division}
-	AND BASE_DATE 			= #{base_date}
+	AND INSPECTION_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	<if test='lift_seq != null  and lift_seq != 0'>
 		,LIFT_SEQ			=	#{lift_seq}
  	</if> 
@@ -652,7 +652,7 @@
 	WHERE USEFLAG 			= #{useflag}
 	AND COMPANY_CODE		= #{company_code}
 	AND INSPECTION_DIVISION = #{inspection_division}
-	AND BASE_DATE 			= #{base_date}
+	AND INSPECTION_DATE BETWEEN DATE_ADD(DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s'), interval -12 month) AND DATE_FORMAT(CONCAT(LAST_DAY(#{toThisYear}),' 23:59:59'),'%Y-%m-%d %H:%i:%s')
  	ORDER BY LIFT_SEQ ASC
 	
 </select>
@@ -672,7 +672,6 @@
 	WHERE USEFLAG 		= #{useflag}
 	AND COMPANY_CODE	= #{company_code}
 	AND LIFT_SEQ 		= #{lift_seq}
-	AND BASE_DATE 			= #{base_date}
  	ORDER BY LIFT_SEQ ASC
 	
 </select>
